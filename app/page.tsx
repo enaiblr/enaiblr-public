@@ -6,7 +6,6 @@ import { ToolCard } from "@/components/tools/tool-card";
 import { Sidebar } from "@/components/tools/sidebar";
 import { Header } from "@/components/tools/header";
 import { tools, categories } from "@/lib/data";
-import { Analytics } from "@vercel/analytics/react";
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
