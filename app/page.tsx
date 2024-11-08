@@ -7,7 +7,7 @@ import Link from "next/link";
 import Exa from "exa-js";
 import { useState } from "react";
 
-const exa = new Exa(process.env.EXA_API_KEY);
+const exa = new Exa(process.env.NEXT_PUBLIC_EXA_API_KEY);
 
 // Default icon mapping
 const defaultIcons = {
