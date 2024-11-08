@@ -4,12 +4,8 @@ import { Search, Share, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon } 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import Exa from "exa-js";
 import { useState } from "react";
 
-const exa = new Exa(process.env.NEXT_PUBLIC_EXA_API_KEY);
-
-// Default icon mapping
 const defaultIcons = {
   Wand2,
   Palette,
@@ -36,16 +32,21 @@ export default function Component() {
     setError(null);
 
     try {
-      const result = await exa.searchAndContents(query, {
-        type: "neural",
-        useAutoprompt: true,
-        numResults: 20,
-        highlights: true,
+      const response = await fetch("/api/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
       });
-      setSearchResults(result);
-    } catch (err: any) {
-      console.error("Error searching:", err);
-      setError(err.message || "An error occurred during the search.");
+      if (!response.ok) {
+        throw new Error("Failed to fetch results");
+      }
+      const results = await response.json();
+      setSearchResults(results);
+    } catch (error: any) {
+      console.error("Search error:", error);
+      setError(error.message || "An error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -60,11 +61,11 @@ export default function Component() {
             <Link href="/" className="text-2xl font-bold tracking-tighter shrink-0">
               en<span className="text-blue-600">ai</span>blr
             </Link>
-            
+
             <div className="relative flex-1 max-w-xl">
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-              <Input 
-                className="w-full pl-10 pr-4 h-10 rounded-full text-sm" 
+              <Input
+                className="w-full pl-10 pr-4 h-10 rounded-full text-sm"
                 placeholder="Search AI tools..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -80,7 +81,7 @@ export default function Component() {
             </Button>
           </div>
         </header>
-        
+
         <main className="container mx-auto px-5 py-8">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
             {searchResults.results.map((result: any, index: number) => {
