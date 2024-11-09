@@ -70,7 +70,7 @@ export default function Component() {
     setQuery(newQuery);
     handleSearch(newQuery);
   };
-  
+
 
 
   // If we have search results, show the results view
@@ -132,8 +132,18 @@ export default function Component() {
                   <div className="flex flex-col flex-1 min-w-0">
                     <h2 className="text-sm font-semibold">{result.title}</h2>
                     <p className="text-xs text-muted-foreground">
-                      {result.highlights?.[0] || "No description available"}
+                      {result.summary || "No description available"}
                     </p>
+                    <div className="mt-1">
+                      <a
+                        href={result.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-bold text-blue-800 hover:text-blue-900"
+                      >
+                        {new URL(result.url).hostname.replace('www.', '')}  ↗
+                      </a>
+                    </div>
                   </div>
                 </a>
               );
