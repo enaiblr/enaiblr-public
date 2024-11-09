@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Share, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon } from "lucide-react";
+import { Search, Mail, Share, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -66,7 +66,7 @@ export default function Component() {
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
               <Input
                 className="w-full pl-10 pr-4 h-10 rounded-full text-sm"
-                placeholder="Search AI tools..."
+                placeholder="AI tools for..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyUp={(e) => e.key === 'Enter' && handleSearch()}
@@ -117,14 +117,14 @@ export default function Component() {
           </div>
         </main>
 
-        <footer className="py-4 text-center text-sm text-muted-foreground border-t">
+        <footer className="py-3 text-center text-sm text-muted-foreground bg-gray-100">
           <p>
             Created by{" "}
-            <a href="#" className="underline">
+            <a href="https://x.com/alhrkn" className="underline" target="_blank" rel="noopener noreferrer">
               @alhrkn
             </a>{" "}
             |{" "}
-            <a href="#" className="underline">
+            <a href="mailto:enaiblr@gmail.com" target="_blank" rel="noopener noreferrer">
               Report a Bug
             </a>
           </p>
@@ -136,18 +136,23 @@ export default function Component() {
   // Otherwise, show the search view
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="absolute top-4 right-4">
-        <Button variant="secondary" className="rounded-full px-6">
-          Contact
-        </Button>
-      </div>
+      <a href="mailto:enaiblr@gmail.com">
+        <div className="absolute top-4 right-4">
+          <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
+            Contact
+          </Button>
+          <Button variant="secondary" className="rounded-full w-10 h-10 sm:hidden" aria-label="Contact">
+            <Mail className="h-7 w-7" />
+          </Button>
+        </div>
+      </a>
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
         <div className="text-center space-y-2">
-          <h1 className="text-5xl font-bold tracking-tighter">
+          <h1 className="text-5xl tracking-tighter space-mono-bold">
             en<span className="text-blue-600">ai</span>blr
           </h1>
-          <p className="text-xl text-muted-foreground">AI Tools Search Engine</p>
+          <p className="text-xl text-muted-foreground space-mono-regular">AI Tools Search Engine</p>
         </div>
 
         <div className="w-full max-w-xl space-y-4">
@@ -155,7 +160,7 @@ export default function Component() {
             <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
             <Input
               className="w-full pl-10 h-12 rounded-full"
-              placeholder="Search AI tools..."
+              placeholder="AI tools for..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyUp={(e) => e.key === 'Enter' && handleSearch()}
@@ -197,14 +202,14 @@ export default function Component() {
         </div>
       </main>
 
-      <footer className="py-4 text-center text-sm text-muted-foreground">
+      <footer className="py-3 text-center text-sm text-muted-foreground bg-gray-100 border-t border-gray-300 border-t border-gray-300">
         <p>
           Created by{" "}
-          <a href="#" className="underline">
+          <a href="https://x.com/alhrkn" className="underline" target="_blank" rel="noopener noreferrer">
             @alhrkn
           </a>{" "}
           |{" "}
-          <a href="#" className="underline">
+          <a href="mailto:enaiblr@gmail.com" target="_blank" rel="noopener noreferrer">
             Report a Bug
           </a>
         </p>
