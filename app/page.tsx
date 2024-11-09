@@ -22,7 +22,7 @@ const getRandomIcon = () => {
 };
 
 export default function Component() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("AI Tools for Graphic Design");
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
