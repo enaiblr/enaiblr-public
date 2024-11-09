@@ -15,20 +15,18 @@ const defaultIcons = {
   ImageIcon
 };
 
-// Function to get a random icon
 const getRandomIcon = () => {
   const icons = Object.values(defaultIcons);
   return icons[Math.floor(Math.random() * icons.length)];
 };
 
 export default function Component() {
-  const [inputValue, setInputValue] = useState('');
   const [query, setQuery] = useState("AI Tools for Graphic Design");
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = async (inputValue: string) => {
+  const handleSearch = async (query: string) => {
     setIsLoading(true);
     setError(null);
 
@@ -61,16 +59,19 @@ export default function Component() {
     }
   };
 
-  const handleTagSearch = (tag: string) => {
-    setQuery(`AI Tools for ${tag}`);
-    handleSearch(query);
-  };
-
   const tags = [
     "brainstorming", "voice over", "research", "copywriting", "coding",
     "content marketing", "music", "photo generator", "productivity", "automation",
     "note-taking", "graphic design", "video editing", "learning", "meme", "presentation",
   ]
+
+  const handleTagSearch = (tag: string) => {
+    const newQuery = `AI Tools for ${tag}`;
+    setQuery(newQuery);
+    handleSearch(newQuery);
+  };
+  
+
 
   // If we have search results, show the results view
   if (searchResults && !isLoading && !error) {
@@ -90,18 +91,10 @@ export default function Component() {
               <Input
                 className="w-full pl-10 pr-9 h-10 rounded-full text-sm"
                 placeholder="AI tools for..."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyUp={(e) => e.key === 'Enter' && handleSearch(inputValue)}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyUp={(e) => e.key === 'Enter' && handleSearch(query)}
               />
-              {inputValue && (
-                <button
-                  className="absolute right-3 top-2 h-5 w-5 text-muted-foreground"
-                  onClick={() => setInputValue('')}
-                >
-                  <X />
-                </button>
-              )}
             </div>
 
             <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
