@@ -149,10 +149,10 @@ export default function Component() {
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
         <div className="text-center space-y-2">
-          <h1 className="text-5xl tracking-tighter space-mono-bold">
+          <h1 className="text-7xl tracking-tighter ibm-plex-mono-bold">
             en<span className="text-blue-600">ai</span>blr
           </h1>
-          <p className="text-xl text-muted-foreground space-mono-regular">AI Tools Search Engine</p>
+          <p className="text-xl text-muted-foreground ibm-plex-mono-light">AI Tools Search Engine</p>
         </div>
 
         <div className="w-full max-w-xl space-y-4">
@@ -182,21 +182,21 @@ export default function Component() {
           </div>
         </div>
 
-        {isLoading && <p>Searching...</p>}
+        // {isLoading && <p>Searching...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
         <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
           {[
-            "brainstorming ↗", "voice over ↗", "research ↗", "copywriting ↗", "coding ↗",
-            "content marketing ↗", "music ↗", "photo generator ↗", "productivity ↗", "automation ↗",
-            "note-taking ↗", "graphic design ↗", "video editing ↗", "learning ↗"
+            "brainstorming", "voice over", "research", "copywriting", "coding",
+            "content marketing", "music", "photo generator", "productivity", "automation",
+            "note-taking", "graphic design", "video editing", "learning", "meme", "presentation",
           ].map((tag) => (
             <Button
               key={tag}
               variant="outline"
               className="rounded-full text-sm h-8 hover:bg-secondary"
             >
-              {tag}
+              {tag} ↗
             </Button>
           ))}
         </div>
