@@ -130,7 +130,7 @@ export default function Component() {
                     )}
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
-                    <h2 className="text-sm font-semibold">{result.title}</h2>
+                    <h2 className="text-sm font-bold">{result.title}</h2>
                     <p className="text-xs text-muted-foreground">
                       {result.summary || "No description available"}
                     </p>
