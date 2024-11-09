@@ -182,10 +182,10 @@ export default function Component() {
           </div>
         </div>
 
-        // {isLoading && <p>Searching...</p>}
+        {isLoading}
         {error && <p className="text-red-500">{error}</p>}
 
-        <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
+        <div className="flex flex-wrap justify-center gap-2 max-w-2xl mt-6">
           {[
             "brainstorming", "voice over", "research", "copywriting", "coding",
             "content marketing", "music", "photo generator", "productivity", "automation",
