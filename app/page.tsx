@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, X} from "lucide-react";
+import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -78,7 +78,10 @@ export default function Component() {
       <div className="min-h-screen flex flex-col">
         <header className="border-b">
           <div className="container mx-auto px-4 py-4 flex justify-center items-center gap-4">
-            <Link href="/" className="text-2xl font-bold tracking-tighter shrink-0">
+            <Link href="/" className="text-2xl font-bold tracking-tighter shrink-0"
+              onClick={(e) => {
+                setSearchResults(null);
+              }}>
               en<span className="text-blue-600">ai</span>blr
             </Link>
 
