@@ -26,13 +26,6 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/icon.png" />
         <meta name="title" content="enaiblr - AI Tools Finder" />
         <meta name="description" content="Free Apps and AI Education" />
-        <script>
-          {`
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
-              }
-            `}
-        </script>
       </head>
       <body className={inter.className} suppressHydrationWarning>
         {children}

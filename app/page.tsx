@@ -149,7 +149,7 @@ export default function Component() {
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
         <div className="text-center space-y-2">
-          <h1 className="text-6xl tracking-tighter ibm-plex-mono-bold">
+          <h1 className="text-5xl tracking-tighter ibm-plex-mono-bold">
             en<span className="text-blue-600">ai</span>blr
           </h1>
           <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Explorer</p>
