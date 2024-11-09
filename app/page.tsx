@@ -152,7 +152,7 @@ export default function Component() {
           <h1 className="text-6xl tracking-tighter ibm-plex-mono-bold">
             en<span className="text-blue-600">ai</span>blr
           </h1>
-          <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Search Engine</p>
+          <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Explorer</p>
         </div>
 
         <div className="w-full max-w-xl space-y-4">
