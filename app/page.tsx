@@ -45,7 +45,6 @@ export default function Component() {
   const [expandedResultIndex, setExpandedResultIndex] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-
   // Effect to handle URL changes
   useEffect(() => {
     const currentQuery = searchParams.get('q');
@@ -106,6 +105,10 @@ export default function Component() {
   }, [router]);
 
 
+  const clearSearch = () => {
+    setQuery("");
+  };
+
   // Effect to handle URL changes and initial load
   useEffect(() => {
     const currentQuery = searchParams.get('q');
@@ -162,13 +165,31 @@ export default function Component() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyUp={(e) => e.key === 'Enter' && handleSearch(query)}
               />
+
+              {query && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
             </div>
 
-            <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
-              Share
+            <Button
+              variant="secondary"
+              className="rounded-full px-6 hidden sm:flex"
+              onClick={() => handleSearch(query)}
+            >
+              Search
             </Button>
-            <Button variant="secondary" className="rounded-full w-10 h-10 sm:hidden" aria-label="Share">
-              <Share2 className="h-7 w-7" />
+            <Button
+              variant="secondary"
+              className="rounded-full w-10 h-10 sm:hidden"
+              aria-label="Search"
+              onClick={() => handleSearch(query)}
+            >
+              <Search className="h-7 w-7" />
             </Button>
           </div>
         </header>
