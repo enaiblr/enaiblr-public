@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, X } from "lucide-react";
+import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -20,15 +20,25 @@ const getRandomIcon = () => {
   return icons[Math.floor(Math.random() * icons.length)];
 };
 
+interface SearchResult {
+  title: string;
+  summary: string;
+  url: string;
+  image?: string;
+}
+
 export default function Component() {
   const [query, setQuery] = useState("AI Tools for Graphic Design");
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expandedResultIndex, setExpandedResultIndex] = useState<number | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSearch = async (query: string) => {
     setIsLoading(true);
     setError(null);
+    setExpandedResultIndex(null); // Reset expanded state on new search
 
     const searchParams = {
       type: 'neural',
@@ -71,7 +81,9 @@ export default function Component() {
     handleSearch(newQuery);
   };
 
-
+  const handleResultClick = (index: number) => {
+    setExpandedResultIndex(expandedResultIndex === index ? null : index);
+  };
 
   // If we have search results, show the results view
   if (searchResults && !isLoading && !error) {
@@ -108,15 +120,15 @@ export default function Component() {
 
         <main className="container mx-auto px-5 py-8">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-            {searchResults.results.map((result: any, index: number) => {
+            {searchResults.results.map((result: SearchResult, index: number) => {
               const IconComponent = getRandomIcon();
+              const isExpanded = expandedResultIndex === index;
+
               return (
-                <a
+                <div
                   key={index}
-                  href={result.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 rounded-xl border bg-card hover:bg-accent transition-colors flex gap-4"
+                  className="p-4 rounded-xl border bg-card hover:bg-accent transition-colors flex gap-4 cursor-pointer"
+                  onClick={() => handleResultClick(index)}
                 >
                   <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center text-primary shrink-0">
                     {result.image ? (
@@ -131,21 +143,38 @@ export default function Component() {
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
                     <h2 className="text-sm font-bold">{result.title}</h2>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className={`text-xs text-muted-foreground mt-1 ${!isExpanded ? "line-clamp-3" : ""}`}>
                       {result.summary || "No description available"}
                     </p>
-                    <div className="mt-1">
+
+                    <div className="flex items-center justify-between mt-2">
                       <a
                         href={result.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm font-bold text-blue-800 hover:text-blue-900"
+                        onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking the link
                       >
                         {new URL(result.url).hostname.replace('www.', '')}  ↗
                       </a>
+                      <div
+                        className="flex items-center gap-1 text-xs text-muted-foreground"
+                        onClick={() => setIsExpanded((prev) => !prev)}
+                      >
+                        {isExpanded ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                        {isExpanded ? (
+                          <span>Show less</span>
+                        ) : (
+                          <span>Show more</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
@@ -234,11 +263,10 @@ export default function Component() {
               {tag} ↗
             </Button>
           ))}
-
         </div>
       </main>
 
-      <footer className="py-3 text-center text-sm text-muted-foreground bg-gray-100 border-t border-gray-300 border-t border-gray-300">
+      <footer className="py-3 text-center text-sm text-muted-foreground bg-gray-100 border-t border-gray-300">
         <p>
           Created by{" "}
           <a href="https://x.com/alhrkn" className="underline" target="_blank" rel="noopener noreferrer">
