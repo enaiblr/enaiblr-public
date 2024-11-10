@@ -4,7 +4,9 @@ import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, Image
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const defaultIcons = {
   Wand2,
@@ -28,14 +30,28 @@ interface SearchResult {
 }
 
 export default function Component() {
-  const [query, setQuery] = useState("AI Tools for Graphic Design");
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get('q') || "AI Tools for Graphic Design";
+  const [query, setQuery] = useState(initialQuery);
+
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedResultIndex, setExpandedResultIndex] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleSearch = async (query: string) => {
+
+  // Effect to handle initial search if query parameter exists
+
+  useEffect(() => {
+    if (searchParams.get('q')) {
+      handleSearch(searchParams.get('q')!);
+    }
+  }, []);
+
+  const handleSearch = async (searchQuery: string) => {
     setIsLoading(true);
     setError(null);
     setExpandedResultIndex(null); // Reset expanded state on new search
@@ -48,12 +64,16 @@ export default function Component() {
     };
 
     try {
+
+      // Update URL with search query
+      router.push(`/?q=${encodeURIComponent(searchQuery)}`, { scroll: false });
+
       const response = await fetch("/api/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query, ...searchParams }),
+        body: JSON.stringify({ query: searchQuery, ...searchParams }),
       });
       if (!response.ok) {
         throw new Error("Failed to fetch results");
@@ -69,11 +89,17 @@ export default function Component() {
     }
   };
 
+  const handleBackToHome = () => {
+    router.push('/', { scroll: false });
+    setSearchResults(null);
+    setQuery("AI Tools for Graphic Design");
+  };
+
   const tags = [
     "brainstorming", "voice over", "research", "copywriting", "coding",
     "content marketing", "music", "photo generator", "productivity", "automation",
     "note-taking", "graphic design", "video editing", "learning", "meme", "presentation",
-  ]
+  ];
 
   const handleTagSearch = (tag: string) => {
     const newQuery = `AI Tools for ${tag}`;
@@ -91,12 +117,11 @@ export default function Component() {
       <div className="min-h-screen flex flex-col">
         <header className="border-b">
           <div className="container mx-auto px-4 py-4 flex justify-center items-center gap-4">
-            <Link href="/" className="text-xl font-bold tracking-tighter shrink-0"
-              onClick={(e) => {
-                setSearchResults(null);
-              }}>
+            <button
+              onClick={handleBackToHome}
+              className="text-xl font-bold tracking-tighter shrink-0">
               en<span className="text-blue-600">ai</span>blr
-            </Link>
+            </button>
 
             <div className="relative flex-1 max-w-xl">
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
