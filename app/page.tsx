@@ -91,7 +91,7 @@ export default function Component() {
       <div className="min-h-screen flex flex-col">
         <header className="border-b">
           <div className="container mx-auto px-4 py-4 flex justify-center items-center gap-4">
-            <Link href="/" className="text-2xl font-bold tracking-tighter shrink-0"
+            <Link href="/" className="text-l font-bold tracking-tighter shrink-0"
               onClick={(e) => {
                 setSearchResults(null);
               }}>
