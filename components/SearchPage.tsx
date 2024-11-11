@@ -9,7 +9,7 @@ import Head from "next/head";
 
 interface SearchPageProps {
     initialQuery: string;
-  }
+}
 
 const defaultIcons = {
     Wand2,
@@ -193,15 +193,27 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     // Show results view when we have results or are loading
     if (searchResults || isLoading) {
         return (
-            <div className="min-h-screen flex flex-col">
+            <div className="flex flex-col min-h-screen">
                 {renderHeader()}
-                <main className="container mx-auto px-5 py-8">
+                <main className="container mx-auto px-5 py-8 flex-1">
                     {isLoading ? (
-                        <div className="text-center">Loading...</div>
+                        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Skeleton Loading... */}
+                            {Array.from({ length: 8 }, (_, index) => (
+                                <div key={index} className="p-4 rounded-xl border bg-card flex gap-4 animate-pulse">
+                                    <div className="w-16 h-16 bg-muted rounded-lg"></div>
+                                    <div className="flex-1">
+                                        <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                                        <div className="h-4 bg-muted rounded w-full mb-2"></div>
+                                        <div className="h-4 bg-muted rounded w-1/2"></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     ) : (
                         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                             {searchResults.results.map((result: SearchResult, index: number) => {
-                                const IconComponent = resultIcons[index]; // use memoized icon                const isExpanded = expandedResultIndex === index;
+                                const IconComponent = resultIcons[index];
                                 const isExpanded = expandedResultIndex === index;
 
                                 return (
