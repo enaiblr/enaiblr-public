@@ -149,50 +149,52 @@ export default function Component() {
     return (
       <div className="min-h-screen flex flex-col">
         <header className="border-b">
-          <div className="container mx-auto px-4 py-4 flex justify-center items-center gap-4">
+          <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-center items-center gap-4">
+            {/* Centered Logo */}
             <button
               onClick={handleBackToHome}
-              className="text-xl font-bold tracking-tighter shrink-0">
+              className="text-2xl font-bold tracking-tighter shrink-0 mb-0 sm:mb-0">
               en<span className="text-blue-600">ai</span>blr
             </button>
+            {/* Search Box and Search Button - Same Row */}
+            <div className="relative flex-1 max-w-xl w-full flex items-center">
+              {/* Input Container with Icons */}
+              <div className="relative flex-1">
+                {/* Search Icon Inside Input */}
+                <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
 
-            <div className="relative flex-1 max-w-xl">
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-              <Input
-                className="w-full pl-10 pr-9 h-10 rounded-full text-sm"
-                placeholder="AI tools for..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyUp={(e) => e.key === 'Enter' && handleSearch(query)}
-              />
+                <Input
+                  className="w-full pl-10 pr-9 h-10 rounded-full text-sm"
+                  placeholder="AI tools for..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyUp={(e) => e.key === 'Enter' && handleSearch(query)}
+                />
 
-              {query && (
-                <button
-                  onClick={clearSearch}
-                  className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              )}
+                {/* Clear Button Inside Input */}
+                {query && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Full Search Button (hidden on mobile) */}
+              <Button
+                variant="secondary"
+                className="rounded-full ml-2 hidden sm:flex"
+                onClick={() => handleSearch(query)}
+              >
+                Search
+              </Button>
             </div>
-
-            <Button
-              variant="secondary"
-              className="rounded-full px-6 hidden sm:flex"
-              onClick={() => handleSearch(query)}
-            >
-              Search
-            </Button>
-            <Button
-              variant="secondary"
-              className="rounded-full w-10 h-10 sm:hidden"
-              aria-label="Search"
-              onClick={() => handleSearch(query)}
-            >
-              <Search className="h-7 w-7" />
-            </Button>
           </div>
         </header>
+
+
 
         <main className="container mx-auto px-5 py-8">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -291,7 +293,7 @@ export default function Component() {
           <h1 className="text-5xl tracking-tighter ibm-plex-mono-bold">
             en<span className="text-blue-600">ai</span>blr
           </h1>
-          <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Explorer</p>
+          <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Finder</p>
         </div>
 
         <div className="w-full max-w-xl space-y-4">
