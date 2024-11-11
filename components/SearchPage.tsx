@@ -199,7 +199,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                     {isLoading ? (
                         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Skeleton Loading... */}
-                            {Array.from({ length: 8 }, (_, index) => (
+                            {Array.from({ length: 4 }, (_, index) => (
                                 <div key={index} className="p-4 rounded-xl border bg-card flex gap-4 animate-pulse">
                                     <div className="w-16 h-16 bg-muted rounded-lg"></div>
                                     <div className="flex-1">
