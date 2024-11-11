@@ -3,7 +3,7 @@
 import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 const defaultIcons = {
@@ -38,6 +38,12 @@ export default function Component() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedResultIndex, setExpandedResultIndex] = useState<number | null>(null);
+
+  // generate and memoize random icons for each result
+  const resultIcons = useMemo(() => {
+    if (!searchResults) return [];
+    return searchResults.results.map(() => getRandomIcon());
+  }, [searchResults?.results]); // only regenerate when results change
 
   // Effect to sync URL query parameter with state
   useEffect(() => {
@@ -182,7 +188,7 @@ export default function Component() {
           ) : (
             <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
               {searchResults.results.map((result: SearchResult, index: number) => {
-                const IconComponent = getRandomIcon();
+                const IconComponent = resultIcons[index]; // use memoized icon                const isExpanded = expandedResultIndex === index;
                 const isExpanded = expandedResultIndex === index;
 
                 return (
