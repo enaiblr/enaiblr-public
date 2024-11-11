@@ -33,13 +33,24 @@ export default function Component() {
   const pathname = usePathname();
 
   // Initialize states
-  const initialQuery = searchParams.get('q') || "AI Tools for Graphic Design";
-  const [query, setQuery] = useState(initialQuery);
+  const [query, setQuery] = useState(searchParams.get('q') || "AI Tools for Graphic Design");
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedResultIndex, setExpandedResultIndex] = useState<number | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Effect to sync URL query parameter with state
+  useEffect(() => {
+    const urlQuery = searchParams.get('q');
+    if (urlQuery !== query) {
+      setQuery(urlQuery || "AI Tools for Graphic Design");
+      if (urlQuery) {
+        handleSearch(urlQuery, false);
+      } else {
+        setSearchResults(null);
+      }
+    }
+  }, [searchParams]);
 
   const handleSearch = useCallback(async (searchQuery: string, updateURL: boolean = true) => {
     setIsLoading(true);
@@ -80,22 +91,17 @@ export default function Component() {
     }
   }, [router]);
 
-  // Effect to handle initial load and URL changes
-  useEffect(() => {
-    const currentQuery = searchParams.get('q');
-    if (currentQuery) {
-      setQuery(currentQuery);
-      handleSearch(currentQuery, false);
-    }
-  }, [searchParams, handleSearch]);
+  const handleBackToHome = () => {
+    router.replace("/", { scroll: false });
+    setSearchResults(null);
+    setQuery("AI Tools for Graphic Design");
+  };
 
   const clearSearch = () => {
     setQuery("");
+    setSearchResults(null);
+    router.replace("/", { scroll: false });
   };
-
-  const handleBackToHome = useCallback(() => {
-    clearSearch();
-  }, []);
 
   const tags = [
     "brainstorming", "voice over", "research", "copywriting", "coding",
