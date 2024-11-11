@@ -99,8 +99,6 @@ export default function Component() {
 
   const clearSearch = () => {
     setQuery("");
-    setSearchResults(null);
-    router.replace("/", { scroll: false });
   };
 
   const tags = [
