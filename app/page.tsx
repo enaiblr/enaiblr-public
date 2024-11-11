@@ -282,10 +282,11 @@ export default function Component() {
           <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
             Contact
           </Button>
-          <Button variant="secondary" className="rounded-full w-10 h-10 sm:hidden" aria-label="Contact">
-            <Mail className="h-7 w-7" />
+          <Button variant="secondary" className="sm:hidden" aria-label="Contact">
+            <Mail className="h-8 w-8" /> {/* Set size here directly */}
           </Button>
         </div>
+
       </a>
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
