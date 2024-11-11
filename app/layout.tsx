@@ -7,7 +7,10 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'enaiblr - AI Tools Finder',
+  title: {
+    template: '%s | enaiblr',
+    default: 'enaiblr - AI Tools Finder',
+  },
   description: 'Free Apps and AI Education',
   icons: {
     icon: ['/icon.png'],
@@ -24,8 +27,6 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" type="image/png" href="/icon.png" />
-        <meta name="title" content="enaiblr - AI Tools Finder" />
-        <meta name="description" content="Free Apps and AI Education" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         {children}
