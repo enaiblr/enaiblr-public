@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import Head from "next/head";
+import CustomSearchInput from "./CustomSearchInput";
 
 interface SearchPageProps {
     initialQuery: string;
@@ -38,7 +38,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     const pathname = usePathname();
 
     // Initialize states
-    const [query, setQuery] = useState(initialQuery || "AI Tools for Graphic Design");
+    const [query, setQuery] = useState(initialQuery || "");
     const [searchResults, setSearchResults] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     useEffect(() => {
         const urlQuery = searchParams.get('q');
         if (urlQuery !== query) {
-            setQuery(urlQuery || "AI Tools for Graphic Design");
+            setQuery(urlQuery || "");
             if (urlQuery) {
                 handleSearch(urlQuery, false);
             } else {
@@ -117,7 +117,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     };
 
     const clearSearch = () => {
-        setQuery("");
+        setQuery("AI Tools for ");
     };
 
     const tags = [
@@ -146,22 +146,13 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                 </button>
                 <div className="relative flex-1 max-w-xl w-full flex items-center">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                        <Input
-                            className="w-full pl-10 pr-9 h-10 rounded-full text-sm"
-                            placeholder="AI tools for..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
+                        <CustomSearchInput
+                            className="w-full h-10 rounded-full text-sm"
+                            value={query.replace(/^AI Tools for /, '')}
+                            onChange={(value) => setQuery(value)}
                             onKeyUp={(e) => e.key === 'Enter' && handleSearch(query)}
+                            onClear={() => clearSearch()}
                         />
-                        {query && (
-                            <button
-                                onClick={clearSearch}
-                                className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground"
-                            >
-                                <X className="h-5 w-5" />
-                            </button>
-                        )}
                     </div>
                     <Button
                         variant="secondary"
@@ -298,16 +289,14 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
 
                 <div className="w-full max-w-xl space-y-4">
                     <div className="relative">
-                        <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                        <Input
-                            className="w-full pl-10 h-12 rounded-full"
-                            placeholder="AI tools for..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
+                        <CustomSearchInput
+                            className="w-full h-12 rounded-full"
+                            value={query.replace(/^AI Tools for /, '')}
+                            onChange={(value) => setQuery(value)}
                             onKeyUp={(e) => e.key === 'Enter' && handleSearch(query)}
+                            onClear={() => clearSearch()}
                         />
                     </div>
-
                     <div className="flex justify-center gap-3">
                         <Button
                             variant="secondary"
