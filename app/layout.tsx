@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: {
     template: '%s | enaiblr',
-    default: 'enaiblr - AI Tools Finder',
+    default: 'enaiblr - AI Tools Search Engine',
   },
   description: 'Simple and Straightforward Search Engine for Finding the Best AI Tools and Resources',
   icons: {

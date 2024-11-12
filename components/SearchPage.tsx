@@ -67,7 +67,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
         if (query && searchResults) {
             document.title = `Search: ${query} | enaiblr`;
         } else {
-            document.title = 'enaiblr - AI Tools Finder';
+            document.title = 'enaiblr - AI Tools Search Engine';
         }
     }, [query, searchResults]);
 
@@ -284,7 +284,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                     <h1 className="text-5xl tracking-tighter ibm-plex-mono-bold">
                         en<span className="text-blue-600">ai</span>blr
                     </h1>
-                    <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Finder</p>
+                    <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Search Engine</p>
                 </div>
 
                 <div className="w-full max-w-xl space-y-4">

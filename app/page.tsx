@@ -9,7 +9,7 @@ export async function generateMetadata({
   const query = searchParams?.q
   
   return {
-    title: query ? `Search: ${query} | enaiblr` : 'enaiblr - AI Tools Finder',
+    title: query ? `Search: ${query} | enaiblr` : 'enaiblr - AI Tools Search Engine',
   }
 }
 
