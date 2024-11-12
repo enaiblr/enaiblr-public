@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: '%s | enaiblr',
     default: 'enaiblr - AI Tools Finder',
   },
-  description: 'Free Apps and AI Education',
+  description: 'Simple and Straightforward Search Engine for Finding the Best AI Tools and Resources',
   icons: {
     icon: ['/icon.png'],
   },

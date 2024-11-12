@@ -113,7 +113,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     const handleBackToHome = () => {
         router.replace("/", { scroll: false });
         setSearchResults(null);
-        setQuery("AI Tools for Graphic Design");
+        setQuery("");
     };
 
     const clearSearch = () => {
