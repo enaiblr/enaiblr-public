@@ -79,7 +79,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
         const searchParams = {
             type: 'neural',
             useAutoprompt: true,
-            numResults: 15,
+            numResults: 20,
             summary: true,
         };
 
