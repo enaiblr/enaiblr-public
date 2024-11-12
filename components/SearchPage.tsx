@@ -268,16 +268,19 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     // Show home view
     return (
         <div className="min-h-screen flex flex-col">
-            <a href="mailto:enaiblr@gmail.com">
-                <div className="absolute top-4 right-4">
-                    <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
-                        Contact
-                    </Button>
-                    <Button variant="secondary" className="rounded-full sm:hidden" aria-label="Contact">
-                        <Mail className="h-5 w-5" />
-                    </Button>
-                </div>
-            </a>
+            <div className="flex flex-col">
+                <a href="mailto:enaiblr@gmail.com">
+                    <div className="absolute top-4 right-4">
+                        <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
+                            Contact
+                        </Button>
+                        <Button variant="secondary" className="rounded-full sm:hidden" aria-label="Contact">
+                            <Mail className="h-5 w-5" />
+                        </Button>
+                    </div>
+                </a>
+            </div>
+
 
             <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
                 <div className="text-center space-y-2">
