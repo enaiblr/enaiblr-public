@@ -121,9 +121,9 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     };
 
     const tags = [
-        "brainstorming", "voice over", "research", "copywriting", "coding",
-        "content marketing", "music", "photo generator", "productivity", "automation",
-        "note-taking", "graphic design", "video editing", "learning", "meme", "presentation",
+        "productivity", "automation", "research", "learning", "coding", "note-taking",
+        "brainstorming",  "copywriting", "content marketing", "photo generator", "graphic design",
+        "video editing", "voice over",  "music", "meme", "presentation", "finance"
     ];
 
     const handleTagSearch = useCallback((tag: string) => {

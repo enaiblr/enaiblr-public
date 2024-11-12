@@ -48,7 +48,7 @@ const CustomSearchInput = ({
       <div className="relative flex-1">
         <Input
           ref={inputRef}
-          className={`pl-[9.5rem] pr-9 flex items-center ${className}`}
+          className={`pl-[10rem] pr-9 flex items-center ${className}`}
           value={inputValue}
           onChange={handleChange}
           onKeyUp={onKeyUp}
