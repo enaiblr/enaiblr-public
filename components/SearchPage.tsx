@@ -122,8 +122,8 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
 
     const tags = [
         "productivity", "automation", "research", "learning", "coding", "note-taking",
-        "brainstorming",  "copywriting", "content marketing", "photo generator", "graphic design",
-        "video editing", "voice over",  "music", "meme", "presentation", "finance"
+        "brainstorming", "copywriting", "content marketing", "photo generator", "graphic design",
+        "video editing", "voice over", "music", "meme", "presentation", "finance"
     ];
 
     const handleTagSearch = useCallback((tag: string) => {
@@ -330,6 +330,15 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                         </Button>
                     ))}
                 </div>
+                <div className="flex justify-center mt-10">
+                    <a href="https://www.producthunt.com/posts/enaiblr?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-enaiblr"
+                        target="_blank">
+                        <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=603106&theme=light"
+                            alt="enaiblr - AI&#0032;Tools&#0032;Search&#0032;Engine | Product Hunt"
+                            style={{ width: '60%', maxWidth: '100%', objectFit: 'contain', margin: '0 auto' }}
+                            /></a>
+                </div>
+
             </main>
 
             {renderFooter()}
