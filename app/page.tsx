@@ -1,4 +1,4 @@
-import SearchPage from '@/components/SearchPage'
+import SearchPage from '@/components/search/SearchPage'
 import { Metadata } from 'next'
 
 export async function generateMetadata({
