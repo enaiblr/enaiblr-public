@@ -36,6 +36,15 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
+    const getFaviconUrl = (url: string) => {
+        try {
+            const hostname = new URL(url).hostname;
+            return `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
+        } catch (e) {
+            return null;
+        }
+    };
+
     // Initialize states
     const [query, setQuery] = useState(initialQuery || "");
     const [searchResults, setSearchResults] = useState<any>(null);
@@ -205,6 +214,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                             {searchResults.results.map((result: SearchResult, index: number) => {
                                 const IconComponent = resultIcons[index];
                                 const isExpanded = expandedResultIndex === index;
+                                const faviconUrl = getFaviconUrl(result.url);
 
                                 return (
                                     <div
@@ -212,13 +222,31 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                                         className="p-4 rounded-xl border bg-card hover:bg-accent transition-colors flex gap-4 cursor-pointer"
                                         onClick={() => handleResultClick(index)}
                                     >
-                                        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center text-primary shrink-0">
+                                        <div className="w-16 h-16 flex items-center justify-center text-primary shrink-0">
                                             {result.image ? (
                                                 <img
                                                     src={result.image}
                                                     alt={result.title}
                                                     className="w-8 h-8 object-contain"
                                                 />
+                                            ) : faviconUrl ? (
+
+                                                <div className="flex flex-col items-center justify-center gap-2">
+                                                    <img
+                                                        src={faviconUrl}
+                                                        alt={`${result.title} favicon`}
+                                                        className="w-8 h-8 object-contain"
+                                                        onError={(e) => {
+                                                            // Fallback to icon if favicon fails to load
+                                                            e.currentTarget.style.display = 'none';
+                                                            const iconElement = e.currentTarget.parentElement?.querySelector('.fallback-icon');
+                                                            if (iconElement instanceof HTMLElement) {  // Type check
+                                                                iconElement.style.display = 'block';
+                                                            }
+                                                        }}
+                                                    />
+                                                    <IconComponent className="w-8 h-8 hidden fallback-icon" />
+                                                </div>
                                             ) : (
                                                 <IconComponent className="w-8 h-8" />
                                             )}
