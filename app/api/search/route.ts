@@ -1,5 +1,3 @@
-// app/api/search/route.ts
-
 import { NextResponse } from 'next/server';
 import Exa from 'exa-js';
 
@@ -22,7 +20,7 @@ export async function POST(request: Request) {
         const results = await exa.searchAndContents(query, searchParams);
         return NextResponse.json(results);
     } catch (error) {
-        console.error("API request error:", error);
+        console.error("API request error: ", error);
         return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
     }
 }
