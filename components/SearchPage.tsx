@@ -1,8 +1,7 @@
 "use client";
 
-import { Search, Mail, Share2, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Mail, Wand2, Palette, Shapes, Layers, Paintbrush, ImageIcon, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import CustomSearchInput from "./CustomSearchInput";
@@ -268,21 +267,20 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
     // Show home view
     return (
         <div className="min-h-screen flex flex-col">
-            <div className="flex flex-col">
-                <a href="mailto:enaiblr@gmail.com">
-                    <div className="absolute top-4 right-4">
+            <header className="sticky top-0 left-0 w-full bg-white p-4 z-10">
+                <div className="container mx-auto flex justify-end">
+                    <a href="mailto:enaiblr@gmail.com">
                         <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
                             Contact
                         </Button>
                         <Button variant="secondary" className="rounded-full sm:hidden" aria-label="Contact">
                             <Mail className="h-5 w-5" />
                         </Button>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+            </header>
 
-
-            <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
+            <main className="flex-1 flex flex-col items-center justify-center px-4 gap-8 pt-1">
                 <div className="text-center space-y-2">
                     <h1 className="text-5xl tracking-tighter ibm-plex-mono-bold">
                         en<span className="text-blue-600">ai</span>blr
@@ -326,14 +324,15 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                         <Button
                             key={tag}
                             variant="outline"
-                            className="rounded-full text-sm h-8 hover:bg-secondary"
+                            className="rounded-full text-xs h-8 hover:bg-secondary"
                             onClick={() => handleTagSearch(tag)}
                         >
                             {tag} ↗
                         </Button>
                     ))}
                 </div>
-                {/* <div className="flex justify-center mt-2">
+
+                {/* <div className="flex justify-center mt-10 mb-8">
                     <a href="https://www.producthunt.com/posts/enaiblr?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-enaiblr"
                         target="_blank">
                         <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=603106&theme=light"
