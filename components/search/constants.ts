@@ -19,5 +19,5 @@ export const SEARCH_PARAMS = {
     type: 'neural',
     useAutoprompt: true,
     numResults: 20,
-    summary: true,
+    summary: false,
 };

@@ -54,7 +54,7 @@ export const SearchResultItem = ({
             <div className="flex flex-col flex-1 min-w-0">
                 <h2 className="text-sm font-bold">{result.title}</h2>
                 <p className={`text-xs text-muted-foreground mt-1 ${!isExpanded ? "line-clamp-3" : ""}`}>
-                    {result.summary || "No description available"}
+                    {result.summary || ""}
                 </p>
                 <div className="flex items-center justify-between mt-2">
                     <a
@@ -66,19 +66,21 @@ export const SearchResultItem = ({
                     >
                         {new URL(result.url).hostname.replace('www.', '')}  ↗
                     </a>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        {isExpanded ? (
-                            <>
-                                <ChevronUp className="h-4 w-4" />
-                                <span>Show less</span>
-                            </>
-                        ) : (
-                            <>
-                                <ChevronDown className="h-4 w-4" />
-                                <span>Show more</span>
-                            </>
-                        )}
-                    </div>
+                    {result.summary && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            {isExpanded ? (
+                                <>
+                                    <ChevronUp className="h-4 w-4" />
+                                    <span>Show less</span>
+                                </>
+                            ) : (
+                                <>
+                                    <ChevronDown className="h-4 w-4" />
+                                    <span>Show more</span>
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
