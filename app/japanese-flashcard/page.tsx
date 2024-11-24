@@ -244,7 +244,7 @@ export default function Component() {
             <div className="flex items-center space-x-2">
               <Input
                 type="text"
-                placeholder="Enter alphabet"
+                placeholder="Guess the alphabet"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onKeyDown={(e) => {
