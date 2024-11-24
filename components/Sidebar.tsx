@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Search, BookOpen, Wallet, FlaskConical } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 interface SidebarProps {
@@ -14,13 +15,16 @@ interface SidebarProps {
 }
 
 const apps = [
-    { name: 'AI Tools Search', icon: '🔍', slug: '' },  // Add more apps as needed
-    { name: 'Japanese Flashcard', icon: '🎴', slug: 'japanese-flashcard' },  // Add more apps as needed
+    { name: 'AI Tools Search', icon: Search, slug: '' },  
+    { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' }, 
+    { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' }, 
+    { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' }, 
   ]
   
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <>
@@ -40,17 +44,24 @@ export function Sidebar() {
         <div className="pt-16 px-4">
           {/* <h2 className="text-xl font-bold mb-4">Applications</h2> */}
           <ul className="space-y-2">
-            {apps.map((app) => (
-              <li key={app.slug}>
-                <Link
-                  href={`/${app.slug}`}
-                  className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg"
-                >
-                  <span className="text-xl">{app.icon}</span>
-                  <span>{app.name}</span>
-                </Link>
-              </li>
-            ))}
+            {apps.map((app) => {
+              const href = `/${app.slug}`
+              const isActive = pathname === href
+              return (
+                <li key={app.slug}>
+                  <Link
+                    href={href}
+                    className={cn(
+                      "flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg",
+                      isActive && "font-medium outline outline-2 outline-blue-600"
+                    )}
+                  >
+                    <app.icon size={20} className="text-xl" />
+                    <span>{app.name}</span>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </div>
       </div>
