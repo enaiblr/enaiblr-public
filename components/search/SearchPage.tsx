@@ -79,8 +79,8 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
         <footer className="py-3 text-center text-sm text-muted-foreground bg-gray-100">
             <p>
                 Created by{" "}
-                <a href="https://x.com/alhrkn" className="underline" target="_blank" rel="noopener noreferrer">
-                    @alhrkn
+                <a href="https://raihankalla.id" className="underline" target="_blank" rel="noopener noreferrer">
+                    Al Harkan
                 </a>{" "}
                 |{" "}
                 <a href="mailto:enaiblr@gmail.com" target="_blank" rel="noopener noreferrer">

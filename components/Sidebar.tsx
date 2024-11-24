@@ -15,12 +15,12 @@ interface SidebarProps {
 }
 
 const apps = [
-    { name: 'AI Tools Search', icon: Search, slug: '' },  
-    { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' }, 
-    { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' }, 
-    { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' }, 
-  ]
-  
+  { name: 'AI Tools Search', icon: Search, slug: '' },
+  { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
+  { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
+  { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },
+]
+
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -34,7 +34,7 @@ export function Sidebar() {
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
-      
+
       <div
         className={cn(
           'fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-40',
@@ -42,7 +42,6 @@ export function Sidebar() {
         )}
       >
         <div className="pt-16 px-4">
-          {/* <h2 className="text-xl font-bold mb-4">Applications</h2> */}
           <ul className="space-y-2">
             {apps.map((app) => {
               const href = `/${app.slug}`
@@ -63,6 +62,9 @@ export function Sidebar() {
               )
             })}
           </ul>
+          <div className="absolute bottom-4 left-4 text-sm text-gray-600">
+            Contact: <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">@alhrkn</a>
+          </div>
         </div>
       </div>
     </>
