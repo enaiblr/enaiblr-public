@@ -1,4 +1,5 @@
 import SearchPage from '@/components/search/SearchPage'
+import { Sidebar } from '@/components/Sidebar'
 import { Metadata } from 'next'
 
 export async function generateMetadata({
@@ -17,5 +18,9 @@ export default function Page({
 }: {
   searchParams: { q?: string }
 }) {
-  return <SearchPage initialQuery={searchParams.q || ""} />
-}
+  return (
+    <>
+      <Sidebar />
+      <SearchPage initialQuery={searchParams.q || ""} />
+    </>
+  )}
