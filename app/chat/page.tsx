@@ -31,6 +31,17 @@ export default function MinimalistChatbot() {
     const [isUploading, setIsUploading] = useState(false)
     const [localImageUrl, setLocalImageUrl] = useState<string | null>(null)
 
+    const titleSection = (
+        <div className="text-center py-8">
+            <h1 className="text-4xl font-bold mb-2">
+                <span className="text-blue-600">Disposable</span> Chat
+            </h1>
+            <p className="text-gray-600">
+                No limits. <span className="text-blue-600">Not recorded</span>. Reload to start fresh.
+            </p>
+        </div>
+    )
+
     const handleImageClick = () => {
         fileInputRef.current?.click()
     }
@@ -209,8 +220,13 @@ export default function MinimalistChatbot() {
         <>
             <Sidebar />
             <div className="flex flex-col h-screen bg-white w-full">
-                <div className={`flex-1 overflow-y-auto ${messages.length === 0 ? 'flex flex-col justify-center' : ''}`}>
-                    <div className="max-w-4xl mx-auto w-full p-4 md:p-6 flex-1">
+                <div className={`flex-1 overflow-y-auto ${messages.length === 0 ? 'flex flex-col items-center justify-center' : ''}`}>
+                    <div className="max-w-4xl mx-auto w-full p-4 md:p-6 flex-1 flex flex-col">
+                        {messages.length === 0 && (
+                            <div className="flex-1 flex items-center justify-center">
+                                {titleSection}
+                            </div>
+                        )}
                         <div className="space-y-4">
                             {messages.map((message, index) => (
                                 <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
