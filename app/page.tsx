@@ -14,13 +14,14 @@ export async function generateMetadata({
 }
 
 export default async function Page({
-  searchParams
+  searchParams,
 }: {
-  searchParams: { q?: string }
+  searchParams: Record<string, string | string[] | undefined>
 }) {
   return (
     <>
       <Sidebar />
-      <SearchPage initialQuery={searchParams.q || ""} />
+      <SearchPage initialQuery={searchParams.q?.toString() || ""} />
     </>
-  )}
+  )
+}
