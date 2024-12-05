@@ -6,9 +6,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
-  metadata: {
-    metadataBase: 'https://enaiblr.org',
-  },
+  // metadata: {
+  //   metadataBase: 'https://enaiblr.org',
+  // },
 };
 
 module.exports = nextConfig;

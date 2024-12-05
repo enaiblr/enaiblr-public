@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, Search, BookOpen, Wallet, FlaskConical } from 'lucide-react'
+import { Menu, X, Search, MessageSquare, BookOpen, Wallet, FlaskConical } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -16,9 +16,10 @@ interface SidebarProps {
 
 const apps = [
   { name: 'AI Tools Search', icon: Search, slug: '' },
-  { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
-  { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
-  { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },
+  { name: 'AI Chat', icon: MessageSquare, slug: 'chat' },
+  // { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
+  // { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
+  // { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },
 ]
 
 
@@ -99,7 +100,7 @@ export function Sidebar() {
               })}
             </ul>
             <div className="absolute bottom-4 left-4 text-sm text-gray-600">
-              Contact: <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">@alhrkn</a>
+              Contact: <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 underline">@alhrkn</a>
             </div>
           </div>
         </div>

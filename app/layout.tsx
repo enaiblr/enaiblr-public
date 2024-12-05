@@ -7,6 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://enaiblr.org'),
   title: {
     template: '%s | enaiblr',
     default: 'enaiblr - AI Tools Search Engine',
