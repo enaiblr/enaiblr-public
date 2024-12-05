@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Together from 'together-ai'
 import { Sidebar } from '@/components/Sidebar'
 import { ChatTitle } from './components/ChatTitle'
 import { MessageList } from './components/MessageList'
@@ -9,9 +8,6 @@ import { ChatInput } from './components/ChatInput'
 import { ImagePreview } from './components/ImagePreview'
 import { useImageUpload } from './hooks/useImageUpload'
 import { useChatMessages } from './hooks/useChatMessages'
-
-// Initialize Together AI client
-const together = new Together({ apiKey: process.env.TOGETHER_API_KEY })
 
 export default function MinimalistChatbot() {
     const { messages, isLoading, sendMessage } = useChatMessages();

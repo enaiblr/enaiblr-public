@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import Together from 'together-ai';
 import { Message } from '../components/types';
 
-const together = new Together({ apiKey: process.env.TOGETHER_API_KEY });
-
 export function useChatMessages() {
-    const [messages, setMessages] = useState<(Message)[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const toTogetherMessage = (msg: Message): any => ({
@@ -28,30 +25,46 @@ export function useChatMessages() {
         setIsLoading(true);
 
         try {
-            const response = await together.chat.completions.create({
-                messages: [...messages.map(toTogetherMessage), toTogetherMessage(userMessage)],
-                model: 'meta-llama/Llama-Vision-Free',
-                max_tokens: 1024,
-                temperature: 0.7,
-                top_p: 0.7,
-                top_k: 50,
-                repetition_penalty: 1,
-                stop: ['<|eot_id|>', '<|eom_id|>'],
-                stream: true
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages: [...messages.map(toTogetherMessage), toTogetherMessage(userMessage)],
+                    imageUrl
+                })
             });
+
+            if (!response.ok) throw new Error('Failed to send message');
+
+            const reader = response.body?.getReader();
+            if (!reader) throw new Error('No reader available');
 
             let assistantMessage = '';
             const userMessages = [...messages, userMessage];
             setMessages(userMessages);
 
-            for await (const token of response) {
-                const content = token.choices[0]?.delta?.content;
-                if (content) {
-                    assistantMessage += content;
-                    setMessages([
-                        ...userMessages,
-                        { role: 'assistant', content: assistantMessage }
-                    ]);
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = new TextDecoder().decode(value);
+                try {
+                    const parsed = JSON.parse(chunk);
+                    const content = parsed.choices[0]?.delta?.content;
+                    if (content) {
+                        assistantMessage += content;
+                        setMessages([
+                            ...userMessages,
+                            {
+                                role: 'assistant',
+                                content: [{ type: 'text', text: assistantMessage }]
+                            }
+                        ]);
+                    }
+                } catch (e) {
+                    // Handle parsing errors
                 }
             }
         } catch (error) {
@@ -61,9 +74,5 @@ export function useChatMessages() {
         }
     };
 
-    return {
-        messages,
-        isLoading,
-        sendMessage
-    };
+    return { messages, isLoading, sendMessage };
 }
