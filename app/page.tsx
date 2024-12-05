@@ -2,6 +2,10 @@ import SearchPage from '@/components/search/SearchPage'
 import { Sidebar } from '@/components/Sidebar'
 import { Metadata } from 'next'
 
+interface SearchPageProps {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
 export async function generateMetadata({
   searchParams
 }: {
@@ -13,15 +17,12 @@ export async function generateMetadata({
   }
 }
 
-interface SearchPageParams {
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-export default function Page({ searchParams }: SearchPageParams) {
+export default function Page({ searchParams }: SearchPageProps) {
+  const query = typeof searchParams.q === 'string' ? searchParams.q : '';
   return (
     <>
       <Sidebar />
-      <SearchPage initialQuery={searchParams.q?.toString() || ""} />
+      <SearchPage initialQuery={query} />
     </>
   )
 }
