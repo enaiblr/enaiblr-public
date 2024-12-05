@@ -13,15 +13,14 @@ export async function generateMetadata({
   }
 }
 
-interface PageProps {
+export default function Page({
+  searchParams
+}: {
   searchParams: { q?: string }
-}
-
-export default function Page({ searchParams }: PageProps) {
+}) {
   return (
     <>
       <Sidebar />
       <SearchPage initialQuery={searchParams.q || ""} />
     </>
-  )
-}
+  )}
