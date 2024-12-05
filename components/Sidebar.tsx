@@ -16,7 +16,7 @@ interface SidebarProps {
 
 const apps = [
   { name: 'AI Tools Search', icon: Search, slug: '' },
-  { name: 'AI Chat', icon: MessageSquare, slug: 'chat' },
+  { name: 'Disposable AI Chat', icon: MessageSquare, slug: 'chat' },
   // { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
   // { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
   // { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },

@@ -20,25 +20,12 @@ interface Message {
     }>
 }
 
-// Add a new interface for multimodal messages
-interface MultiModalMessage {
-    role: 'user' | 'assistant' | 'system';
-    content: Array<{
-        type: 'text' | 'image_url';
-        text?: string;
-        image_url?: {
-            url: string;
-        };
-    }>;
-}
-
 export default function MinimalistChatbot() {
     const [messages, setMessages] = useState<Message[]>([])
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
-    const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [isUploading, setIsUploading] = useState(false)
     const [localImageUrl, setLocalImageUrl] = useState<string | null>(null)
@@ -105,6 +92,10 @@ export default function MinimalistChatbot() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages])
 
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [localImageUrl, tempImageUrl])
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if ((!input.trim() && !tempImageUrl) || isLoading) return
@@ -148,9 +139,6 @@ export default function MinimalistChatbot() {
         setTempImageUrl(null)
         setIsLoading(true)
 
-        setMessages(prev => [...prev, userMessage])
-        setInput('')
-
         try {
             const response = await together.chat.completions.create({
                 messages: [
@@ -191,89 +179,90 @@ export default function MinimalistChatbot() {
         }
     }
 
-
-return (
-    <>
-        <Sidebar />
-        <div className="flex flex-col h-screen bg-white w-full">
-            <div className={`flex-1 overflow-y-auto ${messages.length === 0 ? 'flex flex-col items-center justify-center' : ''}`}>
-                <div className="max-w-4xl mx-auto w-full p-4 md:p-6 flex-1 flex flex-col">
-                    {messages.length === 0 && (
-                        <div className="flex-1 flex items-center justify-center">
-                            {titleSection}
+    return (
+        <>
+            <Sidebar />
+            <div className="flex flex-col h-screen bg-white w-full">
+                {messages.length === 0 ? (
+                    <div className="flex-1 flex items-center justify-center">
+                        {titleSection}
+                    </div>
+                ) : (
+                    <div className="flex-1 overflow-y-auto">
+                        <div className="max-w-4xl mx-auto w-full p-4 md:p-6">
+                            <div className="space-y-4">
+                                {messages.map((message, index) => (
+                                    <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
+                                        <div
+                                            className={`max-w-[80%] rounded-2xl p-3 ${message.role === 'user'
+                                                ? 'bg-blue-500 text-white rounded-br-none'
+                                                : 'bg-gray-200 text-gray-800 rounded-bl-none'
+                                                }`}
+                                        >
+                                            {message.role === 'assistant' ? (
+                                                <ReactMarkdown className="prose prose-sm max-w-none dark:prose-invert">
+                                                    {typeof message.content === 'string'
+                                                        ? message.content
+                                                        : message.content.map((content, i) =>
+                                                            content.type === 'text'
+                                                                ? content.text
+                                                                : content.image_url?.url
+                                                                    ? `![Image](${content.image_url.url})`
+                                                                    : ''
+                                                        ).join('\n')}
+                                                </ReactMarkdown>
+                                            ) : (
+                                                typeof message.content === 'string'
+                                                    ? message.content
+                                                    : message.content.map((content, i) => (
+                                                        <div key={i}>
+                                                            {content.type === 'text' && content.text}
+                                                            {content.type === 'image_url' && content.image_url?.url && (
+                                                                <img
+                                                                    src={content.image_url.url}
+                                                                    alt="Uploaded content"
+                                                                    className="max-w-full max-h-[250px] w-auto h-auto object-contain rounded-lg mt-2"
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    ))
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div ref={messagesEndRef} />
                         </div>
-                    )}
-                    <div className="space-y-4">
-                        {messages.map((message, index) => (
-                            <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
-                                <div
-                                    className={`max-w-[80%] rounded-2xl p-3 ${message.role === 'user'
-                                        ? 'bg-blue-500 text-white rounded-br-none'
-                                        : 'bg-gray-200 text-gray-800 rounded-bl-none'
-                                        }`}
-                                >
-                                    {message.role === 'assistant' ? (
-                                        <ReactMarkdown className="prose prose-sm max-w-none dark:prose-invert">
-                                            {typeof message.content === 'string'
-                                                ? message.content
-                                                : message.content.map((content, i) =>
-                                                    content.type === 'text'
-                                                        ? content.text
-                                                        : content.image_url?.url
-                                                            ? `![Image](${content.image_url.url})`
-                                                            : ''
-                                                ).join('\n')}
-                                        </ReactMarkdown>
-                                    ) : (
-                                        typeof message.content === 'string'
-                                            ? message.content
-                                            : message.content.map((content, i) => (
-                                                <div key={i}>
-                                                    {content.type === 'text' && content.text}
-                                                    {content.type === 'image_url' && content.image_url?.url && (
-                                                        <img
-                                                            src={content.image_url.url}
-                                                            alt="Uploaded content"
-                                                            className="max-w-full max-h-[250px] w-auto h-auto object-contain rounded-lg mt-2"
-                                                        />
-                                                    )}
-                                                </div>
-                                            ))
-                                    )}
+                    </div>
+                )}
+
+                <div className="w-full border-t border-gray-200 bg-white">
+                    <form onSubmit={handleSubmit} className="p-4">
+                        {(localImageUrl || tempImageUrl) && (
+                            <div className="mb-4 flex justify-center">
+                                <div className="relative bg-white p-2 rounded-lg shadow-md inline-block">
+                                    <img
+                                        src={localImageUrl || tempImageUrl || undefined}
+                                        alt="Preview"
+                                        className={`h-20 w-20 object-cover rounded-lg transition-opacity duration-200 ${isUploading ? 'opacity-50' : 'opacity-100'}`}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            handleRemoveImage();
+                                            if (localImageUrl) {
+                                                URL.revokeObjectURL(localImageUrl);
+                                                setLocalImageUrl(null);
+                                            }
+                                        }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none"
+                                        style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                    >
+                                        ×
+                                    </button>
                                 </div>
                             </div>
-                        ))}
-                        <div ref={messagesEndRef} />
-                    </div>
-                </div>
-
-                <div className={`w-full bg-white relative ${messages.length > 0 ? 'sticky bottom-0' : ''}`}>
-                    {(localImageUrl || tempImageUrl) && (
-                        <div className="absolute bottom-full left-0.2 -translate-x-full mb-2 bg-white p-2 rounded-lg shadow-md" style={{ marginLeft: "11rem" }}>
-                            <div className="relative">
-                                <img
-                                    src={localImageUrl || tempImageUrl || undefined}
-                                    alt="Preview"
-                                    className={`h-20 w-20 object-cover rounded-lg transition-opacity duration-200 ${isUploading ? 'opacity-50' : 'opacity-100'}`}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        handleRemoveImage();
-                                        if (localImageUrl) {
-                                            URL.revokeObjectURL(localImageUrl);
-                                            setLocalImageUrl(null);
-                                        }
-                                    }}
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none"
-                                    style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                    <form onSubmit={handleSubmit} className="p-4">
+                        )}
                         <div className="flex items-center bg-white rounded-full shadow-md max-w-4xl mx-auto border border-gray-200">
                             <button
                                 type="button"
@@ -308,7 +297,6 @@ return (
                     </form>
                 </div>
             </div>
-        </div>
-    </>
-)
+        </>
+    )
 }
