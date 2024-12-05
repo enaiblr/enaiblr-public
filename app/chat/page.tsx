@@ -31,15 +31,15 @@ export default function MinimalistChatbot() {
         e.preventDefault();
         const currentTempImageUrl = tempImageUrl; // Store the URL before clearing
         
-        // Clear images immediately
+        // Clear images and input immediately
         clearImages();
+        setInput('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
         
         // Send message with the stored URL
         await sendMessage(input, currentTempImageUrl);
-        setInput('');
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
