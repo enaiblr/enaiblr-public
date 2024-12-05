@@ -6,6 +6,18 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// export async function generateMetadata({
+//   searchParams
+// }: {
+//   searchParams: Promise<{ q?: string }>
+// }): Promise<Metadata> {
+//   const params = await searchParams;
+//   const query = params?.q;
+//   return {
+//     title: query ? `Search: ${query} | enaiblr` : 'enaiblr - AI Tools Search Engine',
+//   };
+// }
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://enaiblr.org'),
   title: {
