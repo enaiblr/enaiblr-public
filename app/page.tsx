@@ -13,7 +13,7 @@ export async function generateMetadata({
   }
 }
 
-export default function Page({
+export default async function Page({
   searchParams
 }: {
   searchParams: { q?: string }
