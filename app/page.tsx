@@ -13,11 +13,12 @@ export async function generateMetadata({
   }
 }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>
-}) {
+type Props = {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function Page({ searchParams }: Props) {
   return (
     <>
       <Sidebar />
