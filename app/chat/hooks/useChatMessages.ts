@@ -4,6 +4,10 @@ import { Message } from '../components/types';
 export function useChatMessages() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const clearMessages = () => {
+        setMessages([]);
+        setIsLoading(false);
+    };
 
     const toTogetherMessage = (msg: Message): any => ({
         role: msg.role,
@@ -80,5 +84,5 @@ export function useChatMessages() {
         }
     };
 
-    return { messages, isLoading, sendMessage };
+    return { messages, isLoading, sendMessage, clearMessages };
 }

@@ -10,7 +10,7 @@ import { useImageUpload } from './hooks/useImageUpload'
 import { useChatMessages } from './hooks/useChatMessages'
 
 export default function MinimalistChatbot() {
-    const { messages, isLoading, sendMessage } = useChatMessages();
+    const { messages, isLoading, sendMessage, clearMessages } = useChatMessages();
     const {
         isUploading,
         localImageUrl,
@@ -30,14 +30,14 @@ export default function MinimalistChatbot() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const currentTempImageUrl = tempImageUrl; // Store the URL before clearing
-        
+
         // Clear images and input immediately
         clearImages();
         setInput('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
-        
+
         // Send message with the stored URL
         await sendMessage(input, currentTempImageUrl);
     };
@@ -52,11 +52,11 @@ export default function MinimalistChatbot() {
             <div className="flex flex-col h-screen bg-white w-full min-w-[320px] mx-auto">
                 {messages.length === 0 ? (
                     <div className="flex-1 flex items-center justify-center px-4 sm:px-6 md:px-8">
-                        <ChatTitle />
+                        <ChatTitle clearMessages={clearMessages} />
                     </div>
                 ) : (
                     <>
-                        <ChatTitle compact />
+                        <ChatTitle compact clearMessages={clearMessages} />
                         <MessageList
                             messages={messages}
                             messagesEndRef={messagesEndRef}
@@ -66,17 +66,17 @@ export default function MinimalistChatbot() {
 
                 <div className="w-full border-gray-200 bg-white">
                     {(localImageUrl || tempImageUrl) && (
-                        <ImagePreview 
-                        localImageUrl={localImageUrl}
-                        tempImageUrl={tempImageUrl}
-                        isUploading={isUploading}
-                        onRemove={() => {
-                            clearImages();
-                            if (fileInputRef.current) {
-                                fileInputRef.current.value = '';
-                            }
-                        }}
-                    />
+                        <ImagePreview
+                            localImageUrl={localImageUrl}
+                            tempImageUrl={tempImageUrl}
+                            isUploading={isUploading}
+                            onRemove={() => {
+                                clearImages();
+                                if (fileInputRef.current) {
+                                    fileInputRef.current.value = '';
+                                }
+                            }}
+                        />
                     )}
                     <ChatInput
                         input={input}
