@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Together from 'together-ai';
 import { Message } from '../components/types';
 
-const together = new Together({ apiKey: process.env.NEXT_PUBLIC_TOGETHER_API_KEY });
+const together = new Together({ apiKey: process.env.TOGETHER_API_KEY });
 
 export function useChatMessages() {
     const [messages, setMessages] = useState<(Message)[]>([]);
