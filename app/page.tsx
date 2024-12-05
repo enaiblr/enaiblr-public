@@ -13,12 +13,11 @@ export async function generateMetadata({
   }
 }
 
-type SearchPageParams = {
-  params: { slug: string[] }
+interface SearchPageProps {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({ searchParams }: SearchPageParams) {
+export default function Page({ searchParams }: SearchPageProps) {
   const query = typeof searchParams.q === 'string' ? searchParams.q : '';
   return (
     <>
