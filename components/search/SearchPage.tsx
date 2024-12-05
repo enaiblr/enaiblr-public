@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,14 @@ import { getRandomIcon } from "./utils";
 import type { SearchPageProps } from "./types";
 
 export default function SearchPage({ initialQuery }: SearchPageProps) {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SearchPageContent initialQuery={initialQuery} />
+        </Suspense>
+    );
+}
+
+function SearchPageContent({ initialQuery }: SearchPageProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
