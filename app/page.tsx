@@ -13,16 +13,15 @@ export async function generateMetadata({
   }
 }
 
-interface SearchPageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+interface PageProps {
+  searchParams: { q?: string }
 }
 
-export default function Page({ searchParams }: SearchPageProps) {
-  const query = typeof searchParams.q === 'string' ? searchParams.q : '';
+export default function Page({ searchParams }: PageProps) {
   return (
     <>
       <Sidebar />
-      <SearchPage initialQuery={query} />
+      <SearchPage initialQuery={searchParams.q || ""} />
     </>
   )
 }
