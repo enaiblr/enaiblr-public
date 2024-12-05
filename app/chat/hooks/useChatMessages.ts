@@ -45,26 +45,32 @@ export function useChatMessages() {
             const userMessages = [...messages, userMessage];
             setMessages(userMessages);
 
+            const textDecoder = new TextDecoder();
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = new TextDecoder().decode(value);
-                try {
-                    const parsed = JSON.parse(chunk);
-                    const content = parsed.choices[0]?.delta?.content;
-                    if (content) {
-                        assistantMessage += content;
-                        setMessages([
-                            ...userMessages,
-                            {
-                                role: 'assistant',
-                                content: [{ type: 'text', text: assistantMessage }]
+                const chunk = textDecoder.decode(value);
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const { content } = JSON.parse(line.slice(6));
+                            if (content) {
+                                assistantMessage += content;
+                                setMessages([
+                                    ...userMessages,
+                                    {
+                                        role: 'assistant',
+                                        content: [{ type: 'text', text: assistantMessage }]
+                                    }
+                                ]);
                             }
-                        ]);
+                        } catch (e) {
+                            console.error('Error parsing SSE data:', e);
+                        }
                     }
-                } catch (e) {
-                    // Handle parsing errors
                 }
             }
         } catch (error) {

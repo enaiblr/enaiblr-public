@@ -22,22 +22,23 @@ export async function POST(request: Request) {
 
     // Create a ReadableStream to handle the streaming response
     const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of response) {
-            // Serialize the chunk and encode it
-            const encodedChunk = new TextEncoder().encode(
-              JSON.stringify(chunk) + '\n'
-            );
-            controller.enqueue(encodedChunk);
+        async start(controller) {
+          try {
+            for await (const chunk of response) {
+              const content = chunk.choices[0]?.delta?.content;
+              if (content) {
+                // Format as SSE data
+                const data = `data: ${JSON.stringify({ content })}\n\n`;
+                controller.enqueue(new TextEncoder().encode(data));
+              }
+            }
+          } catch (error) {
+            controller.error(error);
+          } finally {
+            controller.close();
           }
-        } catch (error) {
-          controller.error(error);
-        } finally {
-          controller.close();
-        }
-      },
-    });
+        },
+      });
 
     return new NextResponse(stream, {
       headers: {
