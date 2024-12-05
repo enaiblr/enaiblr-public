@@ -14,11 +14,12 @@ export async function generateMetadata({
 }
 
 type SearchPageParams = {
-  searchParams: Record<string, string | string[] | undefined>
+  params: { slug: string[] }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default function Page(props: SearchPageParams) {
-  const query = typeof props.searchParams.q === 'string' ? props.searchParams.q : '';
+export default async function Page({ searchParams }: SearchPageParams) {
+  const query = typeof searchParams.q === 'string' ? searchParams.q : '';
   return (
     <>
       <Sidebar />
