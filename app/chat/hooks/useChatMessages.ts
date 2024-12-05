@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import Together from 'together-ai';
-import { Message, ImageMessage } from '../components/types';
+import { Message } from '../components/types';
 
 const together = new Together({ apiKey: process.env.NEXT_PUBLIC_TOGETHER_API_KEY });
 
 export function useChatMessages() {
-    const [messages, setMessages] = useState<(Message | ImageMessage)[]>([]);
+    const [messages, setMessages] = useState<(Message)[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    const toTogetherMessage = (msg: Message): any => ({
+        role: msg.role,
+        content: msg.content
+    });
 
     const sendMessage = async (input: string, imageUrl: string | null) => {
         if ((!input.trim() && !imageUrl) || isLoading) return;
 
-        const userMessage: ImageMessage = {
+        const userMessage: Message = {
             role: 'user',
             content: imageUrl ? [
                 { type: 'text' as const, text: input.trim() },
@@ -24,10 +29,7 @@ export function useChatMessages() {
 
         try {
             const response = await together.chat.completions.create({
-                messages: [...messages.map(msg => ({
-                    role: msg.role,
-                    content: msg.content
-                })), userMessage],
+                messages: [...messages.map(toTogetherMessage), toTogetherMessage(userMessage)],
                 model: 'meta-llama/Llama-Vision-Free',
                 max_tokens: 1024,
                 temperature: 0.7,

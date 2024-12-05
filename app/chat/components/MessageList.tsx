@@ -1,8 +1,8 @@
 import ReactMarkdown from 'react-markdown'
-import { Message, ImageMessage } from './types'
+import { Message } from './types'
 
 interface MessageListProps {
-    messages: (Message | ImageMessage)[];
+    messages: (Message)[];
     messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -14,7 +14,7 @@ export function MessageList({ messages, messagesEndRef }: MessageListProps) {
                     {messages.map((message, index) => (
                         <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
                             <div
-                                className={`max-w-[80%] rounded-2xl p-3 ${
+                                className={`max-w-[80%] rounded-2xl p-3 break-words overflow-wrap-anywhere ${
                                     message.role === 'user'
                                         ? 'bg-blue-500 text-white rounded-br-none'
                                         : 'bg-gray-200 text-gray-800 rounded-bl-none'
