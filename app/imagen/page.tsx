@@ -36,7 +36,7 @@ export default function Home() {
             <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] mx-auto mb-8">
               <div className="aspect-square">
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-200 rounded-lg">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
                   <p className="text-gray-600 font-medium">Creating Visual</p>
                 </div>
               </div>

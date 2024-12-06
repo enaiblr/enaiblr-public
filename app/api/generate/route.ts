@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       height: height || 1024,
       steps: 4,
       n: 1,
-      response_format: "b64_json"
+      response_format: "b64_json" as "base64"
     });
 
     console.log('Image generation successful');
