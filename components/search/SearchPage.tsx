@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SearchHeader } from "./components/SearchHeader";
 import { SearchResultItem } from "./components/SearchResult";
 import CustomSearchInput from "./components/CustomSearchInput";
+import RenderFooter from "../RenderFooter";
 
 import { useSearch } from "./hooks/useSearch";
 import { TAGS } from "./constants";
@@ -83,21 +84,6 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
         setExpandedResultIndex(prev => prev === index ? null : index);
     }, []);
 
-    const renderFooter = () => (
-        <footer className="py-3 text-center text-sm text-muted-foreground bg-gray-100">
-            <p>
-                Created by{" "}
-                <a href="https://raihankalla.id" className="underline" target="_blank" rel="noopener noreferrer">
-                    Al Harkan
-                </a>{" "}
-                |{" "}
-                <a href="mailto:enaiblr@gmail.com" target="_blank" rel="noopener noreferrer">
-                    Report a Bug
-                </a>
-            </p>
-        </footer>
-    );
-
     if (!isHomePage && (searchResults || isLoading)) {
         return (
             <div className="flex flex-col min-h-screen">
@@ -137,7 +123,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                         </div>
                     )}
                 </main>
-                {renderFooter()}
+                <RenderFooter />
             </div>
         );
     }
@@ -216,7 +202,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                 </div>
             </main>
 
-            {renderFooter()}
+            <RenderFooter />
         </div>
     );
 }
