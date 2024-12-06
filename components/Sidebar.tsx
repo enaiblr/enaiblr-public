@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, Search, MessageSquare, BookOpen, Wallet, FlaskConical } from 'lucide-react'
+import { Menu, X, Search, MessageSquare, BookOpen, Wallet, FlaskConical, WandSparkles} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -17,6 +17,7 @@ interface SidebarProps {
 const apps = [
   { name: 'AI Tools Search', icon: Search, slug: '' },
   { name: 'Disposable AI Chat', icon: MessageSquare, slug: 'chat' },
+    { name: 'AI Image Creator', icon: WandSparkles, slug: 'imagen' },
   // { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
   // { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
   // { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },
