@@ -66,12 +66,33 @@ export default function MinimalistChatbot() {
         adjustViewportHeight();
         window.addEventListener('resize', adjustViewportHeight);
         window.addEventListener('orientationchange', adjustViewportHeight);
+        window.addEventListener('scroll', adjustViewportHeight);
+        window.addEventListener('touchmove', adjustViewportHeight);
+        window.addEventListener('touchend', adjustViewportHeight);
 
         return () => {
             window.removeEventListener('resize', adjustViewportHeight);
             window.removeEventListener('orientationchange', adjustViewportHeight);
+            window.removeEventListener('scroll', adjustViewportHeight);
+            window.removeEventListener('touchmove', adjustViewportHeight);
+            window.removeEventListener('touchend', adjustViewportHeight);
         };
     }, []);
+
+    useEffect(() => {
+        const handleMobileReflow = () => {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.style.display = 'none';
+                    document.body.offsetHeight; // Force reflow
+                    document.body.style.display = '';
+                }, 100);
+            }
+        };
+
+        handleMobileReflow();
+    }, [messages]);
 
     useEffect(() => {
         const handleKeyboardBehavior = () => {
@@ -145,7 +166,7 @@ export default function MinimalistChatbot() {
                                 <div className="sticky top-0 backdrop-blur-sm z-10">
                                     <ChatTitle compact clearMessages={clearMessages} />
                                 </div>
-                                <div className="flex-grow overflow-y-auto px-4 pt-14">
+                                <div className="flex-grow overflow-y-auto px-4" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}
