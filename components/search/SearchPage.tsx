@@ -17,7 +17,11 @@ import type { SearchPageProps } from "./types";
 
 export default function SearchPage({ initialQuery }: SearchPageProps) {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+            <div className="w-full h-screen flex items-center justify-center">
+                <div className="animate-pulse text-muted-foreground">Loading...</div>
+            </div>
+        }>
             <SearchPageContent initialQuery={initialQuery} />
         </Suspense>
     );
