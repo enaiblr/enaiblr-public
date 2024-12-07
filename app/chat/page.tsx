@@ -28,11 +28,16 @@ export default function MinimalistChatbot() {
     useEffect(() => {
         const scrollToBottom = () => {
             if (messagesEndRef.current) {
-                const options: ScrollIntoViewOptions = {
-                    behavior: 'smooth',
-                    block: 'end',
-                };
-                messagesEndRef.current.scrollIntoView(options);
+                // First scroll the messages container
+                messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                
+                // Then scroll the window to ensure the input is visible
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: document.documentElement.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 100);
             }
         };
 
