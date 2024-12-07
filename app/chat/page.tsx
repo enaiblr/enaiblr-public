@@ -185,6 +185,9 @@ export default function MinimalistChatbot() {
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}
+                                        onUpdate={() => {
+                                            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                        }}
                                     />
                                 </div>
                                 <div className="w-full border-t backdrop-blur-sm border-gray-200 sticky bottom-0">

@@ -1,12 +1,19 @@
 import ReactMarkdown from 'react-markdown'
 import { Message } from './types'
+import { useEffect } from 'react'
+
 
 interface MessageListProps {
-    messages: (Message)[];
+    messages: Message[];
     messagesEndRef: React.RefObject<HTMLDivElement>;
+    onUpdate: () => void;
 }
 
-export function MessageList({ messages, messagesEndRef }: MessageListProps) {
+export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListProps) {
+    useEffect(() => {
+        onUpdate();
+    }, [messages, onUpdate]); // Run whenever messages update
+    
     return (
         <div className="flex-1 overflow-y-auto">
             <div className="max-w-4xl mx-auto w-full p-4 md:p-6">
