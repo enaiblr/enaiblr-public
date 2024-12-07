@@ -123,7 +123,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                         </div>
                     )}
                 </main>
-                <div className="mt-8">
+                <div className="mt-8 sm:mt-20">
                     <RenderFooter />
                 </div>
             </div>
@@ -204,7 +204,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                 </div>
             </main>
 
-            <div className="mt-8">
+            <div className="mt-8 sm:mt-20">
                 <RenderFooter />
             </div>
         </div>

@@ -9,6 +9,7 @@ import { ImagePreview } from './components/ImagePreview'
 import { useImageUpload } from './hooks/useImageUpload'
 import { useChatMessages } from './hooks/useChatMessages'
 import { AnimatedBackground } from "../../components/animated-background"
+import RenderFooter from '@/components/RenderFooter'
 
 export default function MinimalistChatbot() {
     const { messages, isLoading, sendMessage, clearMessages } = useChatMessages();
@@ -86,7 +87,7 @@ export default function MinimalistChatbot() {
                             messages={messages}
                             messagesEndRef={messagesEndRef}
                         />
-                        <div className="w-full border-gray-200 bg-white">
+                        <div className="w-full border-gray-200">
                             {(localImageUrl || tempImageUrl) && (
                                 <ImagePreview
                                     localImageUrl={localImageUrl}
@@ -110,6 +111,11 @@ export default function MinimalistChatbot() {
                             />
                         </div>
                     </>
+                )}
+                {messages.length === 0 && (
+                    <div className="mt-8 sm:mt-20">
+                        <RenderFooter />
+                    </div>
                 )}
             </div>
         </>
