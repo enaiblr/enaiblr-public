@@ -9,42 +9,21 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListProps) {
-    const scrollTimeout = useRef<NodeJS.Timeout>();
     const messageListRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
-        if (messageListRef.current) {
-            if (scrollTimeout.current) {
-                clearTimeout(scrollTimeout.current);
+        if (messageListRef.current && messagesEndRef.current) {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // For mobile, use a simpler, more direct approach
+                requestAnimationFrame(() => {
+                    messagesEndRef.current?.scrollIntoView({ block: 'end' });
+                });
+            } else {
+                // For desktop, use container scrolling
+                messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
             }
-
-            scrollTimeout.current = setTimeout(() => {
-                const messageContainer = messageListRef.current;
-                if (messageContainer) {
-                    // For mobile devices
-                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                        const lastMessage = messageContainer.lastElementChild;
-                        lastMessage?.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'end',
-                        });
-
-                        // Additional scroll for mobile to ensure the input is visible
-                        setTimeout(() => {
-                            window.scrollTo({
-                                top: document.body.scrollHeight,
-                                behavior: 'smooth'
-                            });
-                        }, 100);
-                    } else {
-                        // For desktop
-                        messageContainer.scrollTo({
-                            top: messageContainer.scrollHeight,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            }, 100);
         }
     };
 
@@ -58,34 +37,19 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
         }
     }, [messages, messages[messages.length - 1]?.content]);
 
-    // Handle resize events (especially important for mobile keyboard)
+    // Initial scroll
     useEffect(() => {
-        const handleResize = () => {
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                scrollToBottom();
-            }
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            if (scrollTimeout.current) {
-                clearTimeout(scrollTimeout.current);
-            }
-        };
+        scrollToBottom();
+        onUpdate();
     }, []);
 
     return (
         <div
             ref={messageListRef}
-            className="flex-1 overflow-y-auto scrollbar-hide relative"
+            className="flex-1 overflow-y-auto scrollbar-hide relative h-full"
             style={{
-                maxHeight: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-                    ? 'calc(100dvh - 180px)'
-                    : 'calc(100vh - 180px)',
-                overscrollBehavior: 'contain'
+                height: '100%',
+                overscrollBehavior: 'contain',
             }}
         >
             <div className="max-w-4xl mx-auto w-full p-4 md:p-6">
@@ -133,7 +97,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
             </div>
             <div
                 ref={messagesEndRef}
-                style={{ height: '1px', visibility: 'hidden' }}
+                className="h-px w-full"
                 aria-hidden="true"
             />
         </div>

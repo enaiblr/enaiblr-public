@@ -26,6 +26,20 @@ export default function MinimalistChatbot() {
     const [input, setInput] = useState('');
     const [hasUserSentMessage, setHasUserSentMessage] = useState(false);
 
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                requestAnimationFrame(() => {
+                    messagesEndRef.current?.scrollIntoView({ block: 'end' });
+                });
+            } else {
+                messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
     const handleSendMessage = async (text: string, imageBase64: string | null) => {
         if (!hasUserSentMessage) {
             setHasUserSentMessage(true);
@@ -38,7 +52,7 @@ export default function MinimalistChatbot() {
             if (messagesEndRef.current) {
                 // First scroll the messages container
                 messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                
+
                 // Then scroll the window to ensure the input is visible
                 setTimeout(() => {
                     window.scrollTo({
@@ -111,17 +125,17 @@ export default function MinimalistChatbot() {
                 document.body.style.width = '100%';
             }
         };
-    
+
         const unlockBodyScroll = () => {
             if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                 document.body.style.position = '';
                 document.body.style.width = '';
             }
         };
-    
+
         window.addEventListener('focus', lockBodyScroll);
         window.addEventListener('blur', unlockBodyScroll);
-    
+
         return () => {
             window.removeEventListener('focus', lockBodyScroll);
             window.removeEventListener('blur', unlockBodyScroll);
@@ -156,9 +170,9 @@ export default function MinimalistChatbot() {
     return (
         <>
             <Sidebar />
-            <div 
-                className="flex flex-col h-screen relative" 
-                style={{ 
+            <div
+                className="flex flex-col h-screen relative"
+                style={{
                     height: 'calc(var(--vh, 1vh) * 100)',
                     minHeight: '-webkit-fill-available'
                 }}
@@ -206,16 +220,18 @@ export default function MinimalistChatbot() {
                                 <div className="sticky top-0 backdrop-blur-sm z-10">
                                     <ChatTitle compact clearMessages={clearMessages} />
                                 </div>
-                                <div className="flex-grow overflow-y-auto px-4 pb-safe">
+                                {/* Modified container for MessageList */}
+                                <div className="flex-1 relative overflow-hidden">
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}
                                         onUpdate={() => {
-                                            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                            scrollToBottom();
                                         }}
                                     />
                                 </div>
-                                <div className="w-full border-t backdrop-blur-sm border-gray-200 sticky bottom-0">
+                                <div className="w-full border-t backdrop-blur-sm border-gray-200 sticky bottom-0 z-10">
+
                                     {localImageUrl && (
                                         <ImagePreview
                                             localImageUrl={localImageUrl}
