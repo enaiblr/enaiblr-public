@@ -20,8 +20,8 @@ export function useChatMessages() {
         const userMessage: Message = {
             role: 'user',
             content: imageUrl ? [
-                { type: 'text' as const, text: input.trim() },
-                { type: 'image_url' as const, image_url: { url: imageUrl } }
+                { type: 'image_url' as const, image_url: { url: imageUrl } },
+                { type: 'text' as const, text: input.trim() }
             ] : [{ type: 'text' as const, text: input.trim() }]
         };
 
