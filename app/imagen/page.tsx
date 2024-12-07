@@ -62,7 +62,7 @@ export default function Home() {
               </h1>
             </div>
           ) : (
-            <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8 mt-16">
+            <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
               <div className={`relative ${getAspectRatioClass(imageAspectRatio)}`} style={{ maxWidth: '100%', maxHeight: '100%' }}>
                 <img
                   src={generatedImage}
