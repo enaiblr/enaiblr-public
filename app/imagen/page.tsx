@@ -16,10 +16,12 @@ export default function Home() {
   const [selectedAspectRatio, setSelectedAspectRatio] = useState<'wide' | 'square' | 'portrait'>('square')
   const [imageAspectRatio, setImageAspectRatio] = useState<'wide' | 'square' | 'portrait'>('square')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
 
   const handleGenerateStart = () => {
     setIsGenerating(true)
     setGeneratedImage(null)
+    setHasInteracted(true)
   }
 
   const handleGenerate = (prompt: string, imageData?: string) => {
@@ -41,9 +43,9 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col min-h-[100dvh] overflow-y-auto">
+      <div className="flex flex-col min-h-[100dvh]">
         <AnimatedBackground />
-        <div className="flex-grow flex flex-col items-center w-full pt-16 sm:pt-0 px-4 overflow-y-auto">
+        <div className="flex-grow flex flex-col items-center justify-center w-full pt-16 sm:pt-0 px-4 overflow-y-auto">
           {isGenerating ? (
             <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
               <div className={getAspectRatioClass(imageAspectRatio)} style={{ maxWidth: '100%', maxHeight: '100%' }}>
@@ -60,11 +62,11 @@ export default function Home() {
               </h1>
             </div>
           ) : (
-            <div className="relative w-full max-w-[640px] flex items-center justify-center mx-auto mb-8 mt-16">
-              <div className={`relative ${getAspectRatioClass(imageAspectRatio)} w-full`} style={{ maxWidth: '100%' }}>
+            <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8 mt-16">
+              <div className={`relative ${getAspectRatioClass(imageAspectRatio)}`} style={{ maxWidth: '100%', maxHeight: '100%' }}>
                 <img
                   src={generatedImage}
-                  alt="Generated image"
+                  alt="Generated image" 
                   className="w-full h-full object-contain rounded-lg cursor-pointer"
                   onClick={() => setIsModalOpen(true)}
                 />
@@ -84,7 +86,7 @@ export default function Home() {
           )}
 
           <div className="w-full max-w-3xl space-y-8">
-          <ImageForm
+            <ImageForm
               defaultPrompt={defaultPrompt}
               onGenerateStart={handleGenerateStart}
               onGenerate={handleGenerate}
@@ -92,7 +94,7 @@ export default function Home() {
               imageDisplayed={!!generatedImage}
             />
 
-            {!generatedImage && (
+            {!generatedImage && !hasInteracted && (
               <div className="flex flex-wrap justify-center gap-2">
                 {EXAMPLE_PROMPTS.map((examplePrompt) => (
                   <button
@@ -130,7 +132,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="mt-8 sm:mt-20">
+        <div className="mt-8">
           <RenderFooter />
         </div>
       </div>

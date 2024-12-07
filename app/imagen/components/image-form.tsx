@@ -38,10 +38,6 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart, onA
     onAspectRatioChange?.(aspectRatio)
   }, [aspectRatio, onAspectRatioChange])
 
-  useEffect(() => {
-    setShowControls(imageDisplayed)
-  }, [imageDisplayed])
-
   const getDimensions = (quality: 'standard' | 'hd', aspectRatio: 'wide' | 'square' | 'portrait'): { width: number, height: number } => {
     if (quality === 'standard') {
       switch (aspectRatio) {
