@@ -59,23 +59,32 @@ export default function MinimalistChatbot() {
 
     useEffect(() => {
         const adjustViewportHeight = () => {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            // Get the actual visible viewport height
+            const visualViewport = window.visualViewport;
+            const height = visualViewport ? visualViewport.height : window.innerHeight;
+            document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
         };
 
+        // Initial adjustment
         adjustViewportHeight();
+
+        // Listen to visualViewport changes if available
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', adjustViewportHeight);
+            window.visualViewport.addEventListener('scroll', adjustViewportHeight);
+        }
+
+        // Fallback listeners
         window.addEventListener('resize', adjustViewportHeight);
         window.addEventListener('orientationchange', adjustViewportHeight);
-        window.addEventListener('scroll', adjustViewportHeight);
-        window.addEventListener('touchmove', adjustViewportHeight);
-        window.addEventListener('touchend', adjustViewportHeight);
 
         return () => {
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', adjustViewportHeight);
+                window.visualViewport.removeEventListener('scroll', adjustViewportHeight);
+            }
             window.removeEventListener('resize', adjustViewportHeight);
             window.removeEventListener('orientationchange', adjustViewportHeight);
-            window.removeEventListener('scroll', adjustViewportHeight);
-            window.removeEventListener('touchmove', adjustViewportHeight);
-            window.removeEventListener('touchend', adjustViewportHeight);
         };
     }, []);
 
@@ -122,10 +131,13 @@ export default function MinimalistChatbot() {
     return (
         <>
             <Sidebar />
-            <div className="flex flex-col h-screen" style={{ 
-                height: 'calc(100vh - env(safe-area-inset-bottom))',
-                paddingBottom: 'env(safe-area-inset-bottom)'
-            }}>
+            <div 
+                className="flex flex-col h-screen relative" 
+                style={{ 
+                    height: 'calc(var(--vh, 1vh) * 100)',
+                    minHeight: '-webkit-fill-available'
+                }}
+            >
                 <AnimatedBackground />
                 {messages.length === 0 ? (
                     <div className="flex flex-col flex-grow">
@@ -158,7 +170,7 @@ export default function MinimalistChatbot() {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full mt-auto">
+                        <div className="w-full mt-8">
                             <RenderFooter />
                         </div>
                     </div>
@@ -166,22 +178,16 @@ export default function MinimalistChatbot() {
                     <div className="flex flex-col h-full w-full">
                         <div className="flex flex-col w-full min-w-[320px] max-w-[1200px] mx-auto h-full">
                             <div className="flex flex-col h-full">
-                                <div className="sticky top-0 backdrop-blur-sm z-10" style={{ top: 'env(safe-area-inset-top)' }}>
+                                <div className="sticky top-0 backdrop-blur-sm z-10">
                                     <ChatTitle compact clearMessages={clearMessages} />
                                 </div>
-                                <div className="flex-grow overflow-y-auto px-4" style={{ 
-                                    paddingTop: 'env(safe-area-inset-top)',
-                                    paddingBottom: 'env(safe-area-inset-bottom)'
-                                }}>
+                                <div className="flex-grow overflow-y-auto px-4 pb-safe">
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}
                                     />
                                 </div>
-                                <div className="w-full border-t border-gray-200" style={{ 
-                                    paddingBottom: 'env(safe-area-inset-bottom)',
-                                    marginBottom: 'env(safe-area-inset-bottom)'
-                                }}>
+                                <div className="w-full border-t border-gray-200 bg-white sticky bottom-0">
                                     {localImageUrl && (
                                         <ImagePreview
                                             localImageUrl={localImageUrl}
