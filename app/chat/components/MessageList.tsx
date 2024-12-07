@@ -21,10 +21,28 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
             scrollTimeout.current = setTimeout(() => {
                 const messageContainer = messageListRef.current;
                 if (messageContainer) {
-                    messageContainer.scrollTo({
-                        top: messageContainer.scrollHeight,
-                        behavior: 'smooth'
-                    });
+                    // For mobile devices
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                        const lastMessage = messageContainer.lastElementChild;
+                        lastMessage?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'end',
+                        });
+
+                        // Additional scroll for mobile to ensure the input is visible
+                        setTimeout(() => {
+                            window.scrollTo({
+                                top: document.body.scrollHeight,
+                                behavior: 'smooth'
+                            });
+                        }, 100);
+                    } else {
+                        // For desktop
+                        messageContainer.scrollTo({
+                            top: messageContainer.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
             }, 100);
         }
@@ -40,12 +58,19 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
         }
     }, [messages, messages[messages.length - 1]?.content]);
 
-    // Initial scroll and cleanup
+    // Handle resize events (especially important for mobile keyboard)
     useEffect(() => {
-        scrollToBottom();
-        onUpdate();
+        const handleResize = () => {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                scrollToBottom();
+            }
+        };
 
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup
         return () => {
+            window.removeEventListener('resize', handleResize);
             if (scrollTimeout.current) {
                 clearTimeout(scrollTimeout.current);
             }
@@ -55,9 +80,11 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
     return (
         <div
             ref={messageListRef}
-            className="flex-1 overflow-y-auto scrollbar-hide relative" // Added scrollbar-hide here
+            className="flex-1 overflow-y-auto scrollbar-hide relative"
             style={{
-                maxHeight: 'calc(100vh - 180px)',
+                maxHeight: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+                    ? 'calc(100dvh - 180px)'
+                    : 'calc(100vh - 180px)',
                 overscrollBehavior: 'contain'
             }}
         >
@@ -106,8 +133,8 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
             </div>
             <div
                 ref={messagesEndRef}
-                className="h-0 w-full"
-                style={{ float: 'left', clear: 'both' }}
+                style={{ height: '1px', visibility: 'hidden' }}
+                aria-hidden="true"
             />
         </div>
     );
