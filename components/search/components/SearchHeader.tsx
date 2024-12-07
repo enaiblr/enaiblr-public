@@ -43,7 +43,7 @@ export const SearchHeader = ({
                         />
                     </div>
                     <Button
-                        variant="secondary"
+                        variant="outline"
                         className="rounded-full ml-2 hidden sm:flex"
                         onClick={() => handleSearch(query)}
                     >

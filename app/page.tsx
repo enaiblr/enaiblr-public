@@ -2,8 +2,8 @@
 
 import SearchPage from '@/components/search/SearchPage'
 import { Sidebar } from '@/components/Sidebar'
-import { Metadata } from 'next'
 import { useEffect, useState } from 'react'
+import { AnimatedBackground } from '@/components/animated-background'
 
 export default function Page({
   searchParams
@@ -19,6 +19,7 @@ export default function Page({
   return (
     <>
       <Sidebar />
+      <AnimatedBackground />
       <SearchPage initialQuery={params.q || ""} />
     </>
   )}

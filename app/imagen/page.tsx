@@ -2,7 +2,7 @@
 
 import { Sidebar } from '@/components/Sidebar'
 import { ImageForm } from "./components/image-form"
-import { AnimatedBackground } from "./components/animated-background"
+import { AnimatedBackground } from "../../components/animated-background"
 import { EXAMPLE_PROMPTS } from "./components/constants"
 import RenderFooter from '@/components/RenderFooter'
 import { useState } from 'react'

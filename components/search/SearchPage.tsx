@@ -131,7 +131,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
     // Home view
     return (
         <div className="min-h-screen flex flex-col">
-            <header className="sticky top-0 left-0 w-full bg-white p-4 z-10">
+            <header className="sticky top-0 left-0 w-full p-4 z-10">
                 <div className="container mx-auto flex justify-end">
                     <a href="mailto:enaiblr@gmail.com">
                         <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
