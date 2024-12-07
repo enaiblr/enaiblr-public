@@ -134,10 +134,10 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
             <header className="sticky top-0 left-0 w-full p-4 z-10">
                 <div className="container mx-auto flex justify-end">
                     <a href="mailto:enaiblr@gmail.com">
-                        <Button variant="secondary" className="rounded-full px-6 hidden sm:flex">
+                        <Button variant="outline" className="rounded-full px-6 hidden sm:flex">
                             Contact
                         </Button>
-                        <Button variant="secondary" className="rounded-full sm:hidden" aria-label="Contact">
+                        <Button variant="outline" className="rounded-full sm:hidden" aria-label="Contact">
                             <Mail className="h-5 w-5" />
                         </Button>
                     </a>
@@ -164,7 +164,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                     </div>
                     <div className="flex justify-center gap-3">
                         <Button
-                            variant="secondary"
+                            variant="outline"
                             className="rounded-full px-6"
                             onClick={() => {
                                 if (query.trim() !== '') {
@@ -177,7 +177,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                             {isLoading ? "Searching..." : "Search"}
                         </Button>
                         <Button
-                            variant="secondary"
+                            variant="outline"
                             className="rounded-full px-6"
                             onClick={() => handleTagSearch(TAGS[Math.floor(Math.random() * TAGS.length)])}
                         >
