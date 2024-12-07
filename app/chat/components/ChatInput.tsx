@@ -7,9 +7,10 @@ interface ChatInputProps {
     onSubmit: (e: React.FormEvent) => Promise<void>;
     fileInputRef: React.RefObject<HTMLInputElement>;
     onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    autoFocus?: boolean;
 }
 
-export function ChatInput({ input, setInput, isLoading, onSubmit, fileInputRef, onImageSelect }: ChatInputProps) {
+export function ChatInput({ input, setInput, isLoading, onSubmit, fileInputRef, onImageSelect, autoFocus }: ChatInputProps) {
     return (
         <form onSubmit={onSubmit} className="p-4">
             <div className="flex items-center bg-white rounded-full shadow-md max-w-4xl mx-auto border border-gray-200">
@@ -37,6 +38,7 @@ export function ChatInput({ input, setInput, isLoading, onSubmit, fileInputRef, 
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type a message..."
                     className="flex-1 p-3 bg-transparent focus:outline-none min-w-0"
+                    autoFocus={autoFocus}
                 />
 
                 <div className="shrink-0">

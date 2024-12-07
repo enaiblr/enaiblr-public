@@ -92,6 +92,7 @@ export default function MinimalistChatbot() {
                                     onSubmit={handleSubmit}
                                     fileInputRef={fileInputRef}
                                     onImageSelect={handleFileChange}
+                                    autoFocus={messages.length > 0}
                                 />
                             </div>
                         </div>
@@ -126,6 +127,7 @@ export default function MinimalistChatbot() {
                                 onSubmit={handleSubmit}
                                 fileInputRef={fileInputRef}
                                 onImageSelect={handleFileChange}
+                                autoFocus={messages.length > 0}
                             />
                         </div>
                     </>
