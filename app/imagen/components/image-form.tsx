@@ -1,9 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -12,35 +10,56 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Sparkles, SlidersHorizontal, LayoutGridIcon as LayoutHorizontal, Square, LayoutGridIcon as LayoutVertical } from 'lucide-react'
+import { Sparkles, SlidersHorizontal } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { style } from './constants';
-import Together from "together-ai";
 
 interface ImageFormProps {
   defaultPrompt?: string
   onGenerate?: (prompt: string, imageData?: string) => void
   onGenerateStart?: () => void
+  onAspectRatioChange?: (aspectRatio: 'wide' | 'square' | 'portrait') => void
 }
 
-export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart }: ImageFormProps) {
+export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart, onAspectRatioChange }: ImageFormProps) {
   const [showControls, setShowControls] = useState(false)
   const [prompt, setPrompt] = useState(defaultPrompt)
   const [isGenerating, setIsGenerating] = useState(false)
   const [quality, setQuality] = useState<'standard' | 'hd'>('standard')
   const [aspectRatio, setAspectRatio] = useState<'wide' | 'square' | 'portrait'>('square')
   const [selectedStyle, setSelectedStyle] = useState("")
-  const router = useRouter()
 
   useEffect(() => {
     setPrompt(defaultPrompt)
   }, [defaultPrompt])
+
+  useEffect(() => {
+    onAspectRatioChange?.(aspectRatio)
+  }, [aspectRatio, onAspectRatioChange])
+
+  const getDimensions = (quality: 'standard' | 'hd', aspectRatio: 'wide' | 'square' | 'portrait'): { width: number, height: number } => {
+    if (quality === 'standard') {
+      switch (aspectRatio) {
+        case 'square': return { width: 768, height: 768 }
+        case 'wide': return { width: 1024, height: 576 }
+        case 'portrait': return { width: 576, height: 1024 }
+      }
+    } else { // HD
+      switch (aspectRatio) {
+        case 'square': return { width: 1440, height: 1440 }
+        case 'wide': return { width: 1440, height: 816 }
+        case 'portrait': return { width: 816, height: 1440 }
+      }
+    }
+  }
 
   const handleGenerate = async () => {
     if (!prompt) return;
 
     try {
       onGenerateStart?.();
+      const dimensions = getDimensions(quality, aspectRatio);
+      const finalPrompt = selectedStyle ? `${prompt}\nStyle: ${selectedStyle}` : prompt;
 
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -48,10 +67,8 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart }: I
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt,
-          quality,
-          aspectRatio,
-          style: selectedStyle
+          prompt: finalPrompt,
+          ...dimensions
         }),
       });
 
@@ -83,15 +100,18 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart }: I
           </Button>
 
           <textarea
-            placeholder={typeof window !== 'undefined' && window.innerWidth < 640 ? "Imagine something..." : "What do you want to create?"}
+            placeholder="Imagine something..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="pl-16 pr-12 min-h-[3.5rem] py-4 text-base sm:text-lg rounded-2xl w-full resize-none overflow-hidden"
+            className="pl-16 pr-12 min-h-[3.5rem] py-4 text-base sm:text-lg rounded-2xl w-full resize-none overflow-y-hidden"
             rows={1}
-            style={{ height: 'auto' }}
+            style={{
+              height: 'auto',
+              minHeight: '3.5rem'
+            }}
             onInput={(e) => {
               const target = e.target as HTMLTextAreaElement;
-              target.style.height = 'auto';
+              target.style.height = '0';
               target.style.height = `${target.scrollHeight}px`;
             }}
           />
@@ -105,7 +125,12 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart }: I
           </Button>
         </div>
 
-        {showControls && (
+        <div
+          className={cn(
+            "overflow-hidden transition-all duration-300 ease-in-out",
+            showControls ? "max-h-[500px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"
+          )}
+        >
           <div className="flex flex-col items-center sm:flex-row sm:justify-between gap-4 mt-4 bg-gray-100 p-4 rounded-lg w-full">
             <div className="w-full">
               <Select
@@ -155,9 +180,8 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart }: I
               />
               <span className={`text-sm font-medium ${quality === 'hd' ? 'text-blue-500 font-bold' : ''}`}>HD</span>
             </div>
-
           </div>
-        )}
+        </div>
       </div>
     </div>
   )

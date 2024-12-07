@@ -13,22 +13,13 @@ export const style = [
     "Photorealistic",
     "Isometric",
     "Pencil Sketch",
-    "Children",
+    "Children Book",
     "Minimalist",
     "Retro",
     "Flat Design"
 ];
 
 // General (No Style), Describe Your Own.
-
-export const resolution = [
-    "950 x 950",
-    "1440 x 1440",
-    "950 x 534",
-    "1440 x 810",
-    "534 x 950",
-    "810 x 1440",
-];
 
 export const EXAMPLE_PROMPTS = [
     "Rocket launch from Borobudur",
