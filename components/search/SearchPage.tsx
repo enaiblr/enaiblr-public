@@ -158,7 +158,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                     <p className="text-l text-muted-foreground ibm-plex-mono-light">AI Tools Search Engine</p>
                 </div>
 
-                <div className="w-full max-w-xl space-y-4">
+                <div className="w-full max-w-2xl space-y-4">
                     <div className="relative">
                         <CustomSearchInput
                             className="w-full h-12 rounded-full"
