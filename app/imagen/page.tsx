@@ -7,6 +7,7 @@ import { EXAMPLE_PROMPTS } from "./components/constants"
 import RenderFooter from '@/components/RenderFooter'
 import { useState } from 'react'
 import { Download } from 'lucide-react';
+import { ImageModal } from "./components/image-modal"
 
 export default function Home() {
   const [defaultPrompt, setDefaultPrompt] = useState("")
@@ -14,6 +15,7 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedAspectRatio, setSelectedAspectRatio] = useState<'wide' | 'square' | 'portrait'>('square')
   const [imageAspectRatio, setImageAspectRatio] = useState<'wide' | 'square' | 'portrait'>('square')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleGenerateStart = () => {
     setIsGenerating(true)
@@ -39,9 +41,9 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col min-h-[100dvh]">
+      <div className="flex flex-col min-h-[100dvh] overflow-y-auto">
         <AnimatedBackground />
-        <div className="flex-grow flex flex-col items-center justify-center w-full pt-16 sm:pt-0 px-4">
+        <div className="flex-grow flex flex-col items-center w-full pt-16 sm:pt-0 px-4 overflow-y-auto">
           {isGenerating ? (
             <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
               <div className={getAspectRatioClass(imageAspectRatio)} style={{ maxWidth: '100%', maxHeight: '100%' }}>
@@ -58,12 +60,13 @@ export default function Home() {
               </h1>
             </div>
           ) : (
-            <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
-              <div className={`relative ${getAspectRatioClass(imageAspectRatio)}`} style={{ maxWidth: '100%', maxHeight: '100%' }}>
+            <div className="relative w-full max-w-[640px] flex items-center justify-center mx-auto mb-8 mt-16">
+              <div className={`relative ${getAspectRatioClass(imageAspectRatio)} w-full`} style={{ maxWidth: '100%' }}>
                 <img
                   src={generatedImage}
                   alt="Generated image"
-                  className="w-full h-full object-contain rounded-lg"
+                  className="w-full h-full object-contain rounded-lg cursor-pointer"
+                  onClick={() => setIsModalOpen(true)}
                 />
                 <button
                   onClick={() => {
@@ -72,9 +75,9 @@ export default function Home() {
                     link.download = 'generated-image.png';
                     link.click();
                   }}
-                  className="absolute bottom-2 right-2 p-2 bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-full transition-colors"
+                  className="absolute bottom-2 right-2 p-2 bg-white/40 backdrop-blur-sm hover:bg-white/60 rounded-full transition-colors"
                 >
-                  <Download className="w-5 h-5 text-gray-700" />
+                  <Download className="w-5 h-5 text-white" />
                 </button>
               </div>
             </div>
@@ -131,6 +134,13 @@ export default function Home() {
           <RenderFooter />
         </div>
       </div>
+      {generatedImage && (
+        <ImageModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          imageUrl={generatedImage}
+        />
+      )}
     </>
   )
 }

@@ -101,7 +101,7 @@ export default function MinimalistChatbot() {
     return (
         <>
             <Sidebar />
-            <div className="flex flex-col min-h-[100dvh]">
+            <div className="flex flex-col h-screen">
                 <AnimatedBackground />
                 {messages.length === 0 ? (
                     <div className="flex flex-col flex-grow">
@@ -140,11 +140,11 @@ export default function MinimalistChatbot() {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex-grow flex flex-col items-center w-full">
-                        <div className="flex-grow flex flex-col w-full min-w-[320px] max-w-[1200px] mx-auto">
-                            <div className="flex-grow flex flex-col">
+                    <div className="flex flex-col h-full w-full">
+                        <div className="flex flex-col w-full min-w-[320px] max-w-[1200px] mx-auto h-full">
+                            <div className="flex flex-col h-full">
                                 <ChatTitle compact clearMessages={clearMessages} />
-                                <div className="flex-grow overflow-y-auto">
+                                <div className="flex-grow overflow-y-auto px-4">
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}

@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const response = await together.chat.completions.create({
       messages: messagesWithImage,
       model: 'meta-llama/Llama-Vision-Free',
-      max_tokens: 1024,
+      max_tokens: null,
       temperature: 0.7,
       top_p: 0.7,
       top_k: 50,
