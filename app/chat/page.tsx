@@ -26,8 +26,23 @@ export default function MinimalistChatbot() {
     const [input, setInput] = useState('');
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages, localImageUrl])
+        const scrollToBottom = () => {
+            if (messagesEndRef.current) {
+                const options: ScrollIntoViewOptions = {
+                    behavior: 'smooth',
+                    block: 'end',
+                };
+                messagesEndRef.current.scrollIntoView(options);
+            }
+        };
+
+        // Add a small delay when there's an image preview to ensure it's loaded
+        if (localImageUrl) {
+            setTimeout(scrollToBottom, 100);
+        } else {
+            scrollToBottom();
+        }
+    }, [messages, localImageUrl]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
