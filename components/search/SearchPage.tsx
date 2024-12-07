@@ -30,7 +30,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
 
     const [query, setQuery] = useState(initialQuery || "");
     const [isHomePage, setIsHomePage] = useState(!initialQuery);
-    
+
     const {
         searchResults,
         isLoading,
@@ -123,7 +123,9 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                         </div>
                     )}
                 </main>
-                <RenderFooter />
+                <div className="mt-8">
+                    <RenderFooter />
+                </div>
             </div>
         );
     }
@@ -202,7 +204,9 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                 </div>
             </main>
 
-            <RenderFooter />
+            <div className="mt-8">
+                <RenderFooter />
+            </div>
         </div>
     );
 }
