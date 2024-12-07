@@ -65,21 +65,6 @@ export default function MinimalistChatbot() {
         };
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const currentImageBase64 = imageBase64; // Store the base64 before clearing
-
-        // Clear images and input immediately
-        clearImages();
-        setInput('');
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-
-        // Send message with the stored base64
-        await sendMessage(input, currentImageBase64);
-    };
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleImageChange(e.target.files?.[0] ?? null);
     };
@@ -87,13 +72,51 @@ export default function MinimalistChatbot() {
     return (
         <>
             <Sidebar />
-            <AnimatedBackground />
-            <div className="flex flex-col w-full min-w-[320px] mx-auto" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
-                {messages.length === 0 ? (
-                    <div className="flex-1 flex flex-col items-center justify-between px-4 sm:px-6 md:px-8">
-                        <div className="w-full flex-1 flex flex-col items-center justify-center">
-                            <ChatTitle clearMessages={clearMessages} />
-                            <div className="w-full max-w-3xl mt-8">
+            <div className="flex flex-col min-h-[100dvh]">
+                <AnimatedBackground />
+                <div className="flex-grow flex flex-col w-full">
+                    {messages.length === 0 ? (
+                        <div className="flex-1 flex flex-col items-center justify-between px-4 sm:px-6 md:px-8">
+                            <div className="w-full flex-1 flex flex-col items-center justify-center">
+                                <ChatTitle clearMessages={clearMessages} />
+                                <div className="w-full max-w-3xl mt-8">
+                                    {localImageUrl && (
+                                        <ImagePreview
+                                            localImageUrl={localImageUrl}
+                                            isUploading={isUploading}
+                                            onRemove={() => {
+                                                clearImages();
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = '';
+                                                }
+                                            }}
+                                        />
+                                    )}
+                                    <ChatInput
+                                        input={input}
+                                        setInput={setInput}
+                                        isLoading={isLoading}
+                                        fileInputRef={fileInputRef}
+                                        onImageSelect={handleFileChange}
+                                        autoFocus={messages.length > 0}
+                                        imageBase64={imageBase64}
+                                        clearImages={clearImages}
+                                        sendMessage={sendMessage}
+                                    />
+                                </div>
+                            </div>
+                            <div className="w-full flex justify-center py-4">
+                                <RenderFooter />
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <ChatTitle compact clearMessages={clearMessages} />
+                            <MessageList
+                                messages={messages}
+                                messagesEndRef={messagesEndRef}
+                            />
+                            <div className="w-full border-gray-200">
                                 {localImageUrl && (
                                     <ImagePreview
                                         localImageUrl={localImageUrl}
@@ -110,49 +133,17 @@ export default function MinimalistChatbot() {
                                     input={input}
                                     setInput={setInput}
                                     isLoading={isLoading}
-                                    onSubmit={handleSubmit}
                                     fileInputRef={fileInputRef}
                                     onImageSelect={handleFileChange}
                                     autoFocus={messages.length > 0}
+                                    imageBase64={imageBase64}
+                                    clearImages={clearImages}
+                                    sendMessage={sendMessage}
                                 />
                             </div>
-                        </div>
-                        <div className="w-full flex justify-center py-4">
-                            <RenderFooter />
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        <ChatTitle compact clearMessages={clearMessages} />
-                        <MessageList
-                            messages={messages}
-                            messagesEndRef={messagesEndRef}
-                        />
-                        <div className="w-full border-gray-200">
-                            {localImageUrl && (
-                                <ImagePreview
-                                    localImageUrl={localImageUrl}
-                                    isUploading={isUploading}
-                                    onRemove={() => {
-                                        clearImages();
-                                        if (fileInputRef.current) {
-                                            fileInputRef.current.value = '';
-                                        }
-                                    }}
-                                />
-                            )}
-                            <ChatInput
-                                input={input}
-                                setInput={setInput}
-                                isLoading={isLoading}
-                                onSubmit={handleSubmit}
-                                fileInputRef={fileInputRef}
-                                onImageSelect={handleFileChange}
-                                autoFocus={messages.length > 0}
-                            />
-                        </div>
-                    </>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
         </>
     )

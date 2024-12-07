@@ -39,9 +39,9 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col items-center justify-between min-h-[100dvh] p-4">
+      <div className="flex flex-col min-h-[100dvh]">
         <AnimatedBackground />
-        <div className="flex-1 flex flex-col items-center justify-center w-full pt-16 sm:pt-8">
+        <div className="flex-grow flex flex-col items-center w-full pt-16 sm:pt-8 px-4">
           {isGenerating ? (
             <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
               <div className={getAspectRatioClass(imageAspectRatio)} style={{ maxWidth: '100%', maxHeight: '100%' }}>
