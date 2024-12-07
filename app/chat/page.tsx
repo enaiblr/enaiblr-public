@@ -145,7 +145,7 @@ export default function MinimalistChatbot() {
                                 <div className="sticky top-0 backdrop-blur-sm z-10">
                                     <ChatTitle compact clearMessages={clearMessages} />
                                 </div>
-                                <div className="flex-grow overflow-y-auto px-4">
+                                <div className="flex-grow overflow-y-auto px-4 pt-14">
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}
