@@ -122,7 +122,10 @@ export default function MinimalistChatbot() {
     return (
         <>
             <Sidebar />
-            <div className="flex flex-col h-screen">
+            <div className="flex flex-col h-screen" style={{ 
+                height: 'calc(100vh - env(safe-area-inset-bottom))',
+                paddingBottom: 'env(safe-area-inset-bottom)'
+            }}>
                 <AnimatedBackground />
                 {messages.length === 0 ? (
                     <div className="flex flex-col flex-grow">
@@ -163,16 +166,22 @@ export default function MinimalistChatbot() {
                     <div className="flex flex-col h-full w-full">
                         <div className="flex flex-col w-full min-w-[320px] max-w-[1200px] mx-auto h-full">
                             <div className="flex flex-col h-full">
-                                <div className="sticky top-0 backdrop-blur-sm z-10">
+                                <div className="sticky top-0 backdrop-blur-sm z-10" style={{ top: 'env(safe-area-inset-top)' }}>
                                     <ChatTitle compact clearMessages={clearMessages} />
                                 </div>
-                                <div className="flex-grow overflow-y-auto px-4" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+                                <div className="flex-grow overflow-y-auto px-4" style={{ 
+                                    paddingTop: 'env(safe-area-inset-top)',
+                                    paddingBottom: 'env(safe-area-inset-bottom)'
+                                }}>
                                     <MessageList
                                         messages={messages}
                                         messagesEndRef={messagesEndRef}
                                     />
                                 </div>
-                                <div className="w-full border-t border-gray-200">
+                                <div className="w-full border-t border-gray-200" style={{ 
+                                    paddingBottom: 'env(safe-area-inset-bottom)',
+                                    marginBottom: 'env(safe-area-inset-bottom)'
+                                }}>
                                     {localImageUrl && (
                                         <ImagePreview
                                             localImageUrl={localImageUrl}
