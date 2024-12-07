@@ -104,6 +104,31 @@ export default function MinimalistChatbot() {
     }, [messages]);
 
     useEffect(() => {
+        // Lock body scroll when keyboard is open on mobile
+        const lockBodyScroll = () => {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
+        };
+    
+        const unlockBodyScroll = () => {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
+        };
+    
+        window.addEventListener('focus', lockBodyScroll);
+        window.addEventListener('blur', unlockBodyScroll);
+    
+        return () => {
+            window.removeEventListener('focus', lockBodyScroll);
+            window.removeEventListener('blur', unlockBodyScroll);
+        };
+    }, []);
+
+    useEffect(() => {
         const handleKeyboardBehavior = () => {
             const handleResize = () => {
                 if (window.innerHeight > window.screen.height * 0.7) {
