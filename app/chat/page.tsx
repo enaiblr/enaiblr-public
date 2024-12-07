@@ -69,31 +69,33 @@ export default function MinimalistChatbot() {
             <AnimatedBackground />
             <div className="flex flex-col h-screen w-full min-w-[320px] mx-auto">
                 {messages.length === 0 ? (
-                    <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
-                        <ChatTitle clearMessages={clearMessages} />
-                        <div className="w-full max-w-3xl mt-8">
-                            {localImageUrl && (
-                                <ImagePreview
-                                    localImageUrl={localImageUrl}
-                                    isUploading={isUploading}
-                                    onRemove={() => {
-                                        clearImages();
-                                        if (fileInputRef.current) {
-                                            fileInputRef.current.value = '';
-                                        }
-                                    }}
+                    <div className="flex-1 flex flex-col items-center justify-between px-4 sm:px-6 md:px-8">
+                        <div className="w-full flex-1 flex flex-col items-center justify-center">
+                            <ChatTitle clearMessages={clearMessages} />
+                            <div className="w-full max-w-3xl mt-8">
+                                {localImageUrl && (
+                                    <ImagePreview
+                                        localImageUrl={localImageUrl}
+                                        isUploading={isUploading}
+                                        onRemove={() => {
+                                            clearImages();
+                                            if (fileInputRef.current) {
+                                                fileInputRef.current.value = '';
+                                            }
+                                        }}
+                                    />
+                                )}
+                                <ChatInput
+                                    input={input}
+                                    setInput={setInput}
+                                    isLoading={isLoading}
+                                    onSubmit={handleSubmit}
+                                    fileInputRef={fileInputRef}
+                                    onImageSelect={handleFileChange}
                                 />
-                            )}
-                            <ChatInput
-                                input={input}
-                                setInput={setInput}
-                                isLoading={isLoading}
-                                onSubmit={handleSubmit}
-                                fileInputRef={fileInputRef}
-                                onImageSelect={handleFileChange}
-                            />
+                            </div>
                         </div>
-                        <div className="mt-8 sm:mt-20">
+                        <div className="w-full flex justify-center py-4">
                             <RenderFooter />
                         </div>
                     </div>
