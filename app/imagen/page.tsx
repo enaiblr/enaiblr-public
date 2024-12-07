@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col items-center justify-between h-screen p-4">
+      <div className="flex flex-col items-center justify-between min-h-[100dvh] p-4">
         <AnimatedBackground />
         <div className="flex-1 flex flex-col items-center justify-center w-full pt-16 sm:pt-8">
           {isGenerating ? (

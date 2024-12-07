@@ -18,7 +18,7 @@ import type { SearchPageProps } from "./types";
 export default function SearchPage({ initialQuery }: SearchPageProps) {
     return (
         <Suspense fallback={
-            <div className="w-full h-screen flex items-center justify-center">
+            <div className="w-full h-[100dvh] flex items-center justify-center">
                 <div className="animate-pulse text-muted-foreground">Loading...</div>
             </div>
         }>
@@ -90,7 +90,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
 
     if (!isHomePage && (searchResults || isLoading)) {
         return (
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col h-[100dvh]">
                 <SearchHeader
                     query={query}
                     setQuery={setQuery}
@@ -136,7 +136,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
 
     // Home view
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="h-[100dvh] flex flex-col">
             <header className="sticky top-0 left-0 w-full p-4 z-10">
                 <div className="container mx-auto flex justify-end">
                     <a href="mailto:enaiblr@gmail.com">

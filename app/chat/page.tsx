@@ -49,6 +49,22 @@ export default function MinimalistChatbot() {
         }
     }, [messages, localImageUrl]);
 
+    useEffect(() => {
+        const adjustViewportHeight = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+
+        adjustViewportHeight();
+        window.addEventListener('resize', adjustViewportHeight);
+        window.addEventListener('orientationchange', adjustViewportHeight);
+
+        return () => {
+            window.removeEventListener('resize', adjustViewportHeight);
+            window.removeEventListener('orientationchange', adjustViewportHeight);
+        };
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const currentImageBase64 = imageBase64; // Store the base64 before clearing
@@ -72,7 +88,7 @@ export default function MinimalistChatbot() {
         <>
             <Sidebar />
             <AnimatedBackground />
-            <div className="flex flex-col h-screen w-full min-w-[320px] mx-auto">
+            <div className="flex flex-col w-full min-w-[320px] mx-auto" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
                 {messages.length === 0 ? (
                     <div className="flex-1 flex flex-col items-center justify-between px-4 sm:px-6 md:px-8">
                         <div className="w-full flex-1 flex flex-col items-center justify-center">

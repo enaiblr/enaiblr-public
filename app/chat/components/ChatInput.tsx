@@ -1,4 +1,5 @@
 import { Send, Image } from 'lucide-react'
+import { useRef } from 'react'
 
 interface ChatInputProps {
     input: string;
@@ -11,8 +12,17 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ input, setInput, isLoading, onSubmit, fileInputRef, onImageSelect, autoFocus }: ChatInputProps) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await onSubmit(e);
+        // Blur the input to hide keyboard
+        inputRef.current?.blur();
+    };
+
     return (
-        <form onSubmit={onSubmit} className="p-4">
+        <form onSubmit={handleSubmit} className="p-4">
             <div className="flex items-center bg-white rounded-full shadow-md max-w-4xl mx-auto border border-gray-200">
                 <div className="shrink-0">
                     <button
@@ -34,6 +44,7 @@ export function ChatInput({ input, setInput, isLoading, onSubmit, fileInputRef, 
 
                 <input
                     type="text"
+                    ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type a message..."
