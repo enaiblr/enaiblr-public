@@ -60,7 +60,7 @@ export function Sidebar() {
       <button
         ref={buttonRef}
         onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 p-2 hover:bg-gray-100 rounded-lg"
+        className="fixed top-4 left-4 z-50 p-2 rounded-lg"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
