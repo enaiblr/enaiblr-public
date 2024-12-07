@@ -98,7 +98,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                     handleBackToHome={handleBackToHome}
                     clearSearch={clearSearch}
                 />
-                <main className="container mx-auto px-5 py-8 flex-1 overflow-y-auto">
+                <main className="container mx-auto px-5 py-8 flex-1 overflow-y-auto h-[calc(100vh-160px)]">
                     {isLoading ? (
                         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                             {Array.from({ length: 4 }, (_, index) => (
@@ -127,7 +127,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                         </div>
                     )}
                 </main>
-                <div className="mt-8 sm:mt-20">
+                <div className="mt-8">
                     <RenderFooter />
                 </div>
             </div>
@@ -194,7 +194,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
 
                 {error && <p className="text-red-500">{error}</p>}
 
-                <div className="flex flex-wrap justify-center gap-2 max-w-2xl mt-6">
+                <div className="hidden sm:flex flex-wrap justify-center gap-2 max-w-2xl mt-6">
                     {TAGS.map((tag) => (
                         <Button
                             key={tag}
@@ -208,7 +208,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
                 </div>
             </main>
 
-            <div className="mt-8 sm:mt-20">
+            <div className="mt-8">
                 <RenderFooter />
             </div>
         </div>

@@ -127,7 +127,6 @@ export default function MinimalistChatbot() {
                                         isLoading={isLoading}
                                         fileInputRef={fileInputRef}
                                         onImageSelect={handleInputImageChange}
-                                        autoFocus={!hasUserSentMessage}
                                         imageBase64={imageBase64}
                                         clearImages={clearImages}
                                         sendMessage={handleSendMessage}
@@ -169,7 +168,6 @@ export default function MinimalistChatbot() {
                                         isLoading={isLoading}
                                         fileInputRef={fileInputRef}
                                         onImageSelect={handleInputImageChange}
-                                        autoFocus={!hasUserSentMessage}
                                         imageBase64={imageBase64}
                                         clearImages={clearImages}
                                         sendMessage={handleSendMessage}

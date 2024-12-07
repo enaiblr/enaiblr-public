@@ -27,7 +27,7 @@ export function ChatTitle({ compact, clearMessages }: ChatTitleProps) {
                 <span className="text-blue-600 whitespace-nowrap">Disposable</span>{' '}
                 <span className="whitespace-nowrap">AI Chat</span>
             </h1>
-            <p className="text-lg text-gray-500">
+            <p className="text-sm text-gray-500">
                 <b>No Limits. Not Recorded.</b>
             </p>
         </div>
