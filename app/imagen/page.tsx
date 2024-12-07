@@ -59,46 +59,72 @@ export default function Home() {
             </div>
           ) : (
             <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
-            <div className={`relative ${getAspectRatioClass(imageAspectRatio)}`} style={{ maxWidth: '100%', maxHeight: '100%' }}>
-              <img
-                src={generatedImage}
-                alt="Generated image"
-                className="w-full h-full object-contain rounded-lg"
-              />
-              <button
-                onClick={() => {
-                  const link = document.createElement('a');
-                  link.href = generatedImage;
-                  link.download = 'generated-image.png';
-                  link.click();
-                }}
-                className="absolute bottom-2 right-2 p-2 bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-full transition-colors"
-              >
-                <Download className="w-5 h-5 text-gray-700" />
-              </button>
+              <div className={`relative ${getAspectRatioClass(imageAspectRatio)}`} style={{ maxWidth: '100%', maxHeight: '100%' }}>
+                <img
+                  src={generatedImage}
+                  alt="Generated image"
+                  className="w-full h-full object-contain rounded-lg"
+                />
+                <button
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = generatedImage;
+                    link.download = 'generated-image.png';
+                    link.click();
+                  }}
+                  className="absolute bottom-2 right-2 p-2 bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-full transition-colors"
+                >
+                  <Download className="w-5 h-5 text-gray-700" />
+                </button>
+              </div>
             </div>
-          </div>
           )}
 
           <div className="w-full max-w-3xl space-y-8">
-            <ImageForm
+          <ImageForm
               defaultPrompt={defaultPrompt}
               onGenerateStart={handleGenerateStart}
               onGenerate={handleGenerate}
               onAspectRatioChange={setSelectedAspectRatio}
+              imageDisplayed={!!generatedImage}
             />
 
-            <div className="flex flex-wrap justify-center gap-2">
-              {EXAMPLE_PROMPTS.map((examplePrompt) => (
-                <button
-                  key={examplePrompt}
-                  onClick={() => setDefaultPrompt(examplePrompt)}
-                  className="px-4 py-2 text-sm bg-white/80 backdrop-blur-sm rounded-full border hover:bg-white/90 transition-colors"
-                >
-                  <span className="text-xs">{examplePrompt} →</span>
-                </button>
-              ))}
-            </div>
+            {!generatedImage && (
+              <div className="flex flex-wrap justify-center gap-2">
+                {EXAMPLE_PROMPTS.map((examplePrompt) => (
+                  <button
+                    key={examplePrompt}
+                    onClick={() => {
+                      setDefaultPrompt(examplePrompt);
+                      handleGenerateStart();
+                      const dimensions = { width: 768, height: 768 }; // default to standard square
+                      fetch('/api/generate', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          prompt: examplePrompt,
+                          ...dimensions
+                        }),
+                      })
+                        .then(response => {
+                          if (!response.ok) throw new Error('Failed to generate image');
+                          return response.json();
+                        })
+                        .then(data => handleGenerate(examplePrompt, data.imageData))
+                        .catch(error => {
+                          console.error('Error generating image:', error);
+                          handleGenerate(examplePrompt);
+                        });
+                    }}
+                    className="px-4 py-2 text-sm bg-white/80 backdrop-blur-sm rounded-full border hover:bg-white/90 transition-colors"
+                  >
+                    <span className="text-xs">{examplePrompt} →</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <div className="mt-16 sm:mt-20">

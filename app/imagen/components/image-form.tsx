@@ -19,10 +19,11 @@ interface ImageFormProps {
   onGenerate?: (prompt: string, imageData?: string) => void
   onGenerateStart?: () => void
   onAspectRatioChange?: (aspectRatio: 'wide' | 'square' | 'portrait') => void
+  imageDisplayed?: boolean
 }
 
-export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart, onAspectRatioChange }: ImageFormProps) {
-  const [showControls, setShowControls] = useState(false)
+export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart, onAspectRatioChange, imageDisplayed = false }: ImageFormProps) {
+  const [showControls, setShowControls] = useState(imageDisplayed)
   const [prompt, setPrompt] = useState(defaultPrompt)
   const [isGenerating, setIsGenerating] = useState(false)
   const [quality, setQuality] = useState<'standard' | 'hd'>('standard')
@@ -36,6 +37,10 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart, onA
   useEffect(() => {
     onAspectRatioChange?.(aspectRatio)
   }, [aspectRatio, onAspectRatioChange])
+
+  useEffect(() => {
+    setShowControls(imageDisplayed)
+  }, [imageDisplayed])
 
   const getDimensions = (quality: 'standard' | 'hd', aspectRatio: 'wide' | 'square' | 'portrait'): { width: number, height: number } => {
     if (quality === 'standard') {
@@ -103,7 +108,7 @@ export function ImageForm({ defaultPrompt = "", onGenerate, onGenerateStart, onA
             placeholder="Imagine something..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="pl-16 pr-12 min-h-[3.5rem] py-4 text-base sm:text-lg rounded-2xl w-full resize-none overflow-y-hidden"
+            className="pl-16 pr-12 min-h-[3.5rem] py-4 text-base sm:text-lg rounded-2xl w-full resize-none overflow-y-hidden shadow-[0_0_0_1px_rgba(0,0,0,0.1)] focus:shadow-[0_0_0_2px_rgba(0,0,0,0.2)] transition-shadow"
             rows={1}
             style={{
               height: 'auto',
