@@ -6,10 +6,15 @@ const together = new Together({ apiKey: process.env.TOGETHER_API_KEY });
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { messages, imageUrl } = body;
+    const { messages, imageBase64 } = body;
+
+    // If there's a base64 image, add it to the messages
+    const messagesWithImage = imageBase64
+      ? [...messages, { role: 'user', content: imageBase64 }]
+      : messages;
 
     const response = await together.chat.completions.create({
-      messages,
+      messages: messagesWithImage,
       model: 'meta-llama/Llama-Vision-Free',
       max_tokens: 1024,
       temperature: 0.7,

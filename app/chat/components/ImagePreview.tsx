@@ -1,35 +1,33 @@
 interface ImagePreviewProps {
-    localImageUrl: string | null;
-    tempImageUrl: string | null;
+    localImageUrl: string;
     isUploading: boolean;
     onRemove: () => void;
 }
 
-export function ImagePreview({ localImageUrl, tempImageUrl, isUploading, onRemove }: ImagePreviewProps) {
+export function ImagePreview({ localImageUrl, isUploading, onRemove }: ImagePreviewProps) {
     return (
-        <div className="mb-0 flex justify-center">
-            <div className="relative bg-white p-2 rounded-lg shadow-md inline-block">
-                <div className="relative">
-                    <img
-                        src={localImageUrl || tempImageUrl || undefined}
-                        alt="Preview"
-                        className={`h-20 w-20 object-cover rounded-lg transition-opacity duration-200 ${isUploading ? 'opacity-50' : 'opacity-100'}`}
-                    />
-                    {isUploading && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-6 h-6 border-2 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
-                        </div>
-                    )}
-                </div>
-                <button
-                    type="button"
-                    onClick={onRemove}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none"
-                    style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    ×
-                </button>
+        <div className="relative inline-block mb-4">
+            <div className="relative">
+                <img
+                    src={localImageUrl}
+                    alt="Preview"
+                    className="max-h-[200px] rounded-lg object-contain"
+                />
+                {isUploading && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+                    </div>
+                )}
             </div>
+            <button
+                onClick={onRemove}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                aria-label="Remove image"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+            </button>
         </div>
     );
 }

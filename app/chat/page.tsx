@@ -16,7 +16,7 @@ export default function MinimalistChatbot() {
     const {
         isUploading,
         localImageUrl,
-        tempImageUrl,
+        imageBase64,
         clearImages,
         handleImageChange,
     } = useImageUpload();
@@ -27,11 +27,11 @@ export default function MinimalistChatbot() {
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages, localImageUrl, tempImageUrl])
+    }, [messages, localImageUrl])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const currentTempImageUrl = tempImageUrl; // Store the URL before clearing
+        const currentImageBase64 = imageBase64; // Store the base64 before clearing
 
         // Clear images and input immediately
         clearImages();
@@ -40,8 +40,8 @@ export default function MinimalistChatbot() {
             fileInputRef.current.value = '';
         }
 
-        // Send message with the stored URL
-        await sendMessage(input, currentTempImageUrl);
+        // Send message with the stored base64
+        await sendMessage(input, currentImageBase64);
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,10 +57,9 @@ export default function MinimalistChatbot() {
                     <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
                         <ChatTitle clearMessages={clearMessages} />
                         <div className="w-full max-w-3xl mt-8">
-                            {(localImageUrl || tempImageUrl) && (
+                            {localImageUrl && (
                                 <ImagePreview
                                     localImageUrl={localImageUrl}
-                                    tempImageUrl={tempImageUrl}
                                     isUploading={isUploading}
                                     onRemove={() => {
                                         clearImages();
@@ -79,6 +78,9 @@ export default function MinimalistChatbot() {
                                 onImageSelect={handleFileChange}
                             />
                         </div>
+                        <div className="mt-8 sm:mt-20">
+                            <RenderFooter />
+                        </div>
                     </div>
                 ) : (
                     <>
@@ -88,10 +90,9 @@ export default function MinimalistChatbot() {
                             messagesEndRef={messagesEndRef}
                         />
                         <div className="w-full border-gray-200">
-                            {(localImageUrl || tempImageUrl) && (
+                            {localImageUrl && (
                                 <ImagePreview
                                     localImageUrl={localImageUrl}
-                                    tempImageUrl={tempImageUrl}
                                     isUploading={isUploading}
                                     onRemove={() => {
                                         clearImages();
@@ -111,11 +112,6 @@ export default function MinimalistChatbot() {
                             />
                         </div>
                     </>
-                )}
-                {messages.length === 0 && (
-                    <div className="mt-8 sm:mt-20">
-                        <RenderFooter />
-                    </div>
                 )}
             </div>
         </>

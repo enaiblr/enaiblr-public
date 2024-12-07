@@ -4,17 +4,17 @@ import imageCompression from 'browser-image-compression';
 export function useImageUpload() {
     const [isUploading, setIsUploading] = useState(false);
     const [localImageUrl, setLocalImageUrl] = useState<string | null>(null);
-    const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
+    const [imageBase64, setImageBase64] = useState<string | null>(null);
 
     const handleImageChange = (file: File | null) => {
         if (file) {
             const url = URL.createObjectURL(file);
             setLocalImageUrl(url);
-            handleImageUpload(file);
+            handleImageProcessing(file);
         }
     };
 
-    const handleImageUpload = async (file: File) => {
+    const handleImageProcessing = async (file: File) => {
         setIsUploading(true);
         try {
             // Compression options
@@ -23,30 +23,29 @@ export function useImageUpload() {
                 maxWidthOrHeight: 1920,    
                 useWebWorker: true,        
                 fileType: 'image/webp', 
-                initialQuality: 0.8,       // Start with 80% quality   
-                alwaysKeepResolution: true // Maintain resolution unless maxWidthOrHeight is exceeded
+                initialQuality: 0.8,       
+                alwaysKeepResolution: true 
             }
 
             // Compress the image
             let compressedFile = await imageCompression(file, options);
 
             // If still too large, compress again with lower quality
-            if (compressedFile.size > 1024 * 1024) {  // if > 1MB
-                options.initialQuality = 0.6;  // Reduce quality to 60%
+            if (compressedFile.size > 1024 * 1024) {  
+                options.initialQuality = 0.6;  
                 compressedFile = await imageCompression(compressedFile, options);
             }
 
-            const formData = new FormData();
-            formData.append('file', compressedFile);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-            setTempImageUrl(data.url);
+            // Convert to Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(compressedFile);
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                setImageBase64(base64String);
+                setIsUploading(false);
+            };
         } catch (error) {
-            console.error('Error uploading file:', error);
-        } finally {
+            console.error('Error processing image:', error);
             setIsUploading(false);
         }
     };
@@ -56,14 +55,14 @@ export function useImageUpload() {
             URL.revokeObjectURL(localImageUrl);
         }
         setLocalImageUrl(null);
-        setTempImageUrl(null);
+        setImageBase64(null);
     };
 
     return {
         isUploading,
         localImageUrl,
-        tempImageUrl,
+        imageBase64,
+        clearImages,
         handleImageChange,
-        clearImages
     };
 }
