@@ -187,7 +187,7 @@ export default function MinimalistChatbot() {
                                         messagesEndRef={messagesEndRef}
                                     />
                                 </div>
-                                <div className="w-full border-t border-gray-200 bg-white sticky bottom-0">
+                                <div className="w-full border-t backdrop-blur-sm border-gray-200 sticky bottom-0">
                                     {localImageUrl && (
                                         <ImagePreview
                                             localImageUrl={localImageUrl}
