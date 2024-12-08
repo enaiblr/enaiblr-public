@@ -46,7 +46,7 @@ export default function Home() {
       <div className="flex flex-col min-h-[100dvh] imagen-layout pt-0"> {/* Removed any top padding */}
         <AnimatedBackground />
         {hasInteracted && (
-          <div className="fixed top-0 left-0 right-0 z-10 w-full backdrop-blur-sm border-b border-gray-200 sm:pt-0 pt-2 bg-white/50 bg-opacity-50">
+          <div className="fixed top-0 left-0 right-0 z-10 w-full backdrop-blur-sm border-b border-gray-200 sm:pt-0 pt-2">
             <div className="max-w-4xl mx-auto px-4 py-2 sm:py-4 md:px-6 text-center relative">
               <h1 className="text-xl font-semibold">
                 <span className="text-blue-600">Image</span> Creator
