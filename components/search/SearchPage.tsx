@@ -90,7 +90,7 @@ function SearchPageContent({ initialQuery }: SearchPageProps) {
 
     if (!isHomePage && (searchResults || isLoading)) {
         return (
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col min-h-screen search-layout">
                 <SearchHeader
                     query={query}
                     setQuery={setQuery}

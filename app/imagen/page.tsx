@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col min-h-[100dvh]">
+      <div className="flex flex-col min-h-[100dvh] imagen-layout">
         <AnimatedBackground />
         <div className="flex-grow flex flex-col items-center justify-center w-full pt-16 sm:pt-0 px-4 overflow-y-auto">
           {isGenerating ? (

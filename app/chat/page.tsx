@@ -171,7 +171,7 @@ export default function MinimalistChatbot() {
         <>
             <Sidebar />
             <div
-                className="flex flex-col h-screen relative"
+                className="flex flex-col h-screen relative chat-layout"
                 style={{
                     height: 'calc(var(--vh, 1vh) * 100)',
                     minHeight: '-webkit-fill-available'

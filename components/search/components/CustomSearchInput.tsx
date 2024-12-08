@@ -47,7 +47,7 @@ const CustomSearchInput = React.forwardRef<HTMLInputElement, CustomSearchInputPr
         <Input
           ref={forwardedRef}
           className={cn(
-            "pl-[10rem] pr-9 flex items-center h-full",
+            "pl-[8rem] pr-9 flex items-center h-full",
             className
           )}
           value={inputValue}
