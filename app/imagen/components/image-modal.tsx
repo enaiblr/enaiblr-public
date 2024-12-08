@@ -37,17 +37,9 @@ export function ImageModal({ isOpen, onClose, imageUrl }: ImageModalProps) {
             className="max-w-full max-h-[90vh] object-contain rounded-lg"
           />
           <button
-            onClick={onClose}
-            className="absolute top-2 right-2 p-2 bg-white/30 hover:bg-white/50 rounded-full transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-          <button
             onClick={handleDownload}
-            className="absolute top-2 right-14 p-2 bg-white/30 hover:bg-white/50 rounded-full transition-colors"
+            className="absolute bottom-2 right-2 p-2 bg-white/30 hover:bg-white/50 rounded-full transition-colors"
+            aria-label="Download image"
           >
             <Download className="w-6 h-6" />
           </button>
