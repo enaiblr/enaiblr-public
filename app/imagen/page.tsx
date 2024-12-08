@@ -43,9 +43,18 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col min-h-[100dvh] imagen-layout">
+      <div className="flex flex-col min-h-[100dvh] imagen-layout pt-0"> {/* Removed any top padding */}
         <AnimatedBackground />
-        <div className="flex-grow flex flex-col items-center justify-center w-full pt-16 sm:pt-0 px-4 overflow-y-auto">
+        {hasInteracted && (
+          <div className="fixed top-0 left-0 right-0 z-10 w-full backdrop-blur-sm border-b border-gray-200 sm:pt-0 pt-2 bg-white/50 bg-opacity-50">
+            <div className="max-w-4xl mx-auto px-4 py-2 sm:py-4 md:px-6 text-center relative">
+              <h1 className="text-xl font-semibold">
+                <span className="text-blue-600">Image</span> Creator
+              </h1>
+            </div>
+          </div>
+        )}
+        <div className={`flex-grow flex flex-col items-center justify-center w-full px-4 overflow-y-auto ${hasInteracted ? 'pt-20' : ''}`}>
           {isGenerating ? (
             <div className="relative w-full max-w-[640px] flex items-center justify-center h-[50vh] mx-auto mb-8">
               <div className={getAspectRatioClass(imageAspectRatio)} style={{ maxWidth: '100%', maxHeight: '100%' }}>
@@ -66,7 +75,7 @@ export default function Home() {
               <div className={`relative ${getAspectRatioClass(imageAspectRatio)}`} style={{ maxWidth: '100%', maxHeight: '100%' }}>
                 <img
                   src={generatedImage}
-                  alt="Generated image" 
+                  alt="Generated image"
                   className="w-full h-full object-contain rounded-lg cursor-pointer"
                   onClick={() => setIsModalOpen(true)}
                 />
