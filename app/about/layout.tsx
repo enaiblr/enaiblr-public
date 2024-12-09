@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Appline - Modern SaaS Platform',
-  description: 'Build your next SaaS platform faster than ever with Appline.',
+  title: 'Enaiblr - Platform AI All-in-One',
+  description: 'Akses Seluruh AI Tanpa Batas dalam Satu Platform dengan Harga Terjangkau'
 };
 
 export default function RootLayout({
@@ -16,10 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, 'min-h-screen bg-background')} suppressHydrationWarning>
+      <div className={cn(inter.className, 'min-h-screen bg-background')}>
         {children}
-      </body>
-    </html>
+      </div>
   );
 }

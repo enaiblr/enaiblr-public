@@ -1,29 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const Hero = () => {
   return (
-    <section className="pt-24 pb-12 md:pt-32 md:pb-20">
+    <section className="pt-24 pb-12 md:pt-60 md:pb-20">
       <div className="container px-4 mx-auto">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">
-            Build your next{" "}
+            Akses Seluruh {" "}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              SaaS platform
+              AI Tanpa Batas
             </span>{" "}
-            faster than ever
+            dalam Satu Platform
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Launch your SaaS product quickly with our modern tech stack and
-            pre-built components. Focus on your business logic, we handle the rest.
+            Tingkatkan produktivitasmu dengan akses ke beragam jenis AI dalam satu akun. Harga terjangkau, tak perlu lagi membayar langganan satu per satu.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gap-2">
-              Get Started <ArrowRight className="w-4 h-4" />
+            <Button size="lg" className="gap-2 w-full sm:w-auto bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
+              Mulai <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button size="lg" variant="outline">
-              Live Demo
-            </Button>
+            <Link href="#features">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                Lihat Fitur
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -18,18 +18,18 @@ const Header = () => {
   }, []);
 
   const navigation = [
-    { name: "Features", href: "#features" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "Pricing", href: "#pricing" },
+    { name: "Fitur", href: "#features" },
+    { name: "Testimoni", href: "#testimonials" },
+    { name: "Harga", href: "#pricing" },
   ];
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : ""}`}>
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-16">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold">
-              Appline
+            <Link href="/about" className="text-2xl font-bold">
+              en<span className="text-blue-600 font-ibm-plex-mono-regular">ai</span>blr
             </Link>
           </div>
 
@@ -45,7 +45,7 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button>Get Started</Button>
+              <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">Login</Button>
             </div>
           </div>
 
