@@ -12,26 +12,26 @@ import { cn } from "@/lib/utils";
 
 const plans = [
   {
-    name: "Starter",
-    price: "$29",
-    description: "Perfect for small teams and startups",
+    name: "Gratis",
+    price: "Rp0",
+    description: "Cocok untuk Pengguna Baru",
     features: [
-      "Up to 5 team members",
-      "Basic analytics",
-      "24/7 email support",
-      "1 project",
+      "Chatbot AI tanpa History",
+      "Image Generator Non-HD",
+      "AI Search 1 Query/Hari",
+      "Transcription 10 Menit",
     ],
   },
   {
-    name: "Pro",
-    price: "$79",
-    description: "Best for growing businesses",
+    name: "All Access",
+    price: "Rp49.000",
+    description: "Akses Semua Fitur AI Lengkap",
     features: [
-      "Up to 20 team members",
-      "Advanced analytics",
-      "Priority support",
-      "5 projects",
-      "Custom integrations",
+      "Unlimited Chatbot dengan History",
+      "Unlimited Image Generator HD",
+      "Unlimited AI Search Query",
+      "Transcription 100 Menit",
+      "Tutorial dan Akses Support",
     ],
     popular: true,
   },
@@ -63,7 +63,7 @@ const Pricing = () => {
             </span> {" "}
             </h2>
           <p className="text-muted-foreground">
-            Choose the perfect plan for your needs. No hidden fees.
+            Fitur AI terlengkap dan tanpa batas dengan harga paling murah.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -90,7 +90,7 @@ const Pricing = () => {
               <CardContent>
                 <div className="mb-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground">/month</span>
+                  <span className="text-muted-foreground">/bulan</span>
                 </div>
                 <ul className="space-y-2">
                   {plan.features.map((feature, i) => (

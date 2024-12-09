@@ -7,21 +7,26 @@ import CTA from './components/CTA';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Loading from '@/components/ui/loading';
+import AnimatedBackground from './components/AnimatedBackground';
 
 export default function Home() {
   return (
     <>
-      <Header />
-      <main>
-        <Suspense fallback={<Loading />}>
-          <Hero />
-          <Features />
-          <Testimonials />
-          <Pricing />
-          <CTA />
-        </Suspense>
-      </main>
-      <Footer />
+      <div className="relative min-h-screen">
+        <AnimatedBackground />
+        <div className="relative z-10"></div>
+        <Header />
+        <main>
+          <Suspense fallback={<Loading />}>
+            <Hero />
+            <Features />
+            <Testimonials />
+            <Pricing />
+            <CTA />
+          </Suspense>
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }
