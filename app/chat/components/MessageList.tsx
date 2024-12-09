@@ -44,6 +44,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
     }, []);
 
     return (
+        <>
         <div
             ref={messageListRef}
             className="flex-1 overflow-y-auto scrollbar-hide relative h-full"
@@ -101,5 +102,13 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
                 aria-hidden="true"
             />
         </div>
+        <style>{`
+            .prose pre, .prose code {
+                white-space: pre-wrap;
+                overflow-wrap: break-word;
+                overflow-x: auto;
+            }
+        `}</style>
+        </>
     );
 }
