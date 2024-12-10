@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const plans = [
   {
@@ -56,12 +57,12 @@ const Pricing = () => {
       <div className="container px-4 mx-auto">
         <div className="max-w-2xl mx-auto text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">
-            Harga Tunggal dan 
+            Harga Tunggal dan
             {" "}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-            Terjangkau
+              Terjangkau
             </span> {" "}
-            </h2>
+          </h2>
           <p className="text-muted-foreground">
             Fitur AI terlengkap dan tanpa batas dengan harga paling murah.
           </p>
@@ -70,11 +71,10 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`relative ${
-                plan.popular
+              className={`relative ${plan.popular
                   ? "border-blue-600 shadow-lg scale-105"
                   : "border-border"
-              }`}
+                }`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -102,13 +102,15 @@ const Pricing = () => {
                 </ul>
               </CardContent>
               <CardFooter>
-              <button
-      className={cn(
-        "w-full rounded-lg px-4 py-2",
-        plan?.popular 
-          ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90"
-          : "border border-gray-200 bg-white text-gray-900 hover:bg-gray-100",
-      )}>Get Started</button>
+              <Link href="/" className="w-full">
+                <button
+                  className={cn(
+                    "w-full rounded-lg px-4 py-2",
+                    plan?.popular
+                      ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90"
+                      : "border border-gray-200 bg-white text-gray-900 hover:bg-gray-100",
+                  )}>Mulai Sekarang</button>
+                  </Link>
               </CardFooter>
             </Card>
           ))}

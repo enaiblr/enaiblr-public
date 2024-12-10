@@ -45,7 +45,9 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">Login</Button>
+              <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
+              <Link href="#features">Mulai</Link>
+              </Button>
             </div>
           </div>
 
@@ -78,7 +80,7 @@ const Header = () => {
             ))}
             <div className="px-3 py-2">
               <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
-                Get Started
+              <Link href="#features">Mulai Sekarang</Link>
               </Button>
             </div>
           </div>

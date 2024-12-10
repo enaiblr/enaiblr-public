@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const CTA = () => {
   return (
@@ -17,11 +18,13 @@ const CTA = () => {
             Gabung sekarang untuk membuka akses ke seluruh fitur AI tanpa batas.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
-              Get Started Now <ArrowRight className="w-4 h-4" />
+          <Link href="/">
+          <Button size="lg" className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
+              Akses Sekarang <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button size="lg" variant="outline">
-              Contact Admin
+            </Link>
+            <Button size="lg" variant="outline" asChild>
+              <a href="https://wa.me/+6281280077690" target="_blank" rel="noopener noreferrer">Contact Admin</a>
             </Button>
           </div>
         </div>
