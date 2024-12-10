@@ -71,10 +71,12 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`relative ${plan.popular
+              className={cn(
+                "relative flex flex-col h-full",
+                plan.popular
                   ? "border-blue-600 shadow-lg scale-105"
                   : "border-border"
-                }`}
+              )}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -83,16 +85,16 @@ const Pricing = () => {
                   </span>
                 </div>
               )}
-              <CardHeader>
+              <CardHeader className="text-center">
                 <CardTitle>{plan.name}</CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="mb-4">
+              <CardContent className="flex flex-col flex-grow">
+                <div className="mb-4 text-center">
                   <span className="text-4xl font-bold">{plan.price}</span>
                   <span className="text-muted-foreground">/bulan</span>
                 </div>
-                <ul className="space-y-2">
+                <ul className="space-y-2 max-w-[90%] mx-auto">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-primary" />
@@ -101,16 +103,16 @@ const Pricing = () => {
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter>
-              <Link href="/" className="w-full">
-                <button
-                  className={cn(
-                    "w-full rounded-lg px-4 py-2",
-                    plan?.popular
-                      ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90"
-                      : "border border-gray-200 bg-white text-gray-900 hover:bg-gray-100",
-                  )}>Mulai Sekarang</button>
-                  </Link>
+              <CardFooter className="mt-auto">
+                <Link href="/" className="w-full">
+                  <button
+                    className={cn(
+                      "w-full rounded-lg px-4 py-2",
+                      plan?.popular
+                        ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90"
+                        : "border border-gray-200 bg-white text-gray-900 hover:bg-gray-100",
+                    )}>Mulai Sekarang</button>
+                </Link>
               </CardFooter>
             </Card>
           ))}
