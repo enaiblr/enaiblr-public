@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileAudio, Check, AlertCircle } from 'lucide-react';
+import { Upload, FileAudio, Check, AlertCircle, X } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { Progress } from './ui/Progress';
+import { Groq } from 'groq-sdk';
 
 interface UploadFormProps {
   onTranscriptionComplete: (result: any) => void;
@@ -52,36 +53,58 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
     if (!file) return;
 
     setIsUploading(true);
+    setUploadProgress(0);
 
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + 10;
+    try {
+      // Create FormData
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('language', selectedLanguage);
+
+      // Start upload and transcription
+      const response = await fetch('/api/transcribe', {
+        method: 'POST',
+        body: formData,
       });
-    }, 500);
 
-    // Simulate transcription process
-    setTimeout(() => {
-      clearInterval(interval);
-      setIsUploading(false);
-      setUploadProgress(0);
+      if (!response.ok) {
+        throw new Error('Transcription failed');
+      }
 
-      // Mock transcription result
-      onTranscriptionComplete({
+      const result = await response.json();
+
+      // Process the transcription result
+      const processedResult = {
         fileName: file.name,
-        audioDuration: "5:30",
-        textLength: 850,
+        audioDuration: formatDuration(result.duration),
+        textLength: result.text.length,
         transcriptionDate: new Date(),
-        segments: [
-          { startTime: 0, endTime: 3.5, text: "Hello, this is a sample transcription." },
-          { startTime: 3.5, endTime: 7.2, text: "The actual transcription would contain real content." }
-        ]
-      });
-    }, 6000);
+        segments: result.segments.map((segment: any) => ({
+          startTime: segment.start,
+          endTime: segment.end,
+          text: segment.text.trim()
+        }))
+      };
+
+      setIsUploading(false);
+      onTranscriptionComplete(processedResult);
+
+    } catch (error) {
+      setError('Transcription failed. Please try again.');
+      setIsUploading(false);
+    }
+  };
+
+  const formatDuration = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.round(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const clearError = () => {
+    setError(null);
+    setErrorDetails(null);
+    setFile(null);
   };
 
   return (
@@ -101,49 +124,74 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
           />
         </div>
 
-        <div
-          {...getRootProps()}
-          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
-            ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
-            ${error ? 'border-red-500 bg-red-50' : ''}`}
-        >
-          <input {...getInputProps()} />
-          <div className="flex flex-col items-center space-y-4">
-            {error ? (
-              <>
-                <AlertCircle className="h-12 w-12 text-red-500" />
-                <div className="space-y-1">
-                  <p className="text-red-600 font-medium">{error}</p>
-                  {errorDetails && (
-                    <p className="text-sm text-red-500">
-                      {errorDetails}
-                    </p>
-                  )}
-                </div>
-              </>
-            ) : file ? (
-              <>
-                <Check className="h-12 w-12 text-green-500" />
-                <span className="text-green-600 font-medium">{file.name}</span>
-              </>
-            ) : (
-              <>
-                <FileAudio className="h-12 w-12 text-gray-400" />
-                <div className="space-y-1">
-                  <p className="text-gray-700 font-medium">
-                    Drop your audio file here
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    or click to select a file.
-                  </p>
-                  {/* <p className="text-xs text-gray-500">
+        <div className="relative">
+          {error && (
+            <button
+              type="button"
+              onClick={clearError}
+              className="absolute -top-2 -right-2 z-10 p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
+            >
+              <X className="h-5 w-5 text-gray-500" />
+            </button>
+          )}
+
+          <div className="relative">  {/* Wrapper for dropzone */}
+            {file && (
+              <button
+                type="button"
+                onClick={() => setFile(null)}
+                className="absolute -top-2 -right-2 z-10 p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            )}
+
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+                ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
+                ${error ? 'border-red-500 bg-red-50' : ''}`}
+            >
+              <input {...getInputProps()} />
+              <div className="flex flex-col items-center space-y-4">
+                {error ? (
+                  <>
+                    <AlertCircle className="h-12 w-12 text-red-500" />
+                    <div className="space-y-1">
+                      <p className="text-red-600 font-medium">{error}</p>
+                      {errorDetails && (
+                        <p className="text-sm text-red-500">
+                          {errorDetails}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                ) : file ? (
+                  <>
+                    <Check className="h-12 w-12 text-green-500" />
+                    <span className="text-green-600 font-medium">{file.name}</span>
+                  </>
+                ) : (
+                  <>
+                    <FileAudio className="h-12 w-12 text-gray-400" />
+                    <div className="space-y-1">
+                      <p className="text-gray-700 font-medium">
+                        Drop your audio file here
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        or click to select a file.
+                      </p>
+                      {/* <p className="text-xs text-gray-500">
                     Max size: 40MB. Formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm
                   </p> */}
-                </div>
-              </>
-            )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
+
 
         {isUploading && (
           <div className="space-y-2">
