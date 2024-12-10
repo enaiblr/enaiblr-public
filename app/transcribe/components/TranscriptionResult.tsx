@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Clock, FileText, Calendar } from 'lucide-react';
+import { Download, Clock, FileText, Calendar, RefreshCw } from 'lucide-react';
 import { Tabs } from './ui/Tabs';
 import type { TranscriptionResult } from '../types';
 
@@ -26,7 +26,14 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 bg-white/30 backdrop-blur-sm border-b z-20">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-center relative">
+          <button 
+            onClick={() => window.location.reload()}
+            className="absolute right-4 text-gray-600 hover:text-blue-600 transition-colors"
+            title="New Transcription"
+          >
+            <RefreshCw size={20} />
+          </button>
           <h1 className="text-xl font-bold">Transcription <span className='text-blue-600'>Result</span></h1>
         </div>
       </div>

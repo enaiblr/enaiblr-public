@@ -85,7 +85,7 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4">
+    <div className="w-11/12 md:w-4/5 lg:w-1/2 mx-auto px-4">
       <h1 className="text-4xl font-bold text-center mb-8">
         Audio <span className="text-blue-600">Transcription AI</span>
       </h1>
