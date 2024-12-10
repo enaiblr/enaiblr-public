@@ -1,121 +1,117 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+
+interface Particle {
+  x: number;
+  y: number;
+  dx: number;
+  dy: number;
+}
 
 const AnimatedBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+useEffect(() => {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // Set canvas size with device pixel ratio for HD
+  const resizeCanvas = () => {
+    const pixelRatio = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    // Set display size (css pixels)
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    
+    // Set actual size in memory (scaled to account for extra pixel density)
+    canvas.width = width * pixelRatio;
+    canvas.height = height * pixelRatio;
+    
+    // Normalize coordinate system to use css pixels
+    ctx.scale(pixelRatio, pixelRatio);
+  };
+  
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+    // Create particles
+    const particleCount = 50;
+    const particles: Particle[] = [];
+    const connectionDistance = 150; // Maximum distance for connecting particles
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        dx: (Math.random() - 0.5) * 1, // Random velocity X
+        dy: (Math.random() - 0.5) * 1, // Random velocity Y
+      });
+    }
+
+    // Animation loop
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update and draw particles
+      particles.forEach((particle) => {
+        // Update position
+        particle.x += particle.dx;
+        particle.y += particle.dy;
+
+        // Bounce off walls
+        if (particle.x < 0 || particle.x > canvas.width) particle.dx *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.dy *= -1;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#60a5fa';
+        ctx.fill();
+
+        // Connect particles
+        particles.forEach((otherParticle) => {
+          const dx = particle.x - otherParticle.x;
+          const dy = particle.y - otherParticle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < connectionDistance) {
+            ctx.beginPath();
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(otherParticle.x, otherParticle.y);
+            ctx.strokeStyle = `rgba(96, 165, 250, ${1 - distance / connectionDistance})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        });
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, []);
+
   return (
-    <div className="animated-background">
-      <style jsx>{`
-        .animated-background {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          z-index: -1 ;
-          background-color: white;
-        }
-
-        .line {
-          position: absolute;
-          background-color: #e6f3ff;
-          transition: all 0.5s ease;
-        }
-
-        .line-1, .line-3, .line-5, .line-7 {
-          width: 2px;
-          height: 100%;
-        }
-
-        .line-2, .line-4, .line-6, .line-8 {
-          width: 100%;
-          height: 2px;
-        }
-
-        .line-1 {
-          left: 15%;
-          animation: moveVertical 20s infinite alternate;
-        }
-
-        .line-2 {
-          top: 20%;
-          animation: moveHorizontal 18s infinite alternate;
-        }
-
-        .line-3 {
-          left: 40%;
-          animation: moveVertical 22s infinite alternate-reverse;
-        }
-
-        .line-4 {
-          top: 45%;
-          animation: moveHorizontal 21s infinite alternate-reverse;
-        }
-
-        .line-5 {
-          right: 35%;
-          animation: moveVertical 24s infinite alternate;
-        }
-
-        .line-6 {
-          bottom: 30%;
-          animation: moveHorizontal 19s infinite alternate;
-        }
-
-        .line-7 {
-          right: 10%;
-          animation: moveVertical 23s infinite alternate-reverse;
-        }
-
-        .line-8 {
-          bottom: 10%;
-          animation: moveHorizontal 20s infinite alternate-reverse;
-        }
-
-        .dot {
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background-color: #b3d9ff;
-          transform: translate(-50%, -50%);
-        }
-
-        @keyframes moveVertical {
-          0% {
-            transform: translateY(-100%);
-          }
-          100% {
-            transform: translateY(100%);
-          }
-        }
-
-        @keyframes moveHorizontal {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
-      <div className="line line-1"></div>
-      <div className="line line-2"></div>
-      <div className="line line-3"></div>
-      <div className="line line-4"></div>
-      <div className="line line-5"></div>
-      <div className="line line-6"></div>
-      <div className="line line-7"></div>
-      <div className="line line-8"></div>
-      {[15, 40, 65, 90].map((x) =>
-        [20, 45, 70, 90].map((y) => (
-          <div key={`${x}-${y}`} className="dot" style={{ left: `${x}%`, top: `${y}%` }}></div>
-        ))
-      )}
+    <div className="animated-background fixed inset-0 w-full h-full z-[1]">
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 w-full h-full"
+        style={{
+          backgroundColor: '#f8fafc',
+          zIndex: 0,
+        }}
+      />
     </div>
   );
 };
 
 export default AnimatedBackground;
-

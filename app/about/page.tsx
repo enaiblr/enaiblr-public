@@ -12,11 +12,10 @@ import AnimatedBackground from './components/AnimatedBackground';
 export default function Home() {
   return (
     <>
-      <div className="relative min-h-screen">
+      <div className="relative min-h-screen scroll-smooth">
         <AnimatedBackground />
-        <div className="relative z-10"></div>
         <Header />
-        <main>
+        <main className="scroll-smooth relative z-[2]">
           <Suspense fallback={<Loading />}>
             <Hero />
             <Features />

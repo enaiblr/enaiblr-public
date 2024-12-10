@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import AnimatedBackground from '../components/AnimatedBackground';
 
 const Hero = () => {
   return (
-    <section className="pt-24 pb-12 md:pt-60 md:pb-20">
-      <div className="container px-4 mx-auto ">
+    <section className="min-h-screen flex items-center">
+      <div className="container px-4 mx-auto">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">
             Akses Seluruh {" "}
