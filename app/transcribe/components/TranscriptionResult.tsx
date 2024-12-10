@@ -286,12 +286,12 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
               <span>Duration: {result.audioDuration}</span>
             </div>
             <div className="flex items-center space-x-2 text-gray-600 justify-center">
-              <LetterText className="h-5 w-5 mr-2" />
-              <span>Characters: {result.textLength}</span>
-            </div>
-            <div className="flex items-center space-x-2 text-gray-600 justify-center">
               <FileText className="h-5 w-5 mr-2" />
               <span>Words: {result.segments.map(segment => segment.text).join(' ').split(' ').length}</span>
+            </div>
+            <div className="flex items-center space-x-2 text-gray-600 justify-center">
+              <LetterText className="h-5 w-5 mr-2" />
+              <span>Characters: {result.textLength}</span>
             </div>
             <div className="flex justify-center">
               <button

@@ -26,11 +26,23 @@ const apps = [
 
 
 export function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
+  // First useEffect for auto-opening on homepage
+  useEffect(() => {
+    if (pathname === '/') {
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
+  // Second useEffect for handling click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
