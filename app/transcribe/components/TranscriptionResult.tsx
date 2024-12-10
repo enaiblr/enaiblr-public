@@ -22,9 +22,9 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
         line: 360, // 1.2 spacing = 360 (240 * 1.2)
       },
     };
-  
+
     let doc;
-  
+
     if (activeTab === 'timestamps') {
       // First create the table with all its rows
       const table = new Table({
@@ -54,7 +54,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
                   size: 25,
                   type: WidthType.PERCENTAGE,
                 },
-                children: [new Paragraph({ 
+                children: [new Paragraph({
                   text: "Timestamp",
                   style: "defaultParagraph"
                 })],
@@ -63,7 +63,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
                 width: {
                   size: 75,
                   type: WidthType.PERCENTAGE,
-                }, 
+                },
                 children: [new Paragraph({
                   text: "Text",
                   style: "defaultParagraph"
@@ -80,7 +80,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
                       size: 25,
                       type: WidthType.PERCENTAGE,
                     },
-                    children: [new Paragraph({ 
+                    children: [new Paragraph({
                       text: `[${formatTime(segment.startTime)} - ${formatTime(segment.endTime)}]`,
                       style: "defaultParagraph"
                     })],
@@ -131,12 +131,37 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
       });
     } else {
       // Create paragraphs for text-only view
+      let paragraphs: string[] = [];
+      let currentParagraph = '';
+    
+      result.segments.forEach((segment) => {
+        const text = segment.text.trim();
+        
+        if (text.endsWith('.')) {
+          currentParagraph += ' ' + text;
+          if (currentParagraph.trim()) {
+            paragraphs.push(currentParagraph.trim());
+          }
+          currentParagraph = '';
+        } else {
+          currentParagraph += ' ' + text;
+        }
+      });
+    
+      // Add any remaining text as final paragraph
+      if (currentParagraph.trim()) {
+        if (!currentParagraph.trim().endsWith('.')) {
+          currentParagraph += '.';
+        }
+        paragraphs.push(currentParagraph.trim());
+      }
+    
       doc = new Document({
         sections: [{
           properties: {},
-          children: result.segments.map(segment => 
+          children: paragraphs.map(paragraph =>
             new Paragraph({
-              text: segment.text,
+              text: paragraph,
               spacing: {
                 after: 200,
                 line: 360
@@ -254,11 +279,42 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
             </div>
           ) : (
             <div className="prose max-w-none">
-              {result.segments.map((segment, index) => (
-                <p key={index}>{segment.text}</p>
-              ))}
+              {(() => {
+                let paragraphs: string[] = [];
+                let currentParagraph = '';
+
+                result.segments.forEach((segment) => {
+                  const text = segment.text.trim();
+
+                  // If text ends with period, add to current and start new paragraph
+                  if (text.endsWith('.')) {
+                    currentParagraph += ' ' + text;
+                    if (currentParagraph.trim()) {
+                      paragraphs.push(currentParagraph.trim());
+                    }
+                    currentParagraph = '';
+                  } else {
+                    // Add to current paragraph
+                    currentParagraph += ' ' + text;
+                  }
+                });
+
+                // Add any remaining text as final paragraph
+                if (currentParagraph.trim()) {
+                  // Add period if missing
+                  if (!currentParagraph.trim().endsWith('.')) {
+                    currentParagraph += '.';
+                  }
+                  paragraphs.push(currentParagraph.trim());
+                }
+
+                return paragraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ));
+              })()}
             </div>
           )}
+
         </div>
       </div>
     </>

@@ -4,13 +4,15 @@ import { Upload, FileAudio, Check, AlertCircle, X } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { Progress } from './ui/Progress';
 import { Groq } from 'groq-sdk';
+import type { TranscriptionApiResponse, TranscriptionResult, TranscriptionSegment } from '../types';
 
 interface UploadFormProps {
-  onTranscriptionComplete: (result: any) => void;
+  onTranscriptionComplete: (result: TranscriptionResult) => void;
 }
 
 export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [processingProgress, setProcessingProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('id');
   const [file, setFile] = useState<File | null>(null);
@@ -54,46 +56,91 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
 
     setIsUploading(true);
     setUploadProgress(0);
+    setProcessingProgress(0);
 
     try {
-      // Create FormData
       const formData = new FormData();
       formData.append('file', file);
       formData.append('language', selectedLanguage);
 
-      // Start upload and transcription
-      const response = await fetch('/api/transcribe', {
-        method: 'POST',
-        body: formData,
+      const xhr = new XMLHttpRequest();
+      
+      // Track upload progress
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(progress);
+        }
+      };
+
+      // Create promise to handle XHR
+      const uploadPromise = new Promise<TranscriptionApiResponse>((resolve, reject) => {
+        xhr.open('POST', '/api/transcribe', true);
+        
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error('Upload failed'));
+          }
+        };
+        
+        xhr.onerror = () => reject(new Error('Upload failed'));
+        xhr.send(formData);
       });
 
-      if (!response.ok) {
-        throw new Error('Transcription failed');
-      }
-
-      const result = await response.json();
+      const result = await uploadPromise;
 
       // Process the transcription result
-      const processedResult = {
+      const processedResult: TranscriptionResult = {
         fileName: file.name,
         audioDuration: formatDuration(result.duration),
         textLength: result.text.length,
         transcriptionDate: new Date(),
-        segments: result.segments.map((segment: any) => ({
+        segments: result.segments.map((segment): TranscriptionSegment => ({
           startTime: segment.start,
           endTime: segment.end,
-          text: segment.text.trim()
+          text: segment.text.trim(),
+          id: segment.id,
+          seek: segment.seek,
+          tokens: segment.tokens,
+          temperature: segment.temperature,
+          avg_logprob: segment.avg_logprob,
+          compression_ratio: segment.compression_ratio,
+          no_speech_prob: segment.no_speech_prob
         }))
       };
 
+      // Upload complete, start processing animation
+      setUploadProgress(100);
+      
+      // Simulate processing progress
+      const processingInterval = setInterval(() => {
+        setProcessingProgress(prev => {
+          if (prev >= 95) {
+            clearInterval(processingInterval);
+            return prev;
+          }
+          return prev + 5;
+        });
+      }, 500);
+
+      clearInterval(processingInterval);
+      setProcessingProgress(100);
       setIsUploading(false);
       onTranscriptionComplete(processedResult);
 
     } catch (error) {
       setError('Transcription failed. Please try again.');
       setIsUploading(false);
+      setUploadProgress(0);
+      setProcessingProgress(0);
     }
   };
+
+  // Calculate the progress to show
+  const displayProgress = processingProgress > 0 ? processingProgress : uploadProgress;
+
 
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -192,16 +239,15 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
           </div>
         </div>
 
-
         {isUploading && (
-          <div className="space-y-2">
-            <Progress value={uploadProgress} />
-            <p className="text-sm text-center text-gray-600">
-              {uploadProgress < 100
-                ? `Uploading... ${uploadProgress}%`
-                : 'Processing transcription...'}
-            </p>
-          </div>
+        <div className="space-y-2">
+          <Progress value={displayProgress} />
+          <p className="text-sm text-center text-gray-600">
+            {processingProgress > 0
+              ? `Processing transcription... ${displayProgress}%`
+              : `Uploading... ${displayProgress}%`}
+          </p>
+        </div>
         )}
 
         <button

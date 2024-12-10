@@ -19,6 +19,23 @@ export interface TranscriptionResult {
   segments: TranscriptionSegment[];
 }
 
+export interface TranscriptionApiResponse {
+  duration: number;
+  text: string;
+  segments: Array<{
+    start: number;
+    end: number;
+    text: string;
+    id?: number;
+    seek?: number;
+    tokens?: number[];
+    temperature?: number;
+    avg_logprob?: number;
+    compression_ratio?: number;
+    no_speech_prob?: number;
+  }>;
+}
+
 export interface Language {
   code: string;
   name: string;
