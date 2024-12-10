@@ -11,20 +11,20 @@ const CTA = () => {
             Siap Jadikan
             {" "}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-            Produktivitas Meroket?
+              Produktivitas Meroket?
             </span> {" "}
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
             Gabung sekarang untuk membuka akses ke seluruh fitur AI tanpa batas.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/">
-          <Button size="lg" className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
-              Akses Sekarang <ArrowRight className="w-4 h-4" />
+            <Button size="lg" className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90" asChild>
+              <Link href="/">
+                Akses Sekarang <ArrowRight className="w-4 h-4" />
+              </Link>
             </Button>
-            </Link>
             <Button size="lg" variant="outline" asChild>
-              <a href="https://wa.me/+6281280077690" target="_blank" rel="noopener noreferrer">Contact Admin</a>
+              <a href="https://wa.me/+6281280077690" target="_blank" rel="noopener noreferrer">Hubungi Admin</a>
             </Button>
           </div>
         </div>

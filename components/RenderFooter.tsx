@@ -4,7 +4,7 @@ const RenderFooter = () => {
         <footer className="py-3 text-center text-sm text-muted-foreground">
             <p className="flex flex-wrap items-center justify-center">
                 &copy; {currentYear}&nbsp; 
-                <a href="https://enaiblr.org/about" className="text-blue-600" target="_blank" rel="noopener noreferrer">Enaiblr</a>.
+                <a href="/about" className="text-blue-600">Enaiblr</a>.
                 {" "}
                 All rights reserved. | 
                 {" "}
