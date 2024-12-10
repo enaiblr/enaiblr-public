@@ -77,7 +77,7 @@ const Footer = () => {
               <Link href="mailto:enaiblr@gmail.com" className="text-muted-foreground hover:text-foreground">
                 <Mail className="w-5 h-5" />
               </Link>
-              <Link href="https://wa.me/+6281280077690" className="text-muted-foreground hover:text-foreground">
+              <Link href="https://wa.me/+6281280077690" className="text-muted-foreground hover:text-foreground" target="_blank" rel="noopener noreferrer">
                 <Phone className="w-5 h-5" />
               </Link>
               <Link href="/about" className="text-muted-foreground hover:text-foreground">
