@@ -25,8 +25,57 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
 
     let doc;
 
+    // ... existing code ...
+
     if (activeTab === 'timestamps') {
-      // First create the table with all its rows
+      // First combine segments into paragraphs
+      let paragraphs: Array<{ text: string, startTime: number, endTime: number }> = [];
+      let currentParagraph = '';
+      let startTime = 0;
+      let endTime = 0;
+      let isFirstSegment = true;
+
+      result.segments.forEach((segment) => {
+        const text = segment.text.trim();
+
+        if (isFirstSegment) {
+          startTime = segment.startTime;
+          isFirstSegment = false;
+        }
+
+        if (text.endsWith('.')) {
+          currentParagraph += ' ' + text;
+          endTime = segment.endTime;
+
+          if (currentParagraph.trim()) {
+            paragraphs.push({
+              text: currentParagraph.trim(),
+              startTime,
+              endTime
+            });
+          }
+
+          currentParagraph = '';
+          isFirstSegment = true;
+        } else {
+          currentParagraph += ' ' + text;
+          endTime = segment.endTime;
+        }
+      });
+
+      // Add any remaining text as final paragraph
+      if (currentParagraph.trim()) {
+        if (!currentParagraph.trim().endsWith('.')) {
+          currentParagraph += '.';
+        }
+        paragraphs.push({
+          text: currentParagraph.trim(),
+          startTime,
+          endTime
+        });
+      }
+
+      // Create table with combined paragraphs
       const table = new Table({
         width: {
           size: 100,
@@ -71,8 +120,8 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
               }),
             ],
           }),
-          ...result.segments.map(
-            segment =>
+          ...paragraphs.map(
+            paragraph =>
               new TableRow({
                 children: [
                   new TableCell({
@@ -81,7 +130,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
                       type: WidthType.PERCENTAGE,
                     },
                     children: [new Paragraph({
-                      text: `[${formatTime(segment.startTime)} - ${formatTime(segment.endTime)}]`,
+                      text: `[${formatTime(paragraph.startTime)} - ${formatTime(paragraph.endTime)}]`,
                       style: "defaultParagraph"
                     })],
                   }),
@@ -91,7 +140,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
                       type: WidthType.PERCENTAGE,
                     },
                     children: [new Paragraph({
-                      text: segment.text,
+                      text: paragraph.text,
                       style: "defaultParagraph"
                     })],
                   }),
@@ -133,10 +182,10 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
       // Create paragraphs for text-only view
       let paragraphs: string[] = [];
       let currentParagraph = '';
-    
+
       result.segments.forEach((segment) => {
         const text = segment.text.trim();
-        
+
         if (text.endsWith('.')) {
           currentParagraph += ' ' + text;
           if (currentParagraph.trim()) {
@@ -147,7 +196,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
           currentParagraph += ' ' + text;
         }
       });
-    
+
       // Add any remaining text as final paragraph
       if (currentParagraph.trim()) {
         if (!currentParagraph.trim().endsWith('.')) {
@@ -155,7 +204,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
         }
         paragraphs.push(currentParagraph.trim());
       }
-    
+
       doc = new Document({
         sections: [{
           properties: {},
@@ -266,16 +315,65 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
         />
 
         <div className="mt-6 bg-white rounded-lg shadow-sm border p-6">
+
           {activeTab === 'timestamps' ? (
             <div className="space-y-4">
-              {result.segments.map((segment, index) => (
-                <div key={index} className="flex space-x-4">
-                  <span className="text-gray-500 whitespace-nowrap">
-                    [{formatTime(segment.startTime)} - {formatTime(segment.endTime)}]
-                  </span>
-                  <p>{segment.text}</p>
-                </div>
-              ))}
+              {(() => {
+                let paragraphs: Array<{ text: string, startTime: number, endTime: number }> = [];
+                let currentParagraph = '';
+                let startTime = 0;
+                let endTime = 0;
+                let isFirstSegment = true;
+
+                result.segments.forEach((segment) => {
+                  const text = segment.text.trim();
+
+                  if (isFirstSegment) {
+                    startTime = segment.startTime;
+                    isFirstSegment = false;
+                  }
+
+                  if (text.endsWith('.')) {
+                    currentParagraph += ' ' + text;
+                    endTime = segment.endTime;
+
+                    if (currentParagraph.trim()) {
+                      paragraphs.push({
+                        text: currentParagraph.trim(),
+                        startTime,
+                        endTime
+                      });
+                    }
+
+                    currentParagraph = '';
+                    isFirstSegment = true;
+                  } else {
+                    currentParagraph += ' ' + text;
+                    endTime = segment.endTime;
+                  }
+                });
+
+                // Add any remaining text as final paragraph
+                if (currentParagraph.trim()) {
+                  if (!currentParagraph.trim().endsWith('.')) {
+                    currentParagraph += '.';
+                  }
+                  paragraphs.push({
+                    text: currentParagraph.trim(),
+                    startTime,
+                    endTime
+                  });
+                }
+
+                return paragraphs.map((paragraph, index) => (
+                  <div key={index} className="flex space-x-4">
+                    <span className="text-gray-500 whitespace-nowrap">
+                      [{formatTime(paragraph.startTime)} - {formatTime(paragraph.endTime)}]
+                    </span>
+                    <p>{paragraph.text}</p>
+                  </div>
+                ));
+              })()}
             </div>
           ) : (
             <div className="prose max-w-none">
