@@ -69,6 +69,11 @@ const Footer = () => {
                   Image Creator
                 </Link>
               </li>
+              <li>
+                <Link href="/transcribe" className="text-muted-foreground hover:text-foreground">
+                  Audio Transcriber
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
