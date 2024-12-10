@@ -94,7 +94,7 @@ export function Sidebar() {
             })}
           </ul>
           <div className="absolute bottom-4 left-4 text-sm text-gray-600">
-            Contact: <a href="https://x.com/alhrkn" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 underline">@alhrkn</a> | <Link href="/about" className="hover:text-blue-600">About</Link>
+            <a href="mailto:enaiblr@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Contact</a> | <Link href="/about" className="hover:text-blue-600">About</Link>
           </div>
         </div>
       </div>
