@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -64,6 +64,21 @@ export function InputForm({
     [onTextChange]
   );
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    // Immediately update parent's state
+    onTextChange(value);
+    // Debounce other operations
+    debouncedTextChange(value);
+  };
+
+  // Add useEffect here, after hooks and before return
+  useEffect(() => {
+    return () => {
+      debouncedTextChange.cancel();
+    };
+  }, [debouncedTextChange]);
+
   // Reset voice when language changes
   const handleLanguageChange = (newLanguage: string) => {
     onLanguageChange(newLanguage);
@@ -79,7 +94,7 @@ export function InputForm({
         placeholder="Enter your text here..."
         className="min-h-[200px] text-lg rounded-2xl"
         value={text}
-        onChange={(e) => debouncedTextChange(e.target.value)}
+        onChange={handleTextChange}
       />
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
