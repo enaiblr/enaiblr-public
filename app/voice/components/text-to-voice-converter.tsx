@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 import { LoadingState } from "./loading-state";
 import { ResultView } from "./result-view";
 import { InputForm } from "./input-form";
@@ -19,38 +18,22 @@ export default function TextToVoiceConverter() {
   } | null>(null);
 
   const synthesizeSpeech = async () => {
-    // Initialize speech config with your Azure credentials
-    const speechConfig = sdk.SpeechConfig.fromSubscription(
-      process.env.NEXT_PUBLIC_SPEECH_KEY!,
-      process.env.NEXT_PUBLIC_SPEECH_REGION!
-    );
-
-    // Set the voice based on selected language and voice
-    speechConfig.speechSynthesisVoiceName = `${voice}`;
-
-    // Create the synthesizer
-    const synthesizer = new sdk.SpeechSynthesizer(speechConfig);
-
-    return new Promise<ArrayBuffer>((resolve, reject) => {
-      synthesizer.speakTextAsync(
+    const response = await fetch('/api/voice', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         text,
-        (result) => {
-          if (result.reason === sdk.ResultReason.SynthesizingAudioCompleted) {
-            // Convert the audio data to ArrayBuffer
-            const audioData = result.audioData;
-            synthesizer.close();
-            resolve(audioData);
-          } else {
-            synthesizer.close();
-            reject(new Error(`Speech synthesis canceled: ${result.errorDetails}`));
-          }
-        },
-        (error) => {
-          synthesizer.close();
-          reject(error);
-        }
-      );
+        voice,
+      }),
     });
+
+    if (!response.ok) {
+      throw new Error('Speech synthesis failed');
+    }
+
+    return response.arrayBuffer();
   };
 
   const handleSubmit = async () => {
