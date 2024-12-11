@@ -74,6 +74,11 @@ const Footer = () => {
                   Audio Transcriber
                 </Link>
               </li>
+              <li>
+                <Link href="/voice" className="text-muted-foreground hover:text-foreground">
+                  Text to Voice
+                </Link>
+              </li>
             </ul>
           </div>
           <div>

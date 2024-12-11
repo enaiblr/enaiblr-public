@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { LoadingState } from "./loading-state";
 import { ResultView } from "./result-view";
 import { InputForm } from "./input-form";
@@ -16,6 +16,10 @@ export default function TextToVoiceConverter() {
     duration: number;
     size: number;
   } | null>(null);
+
+  const handleTextChange = useCallback((newText: string) => {
+    setText(newText);
+  }, []);
 
   const synthesizeSpeech = async () => {
     const response = await fetch('/api/voice', {
@@ -90,7 +94,7 @@ export default function TextToVoiceConverter() {
       text={text}
       language={language}
       voice={voice}
-      onTextChange={setText}
+      onTextChange={handleTextChange}
       onLanguageChange={setLanguage}
       onVoiceChange={setVoice}
       onSubmit={handleSubmit}
