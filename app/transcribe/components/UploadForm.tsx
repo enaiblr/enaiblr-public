@@ -51,6 +51,7 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
   });
 
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) return;
@@ -64,50 +65,41 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
       formData.append('file', file);
       formData.append('language', selectedLanguage);
 
-      // Get the base URL depending on the environment
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-      const apiEndpoint = `${baseUrl}/api/transcribe`;
-
-      const xhr = new XMLHttpRequest();
-
-      // Track upload progress
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded / event.total) * 100);
-          setUploadProgress(progress);
-        }
-      };
-
-      // Create promise to handle XHR
-      const uploadPromise = new Promise<TranscriptionApiResponse>((resolve, reject) => {
-        xhr.open('POST', apiEndpoint, true);
-
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.responseText));
-          } else {
-            // Enhanced error handling
-            const errorMessage = xhr.responseText
-              ? JSON.parse(xhr.responseText).error
-              : 'Upload failed with status ' + xhr.status;
-            reject(new Error(errorMessage));
-          }
-        };
-
-        xhr.onerror = () => {
-          reject(new Error('Network error occurred'));
-        };
-
-        xhr.ontimeout = () => {
-          reject(new Error('Request timed out'));
-        };
-
-        xhr.send(formData);
+      const response = await fetch('/api/transcribe', {
+        method: 'POST',
+        body: formData,
       });
 
-      const result = await uploadPromise;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Transcription failed');
+      }
 
-      // ... existing code ...
+      const result = await response.json();
+
+      // Process the transcription result
+      const processedResult: TranscriptionResult = {
+        fileName: file.name,
+        audioDuration: formatDuration(result.duration),
+        textLength: result.text.length,
+        transcriptionDate: new Date(),
+        segments: result.segments.map((segment: any): TranscriptionSegment => ({
+          startTime: segment.start,
+          endTime: segment.end,
+          text: segment.text.trim(),
+          id: segment.id,
+          seek: segment.seek,
+          tokens: segment.tokens,
+          temperature: segment.temperature,
+          avg_logprob: segment.avg_logprob,
+          compression_ratio: segment.compression_ratio,
+          no_speech_prob: segment.no_speech_prob
+        }))
+      };
+
+      setProcessingProgress(100);
+      setIsUploading(false);
+      onTranscriptionComplete(processedResult);
 
     } catch (error: any) {
       console.error('Transcription error:', error);
@@ -118,7 +110,6 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
       setProcessingProgress(0);
     }
   };
-
 
   // Calculate the progress to show
   const displayProgress = processingProgress > 0 ? processingProgress : uploadProgress;

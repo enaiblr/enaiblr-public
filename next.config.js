@@ -1,22 +1,15 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  //  output: 'export',
   eslint: {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
-  // metadata: {
-  //   metadataBase: 'https://enaiblr.org',
-  // },
-  serverExternalPackages: ['groq-sdk'], // Moved outside of experimental
+  experimental: {
+    serverActions: true,
+  },
   webpack: (config) => {
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      path: false,
-      os: false,
-    };
+    config.externals = [...(config.externals || []), 'groq-sdk'];
     return config;
   },
 };
