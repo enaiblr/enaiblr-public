@@ -1,4 +1,4 @@
-import { ScanSearch, MessageCircleQuestion, WandSparkles, FileAudio, Speech, Lightbulb } from "lucide-react";
+import { ScanSearch, MessageCircleQuestion, WandSparkles, FileAudio, Speech, Lightbulb, LayoutGrid } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const features = [
@@ -42,7 +42,7 @@ const features = [
     title: "Bonus Features",
     description:
       "Fitur AI akan terus ditambahkan gratis, seperti Data Visualization, Research Assistant, dll.",
-    icon: Lightbulb,
+    icon: LayoutGrid,
   },
 ];
 
