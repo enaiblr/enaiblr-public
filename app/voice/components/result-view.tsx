@@ -2,7 +2,6 @@
 
 import { Clock, FileAudio, TextQuote, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import AudioPlayer from "./audio-player";
 
 interface ResultViewProps {

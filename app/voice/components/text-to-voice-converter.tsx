@@ -10,6 +10,7 @@ export default function TextToVoiceConverter() {
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [language, setLanguage] = useState("");
+  const [voice, setVoice] = useState("");
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -31,8 +32,10 @@ export default function TextToVoiceConverter() {
     <InputForm
       text={text}
       language={language}
+      voice={voice}
       onTextChange={setText}
       onLanguageChange={setLanguage}
+      onVoiceChange={setVoice}
       onSubmit={handleSubmit}
     />
   );

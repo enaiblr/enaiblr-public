@@ -13,14 +13,21 @@ import {
 interface InputFormProps {
   text: string;
   language: string;
+  voice: string;
   onTextChange: (text: string) => void;
   onLanguageChange: (language: string) => void;
+  onVoiceChange: (voice: string) => void;
   onSubmit: () => void;
 }
 
 const LANGUAGES = {
-  'id': 'Bahasa Indonesia',
-  'en': 'English',
+  'id-ID': 'Bahasa Indonesia',
+  'en-US': 'English',
+} as const;
+
+const VOICES = {
+  'GadisNeural': 'Perempuan',
+  'ArdiNeural': 'Laki-laki',
 } as const;
 
 export function InputForm({
@@ -28,6 +35,7 @@ export function InputForm({
   language,
   onTextChange,
   onLanguageChange,
+  onVoiceChange,
   onSubmit,
 }: InputFormProps) {
   return (
@@ -37,15 +45,15 @@ export function InputForm({
       </h1>
       <Textarea
         placeholder="Enter your text here..."
-        className="min-h-[200px] text-lg"
+        className="min-h-[200px] text-lg rounded-2xl"
         value={text}
         onChange={(e) => onTextChange(e.target.value)}
       />
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Select value={language} onValueChange={onLanguageChange}>
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Select language" />
+          <SelectTrigger className="w-full sm:w-[200px] rounded-full">
+            <SelectValue placeholder="Pilih Bahasa" />
           </SelectTrigger>
           <SelectContent>
             {Object.entries(LANGUAGES).map(([code, label]) => (
@@ -56,8 +64,21 @@ export function InputForm({
           </SelectContent>
         </Select>
 
+        <Select value={language} onValueChange={onVoiceChange}>
+          <SelectTrigger className="w-full sm:w-[200px] rounded-full">
+            <SelectValue placeholder="Pilih Suara" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(VOICES).map(([code, label]) => (
+              <SelectItem key={code} value={code}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Button
-          className="w-full sm:w-[200px]"
+          className="w-full sm:w-[200px] rounded-full"
           onClick={onSubmit}
           disabled={!text.trim()}
         >
