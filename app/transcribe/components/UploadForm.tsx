@@ -50,8 +50,6 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
     maxFiles: 1
   });
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) return;
@@ -65,25 +63,57 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
       formData.append('file', file);
       formData.append('language', selectedLanguage);
 
-      const response = await fetch('/api/transcribe', {
-        method: 'POST',
-        body: formData,
+      // Create XMLHttpRequest to track upload progress
+      const xhr = new XMLHttpRequest();
+      const promise = new Promise((resolve, reject) => {
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const progress = Math.round((event.loaded / event.total) * 100);
+            setUploadProgress(progress);
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+          }
+        });
+
+        xhr.addEventListener('error', () => {
+          reject(new Error('Network error occurred'));
+        });
+
+        xhr.open('POST', '/api/transcribe');
+        xhr.send(formData);
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Transcription failed');
-      }
+      // Simulate processing progress
+      const startProcessing = () => {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 5;
+          setProcessingProgress(Math.min(progress, 95)); // Cap at 95% until complete
 
-      const result = await response.json();
+          if (progress >= 95) {
+            clearInterval(interval);
+          }
+        }, 500);
 
-      // Process the transcription result
+        return interval;
+      };
+
+      const processingInterval = startProcessing();
+
+      const result = (await promise) as TranscriptionApiResponse;
+
       const processedResult: TranscriptionResult = {
         fileName: file.name,
         audioDuration: formatDuration(result.duration),
         textLength: result.text.length,
         transcriptionDate: new Date(),
-        segments: result.segments.map((segment: any): TranscriptionSegment => ({
+        segments: result.segments.map((segment): TranscriptionSegment => ({
           startTime: segment.start,
           endTime: segment.end,
           text: segment.text.trim(),
@@ -97,9 +127,14 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
         }))
       };
 
+      // Clear the processing interval and set final progress
+      clearInterval(processingInterval);
       setProcessingProgress(100);
-      setIsUploading(false);
-      onTranscriptionComplete(processedResult);
+
+      setTimeout(() => {
+        setIsUploading(false);
+        onTranscriptionComplete(processedResult);
+      }, 500);
 
     } catch (error: any) {
       console.error('Transcription error:', error);
@@ -127,6 +162,15 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
     setFile(null);
   };
 
+  const clearAllStates = () => {
+    setError(null);
+    setErrorDetails(null);
+    setFile(null);
+    setUploadProgress(0);
+    setProcessingProgress(0);
+    setIsUploading(false);
+  };
+
   return (
     <div className="w-11/12 md:w-4/5 lg:w-1/2 mx-auto px-4">
       <h1 className="text-4xl font-bold text-center mb-8">
@@ -148,7 +192,7 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
           {error && (
             <button
               type="button"
-              onClick={clearError}
+              onClick={clearAllStates}
               className="absolute -top-2 -right-2 z-10 p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
             >
               <X className="h-5 w-5 text-gray-500" />
@@ -159,7 +203,7 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
             {file && (
               <button
                 type="button"
-                onClick={() => setFile(null)}
+                onClick={clearAllStates}
                 className="absolute -top-2 -right-2 z-10 p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
               >
                 <X className="h-5 w-5 text-gray-500" />

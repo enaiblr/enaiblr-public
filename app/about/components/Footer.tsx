@@ -10,10 +10,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:px-16">
           <div>
             <Link href="/about" className="text-2xl font-bold mb-4 block">
-            en<span className="text-blue-600 font-ibm-plex-mono-regular">ai</span>blr
+              en<span className="text-blue-600 font-ibm-plex-mono-regular">ai</span>blr
             </Link>
             <p className="text-muted-foreground">
-            Platform AI All-in-One dengan Harga Terjangkau dan Tanpa Batas
+              Platform AI All-in-One dengan Harga Terjangkau dan Tanpa Batas
             </p>
           </div>
           <div>
@@ -34,7 +34,7 @@ const Footer = () => {
                   Careers
                 </Link>
               </li> */}
-                            <li>
+              <li>
                 <Link href="#features" className="text-muted-foreground hover:text-foreground">
                   Fitur
                 </Link>
@@ -95,7 +95,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-border mt-12 pt-4 text-center text-muted-foreground">
-          <p>&copy; {currentYear} Enaiblr. All rights reserved.</p>
+          <p>&copy; {currentYear} <Link href="#Hero" className="text-blue-600 hover:text-blue-700">Enaiblr</Link> All rights reserved.</p>
         </div>
       </div>
     </footer>
