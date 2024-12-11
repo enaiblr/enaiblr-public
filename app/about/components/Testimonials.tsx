@@ -3,9 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const testimonials = [
   {
-    name: "Fadhil",
-    role: "Product Manager",
-    content: "Platform ini jadi game-changer buat saya. Sekarang bisa bikin konten, analisis data, dan riset jauh lebih cepat. Menghemat waktu saya sampai 70%.",
+    name: "Anindya",
+    role: "Mahasiswa Pascasarjana",
+    content: "Platform ini sangat membantu saya ngerjain tugas. Bisa coding, beri rekomendasi solusi, bahkan belajar konsep baru. Nilai matkul saya naik drastis sejak pakai enaiblr.",
     image: "icon.png",
   },
   {
@@ -17,7 +17,7 @@ const testimonials = [
   },
   {
     name: "Wijaya",
-    role: "Peneliti",
+    role: "Dosen & Peneliti",
     content:
       "Saya terkesan dengan kemudahan akses ke berbagai tools AI dalam satu platform ini. Sangat membantu untuk riset akademis dan membuat materi presentasi.",
     image: "icon.png",

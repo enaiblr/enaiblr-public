@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -22,6 +22,26 @@ const Header = () => {
     { name: "Testimoni", href: "#testimonials" },
     { name: "Harga", href: "#pricing" },
   ];
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        !buttonRef.current?.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : ""}`}>
@@ -45,8 +65,8 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
-              <Link href="#features">Mulai</Link>
+              <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 rounded-full">
+                <Link href="#features">Mulai</Link>
               </Button>
             </div>
           </div>
@@ -54,6 +74,7 @@ const Header = () => {
           {/* Mobile Navigation Button */}
           <div className="md:hidden">
             <Button
+              ref={buttonRef}
               variant="ghost"
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -64,9 +85,11 @@ const Header = () => {
         </div>
 
         {/* Mobile Navigation Menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0"
-        }`}>
+        <div
+          ref={menuRef}
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out rounded-lg shadow-md ${isMenuOpen ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+        >
           <div className="bg-white px-2 pt-2 pb-3 space-y-1">
             {navigation.map((item) => (
               <Link
@@ -79,8 +102,8 @@ const Header = () => {
               </Link>
             ))}
             <div className="px-3 py-2">
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
-              <Link href="#features">Mulai Sekarang</Link>
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 rounded-full">
+                <Link href="#features">Mulai Sekarang</Link>
               </Button>
             </div>
           </div>

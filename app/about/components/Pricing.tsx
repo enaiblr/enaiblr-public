@@ -109,8 +109,8 @@ const Pricing = () => {
                     className={cn(
                       "w-full rounded-lg px-4 py-2",
                       plan?.popular
-                        ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90"
-                        : "border border-gray-200 bg-white text-gray-900 hover:bg-gray-100",
+                        ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 rounded-full"
+                        : "border border-gray-200 bg-white text-gray-900 hover:bg-gray-100 rounded-full",
                     )}>Mulai Sekarang</button>
                 </Link>
               </CardFooter>
