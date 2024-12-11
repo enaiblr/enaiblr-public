@@ -280,7 +280,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
             </span>
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             <div className="flex items-center space-x-2 text-gray-600 justify-center">
               <Clock className="h-5 w-5 mr-2" />
               <span>Duration: {result.audioDuration}</span>
@@ -293,7 +293,7 @@ export function TranscriptionResult({ result }: TranscriptionResultProps) {
               <LetterText className="h-5 w-5 mr-2" />
               <span>Characters: {result.textLength}</span>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center md:col-start-2 md:col-span-1 lg:col-auto">
               <button
                 onClick={handleDownload}
                 className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

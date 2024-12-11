@@ -28,13 +28,13 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className="space-y-4 p-6 bg-card rounded-lg">
-      <div className="h-24 w-full flex items-end space-x-1">
+    <div className="space-y-4 p-4 sm:p-6 bg-card rounded-lg">
+      <div className="h-16 sm:h-24 w-full flex items-end space-x-0.5 sm:space-x-1">
         {visualizerData.map((height, index) => (
           <div
             key={index}
             className={cn(
-              "w-2 bg-primary/60 rounded-t",
+              "w-1 sm:w-2 bg-primary/60 rounded-t",
               isPlaying && "animate-pulse"
             )}
             style={{ height: `${height}%` }}
@@ -51,39 +51,41 @@ export default function AudioPlayer() {
           className="w-full"
         />
         
-        <div className="flex justify-between text-sm text-muted-foreground">
+        <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
       </div>
 
-      <div className="flex justify-center items-center space-x-4">
+      <div className="flex justify-center items-center space-x-2 sm:space-x-4">
         <Button
           variant="ghost"
           size="icon"
+          className="h-8 w-8 sm:h-10 sm:w-10"
           onClick={() => setCurrentTime(Math.max(0, currentTime - 10))}
         >
-          <SkipBack className="h-5 w-5" />
+          <SkipBack className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
 
         <Button
           size="icon"
-          className="h-12 w-12"
+          className="h-10 w-10 sm:h-12 sm:w-12 rounded-full"
           onClick={togglePlayPause}
         >
           {isPlaying ? (
-            <Pause className="h-6 w-6" />
+            <Pause className="h-5 w-5 sm:h-6 sm:w-6" />
           ) : (
-            <Play className="h-6 w-6" />
+            <Play className="h-5 w-5 sm:h-6 sm:w-6" />
           )}
         </Button>
 
         <Button
           variant="ghost"
           size="icon"
+          className="h-8 w-8 sm:h-10 sm:w-10"
           onClick={() => setCurrentTime(Math.min(duration, currentTime + 10))}
         >
-          <SkipForward className="h-5 w-5" />
+          <SkipForward className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
       </div>
     </div>

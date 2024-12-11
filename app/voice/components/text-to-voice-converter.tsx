@@ -9,7 +9,7 @@ export default function TextToVoiceConverter() {
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [language, setLanguage] = useState("en-US");
+  const [language, setLanguage] = useState("");
 
   const handleSubmit = async () => {
     setIsLoading(true);

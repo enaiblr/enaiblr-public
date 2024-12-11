@@ -18,6 +18,11 @@ interface InputFormProps {
   onSubmit: () => void;
 }
 
+const LANGUAGES = {
+  'id': 'Bahasa Indonesia',
+  'en': 'English',
+} as const;
+
 export function InputForm({
   text,
   language,
@@ -26,33 +31,33 @@ export function InputForm({
   onSubmit,
 }: InputFormProps) {
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="w-full px-4 md:px-12 lg:px-36 xl:px-48 space-y-4">
       <h1 className="text-5xl font-bold text-center mb-8">
         Text to <span className="text-blue-600">Voice AI</span>
-      </h1>      
+      </h1>
       <Textarea
         placeholder="Enter your text here..."
         className="min-h-[200px] text-lg"
         value={text}
         onChange={(e) => onTextChange(e.target.value)}
       />
-      
-      <div className="flex flex-col sm:flex-row gap-4">
+
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Select value={language} onValueChange={onLanguageChange}>
           <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder="Select language" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="en-US">English (US)</SelectItem>
-            <SelectItem value="en-GB">English (UK)</SelectItem>
-            <SelectItem value="es">Spanish</SelectItem>
-            <SelectItem value="fr">French</SelectItem>
-            <SelectItem value="de">German</SelectItem>
+            {Object.entries(LANGUAGES).map(([code, label]) => (
+              <SelectItem key={code} value={code}>
+                {label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        
-        <Button 
-          className="w-full sm:flex-1"
+
+        <Button
+          className="w-full sm:w-[200px]"
           onClick={onSubmit}
           disabled={!text.trim()}
         >
