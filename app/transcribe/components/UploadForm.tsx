@@ -50,6 +50,7 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
     maxFiles: 1
   });
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) return;
@@ -63,8 +64,12 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
       formData.append('file', file);
       formData.append('language', selectedLanguage);
 
+      // Get the base URL depending on the environment
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiEndpoint = `${baseUrl}/api/transcribe`;
+
       const xhr = new XMLHttpRequest();
-      
+
       // Track upload progress
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
@@ -75,68 +80,45 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
 
       // Create promise to handle XHR
       const uploadPromise = new Promise<TranscriptionApiResponse>((resolve, reject) => {
-        xhr.open('POST', '/api/transcribe', true);
-        
+        xhr.open('POST', apiEndpoint, true);
+
         xhr.onload = () => {
           if (xhr.status === 200) {
             resolve(JSON.parse(xhr.responseText));
           } else {
-            reject(new Error('Upload failed'));
+            // Enhanced error handling
+            const errorMessage = xhr.responseText
+              ? JSON.parse(xhr.responseText).error
+              : 'Upload failed with status ' + xhr.status;
+            reject(new Error(errorMessage));
           }
         };
-        
-        xhr.onerror = () => reject(new Error('Upload failed'));
+
+        xhr.onerror = () => {
+          reject(new Error('Network error occurred'));
+        };
+
+        xhr.ontimeout = () => {
+          reject(new Error('Request timed out'));
+        };
+
         xhr.send(formData);
       });
 
       const result = await uploadPromise;
 
-      // Process the transcription result
-      const processedResult: TranscriptionResult = {
-        fileName: file.name,
-        audioDuration: formatDuration(result.duration),
-        textLength: result.text.length,
-        transcriptionDate: new Date(),
-        segments: result.segments.map((segment): TranscriptionSegment => ({
-          startTime: segment.start,
-          endTime: segment.end,
-          text: segment.text.trim(),
-          id: segment.id,
-          seek: segment.seek,
-          tokens: segment.tokens,
-          temperature: segment.temperature,
-          avg_logprob: segment.avg_logprob,
-          compression_ratio: segment.compression_ratio,
-          no_speech_prob: segment.no_speech_prob
-        }))
-      };
+      // ... existing code ...
 
-      // Upload complete, start processing animation
-      setUploadProgress(100);
-      
-      // Simulate processing progress
-      const processingInterval = setInterval(() => {
-        setProcessingProgress(prev => {
-          if (prev >= 95) {
-            clearInterval(processingInterval);
-            return prev;
-          }
-          return prev + 5;
-        });
-      }, 500);
-
-      clearInterval(processingInterval);
-      setProcessingProgress(100);
-      setIsUploading(false);
-      onTranscriptionComplete(processedResult);
-
-    } catch (error) {
-      setError('Transcription failed. Please try again.');
+    } catch (error: any) {
+      console.error('Transcription error:', error);
+      setError(error.message || 'Transcription failed. Please try again.');
+      setErrorDetails(error.stack);
       setIsUploading(false);
       setUploadProgress(0);
       setProcessingProgress(0);
     }
   };
+
 
   // Calculate the progress to show
   const displayProgress = processingProgress > 0 ? processingProgress : uploadProgress;
@@ -240,14 +222,14 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
         </div>
 
         {isUploading && (
-        <div className="space-y-2">
-          <Progress value={displayProgress} />
-          <p className="text-sm text-center text-gray-600">
-            {processingProgress > 0
-              ? `Processing transcription... ${displayProgress}%`
-              : `Uploading... ${displayProgress}%`}
-          </p>
-        </div>
+          <div className="space-y-2">
+            <Progress value={displayProgress} />
+            <p className="text-sm text-center text-gray-600">
+              {processingProgress > 0
+                ? `Processing transcription... ${displayProgress}%`
+                : `Uploading... ${displayProgress}%`}
+            </p>
+          </div>
         )}
 
         <button
