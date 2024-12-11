@@ -11,7 +11,7 @@
     const audioConfig = sdk.AudioConfig.fromAudioFileOutput(audioFile);
 
     // The language of the voice that speaks.
-    speechConfig.speechSynthesisVoiceName = "en-US-AvaMultilingualNeural"; 
+    speechConfig.speechSynthesisVoiceName = `${language}-${voice}`; 
 
     // Create the speech synthesizer.
     var synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);

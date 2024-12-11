@@ -25,19 +25,41 @@ const LANGUAGES = {
   'en-US': 'English',
 } as const;
 
-const VOICES = {
-  'GadisNeural': 'Perempuan',
-  'ArdiNeural': 'Laki-laki',
-} as const;
+type VoicesType = {
+  [K in 'id-ID' | 'en-US']: {
+    [key: string]: string;
+  };
+};
+
+// Corrected voice names without language code duplication
+const VOICES: VoicesType = {
+  'id-ID': {
+    'id-ID-GadisNeural': 'Gadis (Perempuan)',
+    'id-ID-ArdiNeural': 'Ardi (Laki-laki)',
+  },
+  'en-US': {
+    'en-US-AvaMultilingualNeural': 'Ava (Female)',
+    'en-US-AndrewMultilingualNeural': 'Andrew (Male)',
+  },
+};
 
 export function InputForm({
   text,
   language,
+  voice,
   onTextChange,
   onLanguageChange,
   onVoiceChange,
   onSubmit,
 }: InputFormProps) {
+  const availableVoices = language ? VOICES[language as keyof typeof VOICES] : {};
+
+  // Reset voice when language changes
+  const handleLanguageChange = (newLanguage: string) => {
+    onLanguageChange(newLanguage);
+    onVoiceChange(''); // Reset voice selection when language changes
+  };
+
   return (
     <div className="w-full px-4 md:px-12 lg:px-36 xl:px-48 space-y-4">
       <h1 className="text-5xl font-bold text-center mb-8">
@@ -51,7 +73,7 @@ export function InputForm({
       />
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Select value={language} onValueChange={onLanguageChange}>
+        <Select value={language} onValueChange={handleLanguageChange}>
           <SelectTrigger className="w-full sm:w-[200px] rounded-full">
             <SelectValue placeholder="Pilih Bahasa" />
           </SelectTrigger>
@@ -64,13 +86,17 @@ export function InputForm({
           </SelectContent>
         </Select>
 
-        <Select value={language} onValueChange={onVoiceChange}>
+        <Select
+          value={voice}
+          onValueChange={onVoiceChange}
+          disabled={!language}
+        >
           <SelectTrigger className="w-full sm:w-[200px] rounded-full">
             <SelectValue placeholder="Pilih Suara" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(VOICES).map(([code, label]) => (
-              <SelectItem key={code} value={code}>
+            {Object.entries(availableVoices).map(([voiceId, label]: [string, string]) => (
+              <SelectItem key={voiceId} value={voiceId}>
                 {label}
               </SelectItem>
             ))}
@@ -80,7 +106,7 @@ export function InputForm({
         <Button
           className="w-full sm:w-[200px] rounded-full"
           onClick={onSubmit}
-          disabled={!text.trim()}
+          disabled={!text.trim() || !language || !voice}
         >
           Convert to Audio
         </Button>
