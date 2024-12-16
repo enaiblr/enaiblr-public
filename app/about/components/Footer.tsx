@@ -13,12 +13,18 @@ const Footer = () => {
               en<span className="text-blue-600 font-ibm-plex-mono-regular">ai</span>blr
             </Link>
             <p className="text-muted-foreground">
-              Platform AI All-in-One dengan Harga Terjangkau dan Tanpa Batas
+              Platform AI All-in-One Tanpa Batas
               <br></br>
               <br></br>
               <b>PT. Bestari Media Teknologi</b>
               <br></br>
+              <a href="mailto:mail@enaiblr.org" className="underline">
+                mail@enaiblr.org
+              </a> 
+              <br></br>
+              <a href="https://wa.me/+628128007690">
               +62 812-8007-7690
+              </a>
             </p>
           </div>
           <div>
