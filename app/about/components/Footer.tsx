@@ -14,6 +14,11 @@ const Footer = () => {
             </Link>
             <p className="text-muted-foreground">
               Platform AI All-in-One dengan Harga Terjangkau dan Tanpa Batas
+              <br></br>
+              <br></br>
+              <b>PT. Bestari Media Teknologi</b>
+              <br></br>
+              +62 812-8007-7690
             </p>
           </div>
           <div>
