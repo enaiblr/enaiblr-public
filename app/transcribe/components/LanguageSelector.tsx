@@ -3,8 +3,8 @@ import { Globe } from 'lucide-react';
 import type { Language } from '../types';
 
 const languages: Language[] = [
-  { code: 'en', name: 'English' },
   { code: 'id', name: 'Bahasa Indonesia' },
+    { code: 'en', name: 'English' },
   { code: 'jv', name: 'Javanese' },
   { code: 'su', name: 'Sundanese' },
   { code: 'zh', name: 'Chinese' },
