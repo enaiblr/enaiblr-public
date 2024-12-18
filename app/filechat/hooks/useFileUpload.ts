@@ -1,17 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
-
-// Set up PDF.js worker
-if (typeof window !== 'undefined') {
-    try {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-    } catch (error) {
-        console.error('Error setting up PDF.js worker:', error);
-    }
-}
-
-
 
 interface FileInfo {
     fileName: string;
@@ -20,6 +9,11 @@ interface FileInfo {
 }
 
 export function useFileUpload() {
+    useEffect(() => {
+        // Set up PDF.js worker using local file
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+    }, []);
+
     const [isUploading, setIsUploading] = useState(false);
     const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
     const [fileContent, setFileContent] = useState<string | null>(null);
@@ -44,22 +38,16 @@ export function useFileUpload() {
     };
 
     const extractTextFromPDF = async (arrayBuffer: ArrayBuffer): Promise<string> => {
-        try {
-            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-            const pdf = await loadingTask.promise;
-            let text = '';
-
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                text += content.items.map((item: any) => item.str).join(' ') + '\n';
-            }
-
-            return text;
-        } catch (error) {
-            console.error('Error extracting PDF text:', error);
-            throw new Error('Failed to extract text from PDF');
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let text = '';
+        
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            text += content.items.map((item: any) => item.str).join(' ') + '\n';
         }
+        
+        return text;
     };
 
     const extractTextFromDOCX = async (arrayBuffer: ArrayBuffer): Promise<string> => {
