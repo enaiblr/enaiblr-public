@@ -173,7 +173,7 @@ export function UploadForm({ onTranscriptionComplete }: UploadFormProps) {
 
   return (
     <div className="w-11/12 md:w-4/5 lg:w-1/2 mx-auto px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">
+      <h1 className="text-3xl font-bold text-center mb-8">
         Audio <span className="text-blue-600">Transcriber</span>
       </h1>
       {/* <p className="text-gray-600 text-sm mb-2 text-center">

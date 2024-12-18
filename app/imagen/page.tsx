@@ -67,7 +67,7 @@ export default function Home() {
           ) : !generatedImage ? (
             <div className="flex items-center justify-center py-8 mt-8 sm:mt-0">
               <h1 className="text-4xl sm:text-6xl font-bold mb-12 text-center">
-                Realize <span className="text-blue-500">Imagination</span>
+                Image <span className="text-blue-500">Creator</span>
               </h1>
             </div>
           ) : (
