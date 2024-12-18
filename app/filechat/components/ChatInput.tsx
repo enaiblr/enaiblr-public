@@ -1,4 +1,4 @@
-import { Send, Image } from 'lucide-react'
+import { Send, FileText } from 'lucide-react'
 import { useRef } from 'react'
 
 interface ChatInputProps {
@@ -6,11 +6,12 @@ interface ChatInputProps {
     setInput: (input: string) => void;
     isLoading: boolean;
     fileInputRef: React.RefObject<HTMLInputElement>;
-    onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
     autoFocus?: boolean;
-    imageBase64: string | null;
-    clearImages: () => void;
-    sendMessage: (text: string, imageBase64: string | null) => Promise<void>;
+    fileContent: string | null;
+    clearFile: () => void;
+    sendMessage: (text: string, fileContent: string | null) => Promise<void>;
+    isFirstMessage: boolean;
 }
 
 export function ChatInput({ 
@@ -18,51 +19,59 @@ export function ChatInput({
     setInput, 
     isLoading, 
     fileInputRef, 
-    onImageSelect, 
+    onFileSelect, 
     autoFocus,
-    imageBase64,
-    clearImages,
-    sendMessage
+    fileContent,
+    clearFile,
+    sendMessage,
+    isFirstMessage
 }: ChatInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        // Blur input immediately to hide keyboard
         inputRef.current?.blur();
         
-        const currentImageBase64 = imageBase64;
+        const currentFileContent = fileContent;
         
-        // Clear form state
-        clearImages();
+        clearFile();
         setInput('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
 
-        // Send message
-        await sendMessage(input, currentImageBase64);
+        await sendMessage(input, currentFileContent);
     };
 
     return (
         <form onSubmit={handleSubmit} className="p-4">
             <div className="flex items-center bg-white rounded-full shadow-md max-w-4xl mx-auto border border-gray-200">
-                <div className="shrink-0">
-                    <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="p-3 pl-4 hover:bg-gray-100 focus:outline-none rounded-l-full"
-                    >
-                        <Image className="w-6 h-6 text-gray-500" />
-                    </button>
-                </div>
+                {isFirstMessage && (
+                    <div className="shrink-0">
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={onFileSelect}
+                            className="hidden"
+                            accept=".pdf,.doc,.docx,.txt,.md"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="p-2 hover:text-blue-500 transition-colors"
+                            aria-label="Attach document"
+                        >
+                            <FileText className="h-6 w-6" />
+                        </button>
+                    </div>
+                )}
 
                 <input
                     type="file"
                     ref={fileInputRef}
-                    onChange={onImageSelect}
-                    accept="image/*"
+                    onChange={onFileSelect}
+                    accept=".pdf,.doc,.docx,.txt,.md"
                     className="hidden"
                 />
 

@@ -4,25 +4,28 @@ import { Message } from '../components/types';
 export function useChatMessages() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    
     const clearMessages = () => {
         setMessages([]);
         setIsLoading(false);
     };
 
-    const toTogetherMessage = (msg: Message): any => ({
+    const formatMessage = (msg: Message): any => ({
         role: msg.role,
-        content: msg.content
+        content: Array.isArray(msg.content) 
+            ? msg.content.map(c => c.type === 'text' ? c.text : '').join('\n')
+            : msg.content
     });
 
-    const sendMessage = async (input: string, imageUrl: string | null) => {
-        if ((!input.trim() && !imageUrl) || isLoading) return;
+    const sendMessage = async (input: string, documentContent: string | null) => {
+        if ((!input.trim() && !documentContent) || isLoading) return;
 
         const userMessage: Message = {
             role: 'user',
-            content: imageUrl ? [
-                { type: 'image_url' as const, image_url: { url: imageUrl } },
-                { type: 'text' as const, text: input.trim() }
-            ] : [{ type: 'text' as const, text: input.trim() }]
+            content: [
+                { type: 'text' as const, text: input.trim() },
+                ...(documentContent ? [{ type: 'text' as const, text: `\nDocument content:\n${documentContent}` }] : [])
+            ]
         };
 
         setMessages(prev => [...prev, userMessage]);
@@ -35,8 +38,7 @@ export function useChatMessages() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    messages: [...messages.map(toTogetherMessage), toTogetherMessage(userMessage)],
-                    imageUrl
+                    messages: [...messages.map(formatMessage), formatMessage(userMessage)],
                 })
             });
 
@@ -49,28 +51,28 @@ export function useChatMessages() {
             const userMessages = [...messages, userMessage];
             setMessages(userMessages);
 
-            const textDecoder = new TextDecoder();
+            // Process the stream
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = textDecoder.decode(value);
+                // Decode the stream data
+                const chunk = new TextDecoder().decode(value);
                 const lines = chunk.split('\n');
 
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
                         try {
-                            const { content } = JSON.parse(line.slice(6));
-                            if (content) {
-                                assistantMessage += content;
-                                setMessages([
-                                    ...userMessages,
-                                    {
-                                        role: 'assistant',
-                                        content: [{ type: 'text', text: assistantMessage }]
-                                    }
-                                ]);
-                            }
+                            const data = JSON.parse(line.slice(6));
+                            assistantMessage = data.content;
+
+                            setMessages([
+                                ...userMessages,
+                                {
+                                    role: 'assistant',
+                                    content: [{ type: 'text', text: assistantMessage }]
+                                }
+                            ]);
                         } catch (e) {
                             console.error('Error parsing SSE data:', e);
                         }
@@ -78,11 +80,17 @@ export function useChatMessages() {
                 }
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error sending message:', error);
+            setMessages(prev => [...prev.slice(0, -1)]);
         } finally {
             setIsLoading(false);
         }
     };
 
-    return { messages, isLoading, sendMessage, clearMessages };
+    return {
+        messages,
+        isLoading,
+        sendMessage,
+        clearMessages,
+    };
 }
