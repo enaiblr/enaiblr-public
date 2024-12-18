@@ -6,12 +6,12 @@ import { ChatTitle } from './components/ChatTitle'
 import { MessageList } from './components/MessageList'
 import { ChatInput } from './components/ChatInput'
 import { ImagePreview } from './components/ImagePreview'
-import { useImageUpload } from './hooks/useImageUpload'
+import { useFileUpload } from './hooks/useFileUpload'
 import { useChatMessages } from './hooks/useChatMessages'
 import { AnimatedBackground } from "../../components/animated-background"
 import RenderFooter from '@/components/RenderFooter'
 
-export default function MinimalistChatbot() {
+export default function Filechat() {
     const { messages, isLoading, sendMessage, clearMessages } = useChatMessages();
     const {
         isUploading,
@@ -19,7 +19,7 @@ export default function MinimalistChatbot() {
         imageBase64,
         clearImages,
         handleImageChange,
-    } = useImageUpload();
+    } = useFileUpload();
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);

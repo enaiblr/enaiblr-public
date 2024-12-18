@@ -29,7 +29,7 @@ export function useChatMessages() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/chat', {
+            const response = await fetch('/api/filechat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

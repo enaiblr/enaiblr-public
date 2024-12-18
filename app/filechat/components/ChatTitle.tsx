@@ -12,7 +12,7 @@ export function ChatTitle({ compact, clearMessages }: ChatTitleProps) {
                 <h1 className="text-xl font-semibold">
                     <span className="text-blue-600">Disposable</span> Chat
                 </h1>
-                <button 
+                <button
                     onClick={clearMessages}
                     className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors"
                     title="Clear chat history"
@@ -24,11 +24,11 @@ export function ChatTitle({ compact, clearMessages }: ChatTitleProps) {
     ) : (
         <div className="text-center py-8">
             <h1 className="text-4xl font-extrabold mb-2">
-                <span className="text-blue-600 whitespace-nowrap">Disposable</span>{' '}
-                <span className="whitespace-nowrap">AI Chat</span>
+                <span className="whitespace-nowrap">Chat with </span>
+                <span className="text-blue-600 whitespace-nowrap">PDFs and Docs</span>{' '}
             </h1>
             <p className="text-sm text-gray-500">
-                <b>No Limits. Not Recorded.</b>
+                <b>Private. Secured. Not Recorded.</b>
             </p>
         </div>
     );

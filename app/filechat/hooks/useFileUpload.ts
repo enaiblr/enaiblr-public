@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import imageCompression from 'browser-image-compression';
 
-export function useImageUpload() {
+export function useFileUpload() {
     const [isUploading, setIsUploading] = useState(false);
     const [localImageUrl, setLocalImageUrl] = useState<string | null>(null);
     const [imageBase64, setImageBase64] = useState<string | null>(null);
