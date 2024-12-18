@@ -23,7 +23,7 @@ export function ChatTitle({ compact, clearMessages, fileName }: ChatTitleProps) 
     return compact ? (
         <div className="border-b border-gray-200">
             <div className="max-w-4xl mx-auto px-4 py-4 md:px-6 text-center relative">
-                <h1 className="text-xl font-semibold">
+                <h1 className="text-xl font-semibold mx-12 truncate">
                     Chat with{' '}
                     {fileName && <span className="text-blue-600">{truncateFileName(fileName)}</span>}
                 </h1>
@@ -38,12 +38,12 @@ export function ChatTitle({ compact, clearMessages, fileName }: ChatTitleProps) 
         </div>
     ) : (
         <div className="text-center py-8">
-            <h1 className="text-4xl font-extrabold mb-2">
-                <span className="whitespace-nowrap">Chat with </span>
+            <h1 className="text-4xl font-extrabold mb-2 flex flex-wrap justify-center items-center gap-x-2">
+                <span>Chat with</span>
                 {fileName ? (
-                    <span className="text-blue-600 whitespace-nowrap">{truncateFileName(fileName)}</span>
+                    <span className="text-blue-600">{truncateFileName(fileName)}</span>
                 ) : (
-                    <span className="text-blue-600 whitespace-nowrap">PDFs and Docs</span>
+                    <span className="text-blue-600">PDFs and Docs</span>
                 )}
             </h1>
             <p className="text-sm text-gray-500">

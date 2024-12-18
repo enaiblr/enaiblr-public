@@ -114,7 +114,7 @@ export function ChatInput({
                     <button
                         type="submit"
                         disabled={isLoading || !input.trim() || wordCount > 80000}
-                        className={`p-3 pr-4 mr-2 hover:bg-gray-100 rounded-r-full transition-colors ${isLoading || !input.trim() || wordCount > 80000
+                        className={`p-3 pr-4 hover:bg-gray-100 rounded-r-full transition-colors ${isLoading || !input.trim() || wordCount > 80000
                             ? 'text-gray-400'
                             : 'text-blue-600'
                             }`}
