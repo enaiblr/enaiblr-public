@@ -1,12 +1,43 @@
 import ReactMarkdown from 'react-markdown'
 import { Message } from './types'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 interface MessageListProps {
     messages: Message[];
     messagesEndRef: React.RefObject<HTMLDivElement>;
     onUpdate: () => void;
     isLoading?: boolean; // Add this new prop
+}
+
+interface CollapsibleTextProps {
+    content: string;
+}
+
+function CollapsibleText({ content }: CollapsibleTextProps) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="relative">
+            <p
+                className={`text-gray-600 text-sm pr-6 ${!isExpanded ? 'line-clamp-2' : ''
+                    }`}
+            >
+                {content}
+            </p>
+            <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="absolute bottom-0 right-0 p-1 text-gray-500 hover:text-gray-700 transition-colors"
+                aria-label={isExpanded ? 'Show less' : 'Show more'}
+            >
+                {isExpanded ? (
+                    <ChevronUp className="h-4 w-4" />
+                ) : (
+                    <ChevronDown className="h-4 w-4" />
+                )}
+            </button>
+        </div>
+    );
 }
 
 export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: MessageListProps) {
@@ -60,8 +91,8 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                             <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
                                 <div
                                     className={`max-w-[80%] rounded-2xl p-3 break-words overflow-wrap-anywhere ${message.role === 'user'
-                                            ? 'bg-blue-500 text-white rounded-br-none'
-                                            : 'bg-gray-200 text-gray-800 rounded-bl-none'
+                                        ? 'bg-blue-500 text-white rounded-br-none'
+                                        : 'bg-gray-200 text-gray-800 rounded-bl-none'
                                         }`}
                                 >
                                     {message.role === 'user' ? (
@@ -94,7 +125,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
 
                                             {message.sources && message.sources.length > 0 && (
                                                 <div className="mt-4 space-y-3 border-t pt-3 text-sm">
-                                                    <div className="font-medium text-gray-700">Sources:</div>
+                                                    <div className="font-bold text-gray-700">Sources:</div>
                                                     {message.sources.map((source, index) => (
                                                         <div key={index} className="space-y-1">
                                                             <a
@@ -105,7 +136,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                                                             >
                                                                 {source.title}
                                                             </a>
-                                                            <p className="text-gray-600 text-sm">{source.content}</p>
+                                                            <CollapsibleText content={source.content} />
                                                         </div>
                                                     ))}
                                                 </div>
@@ -135,25 +166,32 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                 />
             </div>
             <style>{`
-            .prose pre, .prose code {
-                white-space: pre-wrap;
-                overflow-wrap: break-word;
-                overflow-x: auto;
-            }
-            
-            @keyframes bounce {
-                0%, 100% {
-                    transform: translateY(0);
+                .prose pre, .prose code {
+                    white-space: pre-wrap;
+                    overflow-wrap: break-word;
+                    overflow-x: auto;
                 }
-                50% {
-                    transform: translateY(-5px);
+                
+                @keyframes bounce {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+                    50% {
+                        transform: translateY(-5px);
+                    }
                 }
-            }
-            
-            .animate-bounce {
-                animation: bounce 1s infinite;
-            }
-        `}</style>
+                
+                .animate-bounce {
+                    animation: bounce 1s infinite;
+                }
+
+                .line-clamp-2 {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+            `}</style>
         </>
     );
 }
