@@ -19,7 +19,17 @@ export default function Filechat() {
         fileContent,
         handleFileChange,
         clearFile,
+        error,
+        setError,
+        wordCount
     } = useFileUpload();
+
+    useEffect(() => {
+        if (error) {
+            alert(error);
+            setError(null);
+        }
+    }, [error, setError]);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -148,6 +158,8 @@ export default function Filechat() {
                                         fileType={fileInfo.fileType}
                                         isUploading={isUploading}
                                         onRemove={clearFile}
+                                        error={error}
+                                        wordCount={wordCount}
                                     />
                                 </div>
                             )}
@@ -163,6 +175,9 @@ export default function Filechat() {
                                     clearFile={clearFile}
                                     sendMessage={handleSendMessage}
                                     isFirstMessage={!hasUserSentMessage}
+                                    isUploading={isUploading}
+                                    wordCount={wordCount}
+                                    error={error}
                                 />
                             </div>
                         </div>

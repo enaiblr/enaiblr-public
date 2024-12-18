@@ -12,6 +12,9 @@ interface ChatInputProps {
     clearFile: () => void;
     sendMessage: (text: string, fileContent: string | null) => Promise<void>;
     isFirstMessage: boolean;
+    isUploading: boolean;
+    wordCount: number;
+    error: string | null;
 }
 
 export function ChatInput({
@@ -24,7 +27,10 @@ export function ChatInput({
     fileContent,
     clearFile,
     sendMessage,
-    isFirstMessage
+    isFirstMessage,
+    isUploading,
+    wordCount,
+    error
 }: ChatInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,13 +53,14 @@ export function ChatInput({
         await sendMessage(input, currentFileContent);
 
         // Only clear the file input, but keep the fileInfo state for display
-        if (!isFirstMessage) {
-            clearFile();
-        }
+        // if (!isFirstMessage) {
+        //     clearFile();
+        // }
     };
 
     return (
         <form onSubmit={handleSubmit} className="p-4">
+
             <div className="flex items-center bg-white rounded-full shadow-md max-w-4xl mx-auto border border-gray-200">
                 {isFirstMessage && (
                     <div className="shrink-0 p-2">
@@ -106,13 +113,19 @@ export function ChatInput({
                 <div className="shrink-0">
                     <button
                         type="submit"
-                        disabled={isLoading}
-                        className={`p-3 pl-4 pr-4 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'} focus:outline-none rounded-r-full`}
+                        disabled={isLoading || !input.trim() || wordCount > 80000}
+                        className={`p-3 pr-4 mr-2 hover:bg-gray-100 rounded-r-full transition-colors ${isLoading || !input.trim() || wordCount > 80000
+                            ? 'text-gray-400'
+                            : 'text-blue-600'
+                            }`}
                     >
-                        <Send className="w-6 h-6 text-blue-500" />
+                        <Send className="w-6 h-6" />
                     </button>
                 </div>
             </div>
+
+
+
         </form>
     );
 }

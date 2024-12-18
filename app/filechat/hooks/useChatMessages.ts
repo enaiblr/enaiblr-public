@@ -64,7 +64,7 @@ export function useChatMessages() {
                     if (line.startsWith('data: ')) {
                         try {
                             const data = JSON.parse(line.slice(6));
-                            assistantMessage = data.content;
+                            assistantMessage += data.content;  // Accumulate the chunks
 
                             setMessages([
                                 ...userMessages,

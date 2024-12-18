@@ -9,6 +9,7 @@ interface FileInfo {
 }
 
 export function useFileUpload() {
+    const [wordCount, setWordCount] = useState<number>(0);
     useEffect(() => {
         // Set up PDF.js worker using local file
         pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -40,13 +41,13 @@ export function useFileUpload() {
     const extractTextFromPDF = async (arrayBuffer: ArrayBuffer): Promise<string> => {
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
         let text = '';
-        
+
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const content = await page.getTextContent();
             text += content.items.map((item: any) => item.str).join(' ') + '\n';
         }
-        
+
         return text;
     };
 
@@ -64,10 +65,13 @@ export function useFileUpload() {
 
     const handleFileChange = async (file: File | null) => {
         setError(null);
+        setWordCount(0);
+        setIsUploading(true);
 
         if (!file) {
             setFileInfo(null);
             setFileContent(null);
+            setIsUploading(false);
             return;
         }
 
@@ -84,12 +88,18 @@ export function useFileUpload() {
             (isDoc && (file.type.includes('word') || file.type.includes('document')));
 
         if (!isAllowedType) {
-            setError(`Unsupported file type: ${file.type} for extension: ${extension}`);
+            setError('Allowed file types: .pdf .docx .doc .txt .md');
             console.error('Unsupported file type:', file.type, 'extension:', extension);
+            setIsUploading(false);
             return;
         }
 
-        setIsUploading(true);
+        // Set file info immediately for preview
+        setFileInfo({
+            fileName: file.name,
+            fileType: file.type,
+            content: '' // Will be updated after content extraction
+        });
 
         try {
             const arrayBuffer = await file.arrayBuffer();
@@ -100,19 +110,27 @@ export function useFileUpload() {
             } else if (isDoc) {
                 content = await extractTextFromDOCX(arrayBuffer);
             } else {
-                // For markdown and text files
+                // For text files
                 content = await file.text();
             }
 
-            setFileInfo({
-                fileName: file.name,
-                fileType: extension,
-                content
-            });
-            setFileContent(content);
-        } catch (error) {
-            console.error('Error processing file:', error);
-            setError(error instanceof Error ? error.message : 'Failed to process file');
+            // Calculate word count
+            const words = content.trim().split(/\s+/).length;
+
+            if (words > 80000) {
+                setError('Maximum word count is 80.000');
+                setFileInfo(null);
+                setFileContent(null);
+                setWordCount(0);
+            } else {
+                setWordCount(words);
+                setFileContent(content);
+                // Update fileInfo with content
+                setFileInfo(prev => prev ? { ...prev, content } : null);
+            }
+        } catch (err: any) {
+            setError(err.message || 'Error processing file');
+            console.error('File processing error:', err);
             setFileInfo(null);
             setFileContent(null);
         } finally {
@@ -135,8 +153,10 @@ export function useFileUpload() {
         isUploading,
         fileInfo,
         fileContent,
-        error,
         handleFileChange,
-        clearFile
+        clearFile,
+        error,
+        setError,
+        wordCount,
     };
 }

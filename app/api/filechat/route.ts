@@ -38,20 +38,21 @@ export async function POST(request: Request) {
       : `${SYSTEM_PROMPT}\n\nDocument for reference:\n${documentContent}\n\nUser question: ${latestPrompt}`;
 
     // Send the message and get response
-    const result = await model.generateContent({
+    const result = await model.generateContentStream({
       contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
       generationConfig,
     });
-    
-    const response = await result.response;
-    const text = response.text();
 
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          // Format as SSE data
-          const data = `data: ${JSON.stringify({ content: text })}\n\n`;
-          controller.enqueue(new TextEncoder().encode(data));
+          for await (const chunk of result.stream) {
+            const chunkText = chunk.text();
+            if (chunkText) {
+              const data = `data: ${JSON.stringify({ content: chunkText })}\n\n`;
+              controller.enqueue(new TextEncoder().encode(data));
+            }
+          }
           controller.close();
         } catch (error) {
           controller.error(error);

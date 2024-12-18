@@ -64,11 +64,11 @@ export function MessageList({ messages, messagesEndRef, onUpdate }: MessageListP
                     >
                         <div
                             className={`rounded-lg px-4 py-2 max-w-[85%] ${message.role === 'user'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'bg-gray-100 text-gray-900'
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-100 text-gray-900'
                                 }`}
                         >
-                            <ReactMarkdown className={`prose prose-sm max-w-none ${message.role === 'user' ? 'prose-invert' : ''
+                            <ReactMarkdown className={`prose prose-sm max-w-none ${message.role === 'user' ? 'prose-invert !text-white' : ''
                                 }`}>
                                 {getVisibleContent(message.content)}
                             </ReactMarkdown>
