@@ -124,6 +124,11 @@ export function useFileUpload() {
         setFileInfo(null);
         setFileContent(null);
         setError(null);
+        // Reset the file input value to allow selecting the same file again
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            (fileInput as HTMLInputElement).value = '';
+        }
     };
 
     return {

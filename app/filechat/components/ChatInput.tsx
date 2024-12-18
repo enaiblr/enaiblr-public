@@ -14,12 +14,12 @@ interface ChatInputProps {
     isFirstMessage: boolean;
 }
 
-export function ChatInput({ 
-    input, 
-    setInput, 
-    isLoading, 
-    fileInputRef, 
-    onFileSelect, 
+export function ChatInput({
+    input,
+    setInput,
+    isLoading,
+    fileInputRef,
+    onFileSelect,
     autoFocus,
     fileContent,
     clearFile,
@@ -30,7 +30,7 @@ export function ChatInput({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (isFirstMessage && !fileContent) {
             alert('Please attach a file first');
             return;
@@ -38,7 +38,7 @@ export function ChatInput({
 
         inputRef.current?.blur();
         const currentFileContent = fileContent;
-        
+
         setInput('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -62,22 +62,32 @@ export function ChatInput({
                             ref={fileInputRef}
                             onChange={onFileSelect}
                             className="hidden"
-                            accept=".txt,.pdf,.doc,.docx"
+                            accept=".pdf,.doc,.docx,.txt,.md"
                         />
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${!fileContent ? 'text-gray-400' : 'text-blue-600'}`}
+                            className={`p-3 pl-4 hover:bg-gray-100 rounded-l-full transition-colors ${!fileContent ? 'text-gray-400' : 'text-blue-600'}`}
                             title="Attach file"
                         >
-                            <FileText className="w-5 h-5" />
+                            <FileText className="w-6 h-6" />
                         </button>
                     </div>
                 )}
 
+                {!isFirstMessage && (
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={onFileSelect}
+                        accept=".pdf,.doc,.docx,.txt,.md"
+                        className="hidden"
+                    />
+                )}
+
                 <input
-                    type="file"
-                    ref={fileInputRef}
+                    type="text"
+                    ref={inputRef}
                     onChange={onFileSelect}
                     accept=".pdf,.doc,.docx,.txt,.md"
                     className="hidden"
@@ -97,7 +107,7 @@ export function ChatInput({
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`p-3 pr-4 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'} focus:outline-none rounded-r-full`}
+                        className={`p-3 pl-4 pr-4 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'} focus:outline-none rounded-r-full`}
                     >
                         <Send className="w-6 h-6 text-blue-500" />
                     </button>
