@@ -149,7 +149,7 @@ export default function Filechat() {
                     ) : (
                         <ChatTitle clearMessages={handleReset} fileName={fileInfo?.fileName} />
                     )}
-                    <div className={`flex flex-col justify-end w-full ${!hasUserSentMessage ? 'mt-8' : ''}`}>
+                    <div className={`flex flex-col justify-end w-full ${!hasUserSentMessage ? 'mt-0' : ''}`}>
                         <div className="w-full max-w-5xl mx-auto">
                             {fileInfo && !hasUserSentMessage && (
                                 <div className="px-4">
