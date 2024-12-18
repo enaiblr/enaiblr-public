@@ -23,10 +23,14 @@ export async function POST(request: Request) {
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          const answer = response.answer || "I couldn't find a specific answer to your question.";
+          // Send the entire response as a single chunk
+          const responseData = {
+            query: response.query,
+            answer: response.answer || "I couldn't find a specific answer to your question.",
+            results: response.results || []
+          };
           
-          // Format as SSE data
-          const data = `data: ${JSON.stringify({ content: answer })}\n\n`;
+          const data = `data: ${JSON.stringify(responseData)}\n\n`;
           controller.enqueue(new TextEncoder().encode(data));
           controller.close();
         } catch (error) {

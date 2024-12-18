@@ -4,15 +4,11 @@ import { Message } from '../components/types';
 export function useChatMessages() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+
     const clearMessages = () => {
         setMessages([]);
         setIsLoading(false);
     };
-
-    const toTogetherMessage = (msg: Message): any => ({
-        role: msg.role,
-        content: msg.content
-    });
 
     const sendMessage = async (input: string) => {
         if ((!input.trim()) || isLoading) return;
@@ -43,6 +39,7 @@ export function useChatMessages() {
 
             const textDecoder = new TextDecoder();
             const { done, value } = await reader.read();
+            
             if (!done && value) {
                 const chunk = textDecoder.decode(value);
                 const lines = chunk.split('\n');
@@ -50,18 +47,21 @@ export function useChatMessages() {
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
                         try {
-                            const { content } = JSON.parse(line.slice(6));
-                            if (content) {
-                                setMessages(prev => [
-                                    ...prev,
-                                    {
-                                        role: 'assistant',
-                                        content: [{ type: 'text', text: content }]
-                                    }
-                                ]);
+                            const data = JSON.parse(line.slice(6));
+                            if (data.answer) {
+                                const assistantMessage: Message = {
+                                    role: 'assistant',
+                                    content: [{ 
+                                        type: 'text' as const, 
+                                        text: data.answer 
+                                    }],
+                                    sources: data.results
+                                };
+                                setMessages(prev => [...prev, assistantMessage]);
                             }
                         } catch (e) {
                             console.error('Error parsing SSE data:', e);
+                            console.log('Raw data:', line.slice(6));
                         }
                     }
                 }

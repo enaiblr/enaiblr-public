@@ -46,75 +46,95 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
 
     return (
         <>
-        <div
-            ref={messageListRef}
-            className="flex-1 overflow-y-auto scrollbar-hide relative h-full"
-            style={{
-                height: '100%',
-                overscrollBehavior: 'contain',
-            }}
-        >
-            <div className="max-w-4xl mx-auto w-full p-4 md:p-6">
-                <div className="space-y-4">
-                    {messages.map((message, index) => (
-                        <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
-                            <div
-                                className={`max-w-[80%] rounded-2xl p-3 break-words overflow-wrap-anywhere ${message.role === 'user'
-                                    ? 'bg-blue-500 text-white rounded-br-none'
-                                    : 'bg-gray-200 text-gray-800 rounded-bl-none'
-                                    }`}
-                            >
-                                {message.role === 'assistant' ? (
-                                    <ReactMarkdown className="prose prose-sm max-w-none dark:prose-invert">
-                                        {typeof message.content === 'string'
-                                            ? message.content
-                                            : message.content.map((content, i) =>
-                                                content.type === 'text'
-                                                    ? content.text
-                                                    : content.image_url?.url
-                                                        ? `![Image](${content.image_url.url})`
-                                                        : ''
-                                            ).join('\n')}
-                                    </ReactMarkdown>
-                                ) : (
-                                    typeof message.content === 'string'
-                                        ? message.content
-                                        : message.content.map((content, i) => (
-                                            <div key={i} className="flex flex-col">
-                                                {content.type === 'image_url' && content.image_url?.url && (
-                                                    <img
-                                                        src={content.image_url.url}
-                                                        alt="Uploaded content"
-                                                        className="max-w-full max-h-[250px] w-auto h-auto object-contain rounded-lg mb-2"
-                                                    />
-                                                )}
-                                                {content.type === 'text' && content.text}
-                                            </div>
-                                        ))
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                {isLoading && (
-                        <div className="flex justify-start w-full">
-                            <div className="max-w-[80%] rounded-2xl p-3 bg-gray-200 text-gray-800 rounded-bl-none">
-                                <div className="flex space-x-1">
-                                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
-                                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }}></div>
+            <div
+                ref={messageListRef}
+                className="flex-1 overflow-y-auto scrollbar-hide relative h-full"
+                style={{
+                    height: '100%',
+                    overscrollBehavior: 'contain',
+                }}
+            >
+                <div className="max-w-4xl mx-auto w-full p-4 md:p-6">
+                    <div className="space-y-4">
+                        {messages.map((message, index) => (
+                            <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
+                                <div
+                                    className={`max-w-[80%] rounded-2xl p-3 break-words overflow-wrap-anywhere ${message.role === 'user'
+                                            ? 'bg-blue-500 text-white rounded-br-none'
+                                            : 'bg-gray-200 text-gray-800 rounded-bl-none'
+                                        }`}
+                                >
+                                    {message.role === 'user' ? (
+                                        // User message
+                                        Array.isArray(message.content)
+                                            ? message.content.map((content, i) => (
+                                                <div key={i}>
+                                                    {content.type === 'text' && content.text}
+                                                    {content.type === 'image_url' && (
+                                                        <img
+                                                            src={content.image_url.url}
+                                                            alt="Uploaded content"
+                                                            className="max-w-full max-h-[250px] w-auto h-auto object-contain rounded-lg mb-2"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))
+                                            : message.content
+                                    ) : (
+                                        // Assistant message
+                                        <div className="space-y-4">
+                                            <ReactMarkdown className="prose prose-sm max-w-none dark:prose-invert">
+                                                {Array.isArray(message.content)
+                                                    ? message.content
+                                                        .filter(content => content.type === 'text')
+                                                        .map(content => (content as { type: 'text', text: string }).text)
+                                                        .join('\n')
+                                                    : message.content}
+                                            </ReactMarkdown>
+
+                                            {message.sources && message.sources.length > 0 && (
+                                                <div className="mt-4 space-y-3 border-t pt-3 text-sm">
+                                                    <div className="font-medium text-gray-700">Sources:</div>
+                                                    {message.sources.map((source, index) => (
+                                                        <div key={index} className="space-y-1">
+                                                            <a
+                                                                href={source.url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-600 hover:underline font-medium"
+                                                            >
+                                                                {source.title}
+                                                            </a>
+                                                            <p className="text-gray-600 text-sm">{source.content}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        ))}
+                        {isLoading && (
+                            <div className="flex justify-start w-full">
+                                <div className="max-w-[80%] rounded-2xl p-3 bg-gray-200 text-gray-800 rounded-bl-none">
+                                    <div className="flex space-x-1">
+                                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
+                                        <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
+                <div
+                    ref={messagesEndRef}
+                    className="h-px w-full"
+                    aria-hidden="true"
+                />
             </div>
-            <div
-                ref={messagesEndRef}
-                className="h-px w-full"
-                aria-hidden="true"
-            />
-        </div>
-        <style>{`
+            <style>{`
             .prose pre, .prose code {
                 white-space: pre-wrap;
                 overflow-wrap: break-word;

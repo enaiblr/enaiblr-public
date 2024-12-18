@@ -8,7 +8,15 @@ export type MessageContent = string | Array<{
     };
 }>;
 
+export interface Source {
+    title: string;
+    url: string;
+    content: string;
+    score: number;
+}
+
 export interface Message {
     role: 'user' | 'assistant' | 'system';
     content: MessageContent;
+    sources?: Source[];
 }
