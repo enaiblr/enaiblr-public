@@ -101,9 +101,18 @@ export default function Filechat() {
 
     const handleSendMessage = async (text: string, fileContent: string | null) => {
         if (!text.trim() && !fileContent) return;
-        
-        setHasUserSentMessage(true);
+
+        if (!hasUserSentMessage && fileInfo) {
+            setHasUserSentMessage(true);
+        }
         await sendMessage(text, fileContent);
+    };
+
+    const handleReset = () => {
+        clearMessages();
+        clearFile();
+        setInput('');
+        setHasUserSentMessage(false);
     };
 
     return (
@@ -111,18 +120,28 @@ export default function Filechat() {
             <Sidebar />
             <div className="flex-1 flex flex-col overflow-hidden relative">
                 <AnimatedBackground />
-                <ChatTitle clearMessages={clearMessages} />
-                <div className="flex-1 overflow-hidden flex flex-col">
-                    <div className="flex-1 overflow-y-auto" ref={messagesEndRef}>
-                        <MessageList 
-                            messages={messages} 
-                            messagesEndRef={messagesEndRef}
-                            onUpdate={scrollToBottom}
-                        />
-                    </div>
-                    <div className="flex flex-col justify-end w-full">
+                {hasUserSentMessage ? (
+                    <ChatTitle
+                        compact
+                        clearMessages={handleReset}
+                        fileName={fileInfo?.fileName}
+                    />
+                ) : null}
+                <div className={`flex-1 overflow-hidden flex flex-col ${!hasUserSentMessage ? 'justify-center' : ''}`}>
+                    {hasUserSentMessage ? (
+                        <div className="flex-1 overflow-y-auto" ref={messagesEndRef}>
+                            <MessageList
+                                messages={messages}
+                                messagesEndRef={messagesEndRef}
+                                onUpdate={scrollToBottom}
+                            />
+                        </div>
+                    ) : (
+                        <ChatTitle clearMessages={handleReset} fileName={fileInfo?.fileName} />
+                    )}
+                    <div className={`flex flex-col justify-end w-full ${!hasUserSentMessage ? 'mt-8' : ''}`}>
                         <div className="w-full max-w-5xl mx-auto">
-                            {fileInfo && (
+                            {fileInfo && !hasUserSentMessage && (
                                 <div className="px-4">
                                     <DocumentPreview
                                         fileName={fileInfo.fileName}
@@ -147,8 +166,10 @@ export default function Filechat() {
                                 />
                             </div>
                         </div>
-                        <RenderFooter />
                     </div>
+                </div>
+                <div className="w-full">
+                    <RenderFooter />
                 </div>
             </div>
         </div>

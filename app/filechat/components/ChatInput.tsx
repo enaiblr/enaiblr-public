@@ -31,38 +31,46 @@ export function ChatInput({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
+        if (isFirstMessage && !fileContent) {
+            alert('Please attach a file first');
+            return;
+        }
+
         inputRef.current?.blur();
-        
         const currentFileContent = fileContent;
         
-        clearFile();
         setInput('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
 
         await sendMessage(input, currentFileContent);
+
+        // Only clear the file input, but keep the fileInfo state for display
+        if (!isFirstMessage) {
+            clearFile();
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="p-4">
             <div className="flex items-center bg-white rounded-full shadow-md max-w-4xl mx-auto border border-gray-200">
                 {isFirstMessage && (
-                    <div className="shrink-0">
+                    <div className="shrink-0 p-2">
                         <input
                             type="file"
                             ref={fileInputRef}
                             onChange={onFileSelect}
                             className="hidden"
-                            accept=".pdf,.doc,.docx,.txt,.md"
+                            accept=".txt,.pdf,.doc,.docx"
                         />
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="p-2 hover:text-blue-500 transition-colors"
-                            aria-label="Attach document"
+                            className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${!fileContent ? 'text-gray-400' : 'text-blue-600'}`}
+                            title="Attach file"
                         >
-                            <FileText className="h-6 w-6" />
+                            <FileText className="w-5 h-5" />
                         </button>
                     </div>
                 )}
@@ -80,7 +88,7 @@ export function ChatInput({
                     ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type a message..."
+                    placeholder="Summarize this document..."
                     className="flex-1 p-3 bg-transparent focus:outline-none min-w-0"
                     autoFocus={autoFocus}
                 />

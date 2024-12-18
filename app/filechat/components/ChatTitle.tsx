@@ -3,14 +3,29 @@ import { RefreshCw } from 'lucide-react'
 interface ChatTitleProps {
     compact?: boolean;
     clearMessages: () => void;
+    fileName?: string;
 }
 
-export function ChatTitle({ compact, clearMessages }: ChatTitleProps) {
+export function ChatTitle({ compact, clearMessages, fileName }: ChatTitleProps) {
+    const truncateFileName = (name: string) => {
+        if (!name) return '';
+
+        const lastDotIndex = name.lastIndexOf('.');
+        if (lastDotIndex === -1) return name;
+
+        const nameWithoutExt = name.slice(0, lastDotIndex);
+        const extension = name.slice(lastDotIndex);
+
+        if (nameWithoutExt.length <= 20) return name;
+        return `${nameWithoutExt.substring(0, 20)}...${extension}`;
+    };
+
     return compact ? (
         <div className="border-b border-gray-200">
             <div className="max-w-4xl mx-auto px-4 py-4 md:px-6 text-center relative">
                 <h1 className="text-xl font-semibold">
-                    <span className="text-blue-600">Disposable</span> Chat
+                    Chat with{' '}
+                    {fileName && <span className="text-blue-600">{truncateFileName(fileName)}</span>}
                 </h1>
                 <button
                     onClick={clearMessages}
@@ -25,7 +40,11 @@ export function ChatTitle({ compact, clearMessages }: ChatTitleProps) {
         <div className="text-center py-8">
             <h1 className="text-4xl font-extrabold mb-2">
                 <span className="whitespace-nowrap">Chat with </span>
-                <span className="text-blue-600 whitespace-nowrap">PDFs and Docs</span>{' '}
+                {fileName ? (
+                    <span className="text-blue-600 whitespace-nowrap">{truncateFileName(fileName)}</span>
+                ) : (
+                    <span className="text-blue-600 whitespace-nowrap">PDFs and Docs</span>
+                )}
             </h1>
             <p className="text-sm text-gray-500">
                 <b>Private. Secured. Not Recorded.</b>
