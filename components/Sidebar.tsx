@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, Search, MessageSquare, BookOpen, Wallet, FlaskConical, WandSparkles, FileAudio, Speech, FileText} from 'lucide-react'
+import { Menu, X, Search, MessageSquare, Globe, BookOpen, Wallet, FlaskConical, WandSparkles, FileAudio, Speech, FileText} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -18,9 +18,10 @@ const apps = [
   { name: 'AI Tools Search', icon: Search, slug: '' },
   { name: 'Disposable AI Chat', icon: MessageSquare, slug: 'chat' },
   { name: 'AI Image Creator', icon: WandSparkles, slug: 'imagen' },
+  { name: 'Chat with Docs', icon: FileText, slug: 'filechat' },
+  { name: 'Web Search', icon: Globe, slug: 'web' },
   { name: 'Audio Transcription', icon: FileAudio, slug: 'transcribe' },
   { name: 'Text to Voice', icon: Speech, slug: 'voice' },
-  { name: 'Chat with Docs', icon: FileText, slug: 'filechat' },
   // { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
   // { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
   // { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },
