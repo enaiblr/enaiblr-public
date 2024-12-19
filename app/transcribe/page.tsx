@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Sidebar } from '@/components/Sidebar'
 import { AnimatedBackground } from "../../components/animated-background"
 import RenderFooter from '@/components/RenderFooter'
@@ -11,22 +11,45 @@ import type { TranscriptionResult as TranscriptionResultType } from './types';
 export default function Transcriber() {
     const [transcriptionResult, setTranscriptionResult] = useState<TranscriptionResultType | null>(null);
 
+    useEffect(() => {
+        const adjustViewportHeight = () => {
+            const visualViewport = window.visualViewport;
+            const height = visualViewport ? visualViewport.height : window.innerHeight;
+            document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
+        };
+
+        adjustViewportHeight();
+        window.visualViewport?.addEventListener('resize', adjustViewportHeight);
+        window.addEventListener('resize', adjustViewportHeight);
+
+        return () => {
+            window.visualViewport?.removeEventListener('resize', adjustViewportHeight);
+            window.removeEventListener('resize', adjustViewportHeight);
+        };
+    }, []);
+
     return (
-        <>
+        <div 
+            className="flex min-h-screen"
+            style={{
+                height: 'calc(var(--vh, 1vh) * 100)',
+                minHeight: '-webkit-fill-available'
+            }}
+        >
             <Sidebar />
-            <AnimatedBackground />
-            <div className="flex flex-col min-h-screen">
-                <div className={`flex-grow ${transcriptionResult ? 'pt-28 pb-12' : 'flex items-center justify-center py-12'}`}>
+            <div className="flex flex-col w-full relative">
+                <AnimatedBackground />
+                <main className={`flex-grow ${transcriptionResult ? 'pt-28 pb-12' : 'flex items-center justify-center py-12'}`}>
                     {transcriptionResult ? (
                         <TranscriptionResult result={transcriptionResult} />
                     ) : (
                         <UploadForm onTranscriptionComplete={setTranscriptionResult} />
                     )}
-                </div>
-                <div className="w-full">
+                </main>
+                <footer className="w-full sticky bottom-0 z-10">
                     <RenderFooter />
-                </div>
+                </footer>
             </div>
-        </>
+        </div>
     )
 }
