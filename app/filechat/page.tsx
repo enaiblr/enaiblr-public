@@ -170,7 +170,7 @@ export default function Filechat() {
                                     isLoading={isLoading}
                                     fileInputRef={fileInputRef}
                                     onFileSelect={(e) => handleFileChange(e.target.files?.[0] || null)}
-                                    autoFocus={true}
+                                    // autoFocus={false}
                                     fileContent={fileContent}
                                     clearFile={clearFile}
                                     sendMessage={handleSendMessage}
