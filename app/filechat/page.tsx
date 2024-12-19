@@ -126,8 +126,13 @@ export default function Filechat() {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden">
-            <Sidebar />
+        <div 
+            className="flex min-h-screen"
+            style={{
+                height: 'calc(var(--vh, 1vh) * 100)',
+                minHeight: '-webkit-fill-available'
+            }}
+        >            <Sidebar />
             <div className="flex-1 flex flex-col overflow-hidden relative">
                 <AnimatedBackground />
                 {hasUserSentMessage ? (
