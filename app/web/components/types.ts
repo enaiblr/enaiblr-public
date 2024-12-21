@@ -16,6 +16,7 @@ export interface Source {
 }
 
 export interface Message {
+    id: string;
     role: 'user' | 'assistant' | 'system';
     content: MessageContent;
     sources?: Source[];

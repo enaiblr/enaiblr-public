@@ -14,6 +14,7 @@ export function useChatMessages() {
         if ((!input.trim()) || isLoading) return;
 
         const userMessage: Message = {
+            id: crypto.randomUUID(),
             role: 'user',
             content: [{ type: 'text' as const, text: input.trim() }]
         };
@@ -57,6 +58,7 @@ export function useChatMessages() {
                                 if (data.answer) {
                                     receivedResponse = true;
                                     const assistantMessage: Message = {
+                                        id: crypto.randomUUID(),
                                         role: 'assistant',
                                         content: [{ 
                                             type: 'text' as const, 

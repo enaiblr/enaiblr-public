@@ -7,7 +7,7 @@ interface MessageListProps {
     messages: Message[];
     messagesEndRef: React.RefObject<HTMLDivElement>;
     onUpdate: () => void;
-    isLoading?: boolean; // Add this new prop
+    isLoading?: boolean; 
 }
 
 interface CollapsibleTextProps {
@@ -42,7 +42,14 @@ function CollapsibleText({ content }: CollapsibleTextProps) {
 
 export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: MessageListProps) {
     const messageListRef = useRef<HTMLDivElement>(null);
-    const [isSourcesExpanded, setIsSourcesExpanded] = useState<boolean>(false);
+    const [expandedSources, setExpandedSources] = useState<Record<string, boolean>>({});
+
+    const toggleSourcesExpanded = (messageId: string) => {
+        setExpandedSources(prev => ({
+            ...prev,
+            [messageId]: !prev[messageId]
+        }));
+    };
 
     const scrollToBottom = () => {
         if (messageListRef.current && messagesEndRef.current) {
@@ -126,10 +133,11 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
 
                                             {message.sources && message.sources.length > 0 && (
                                                 <div className="mt-4 space-y-3 border-t pt-3 text-sm">
-                                                    <div className="flex items-center justify-between cursor-pointer bg-gray-100 rounded-md p-2" onClick={() => setIsSourcesExpanded(!isSourcesExpanded)}>
+                                                    <div className="flex items-center justify-between cursor-pointer bg-gray-100 rounded-md p-2" 
+                                                         onClick={() => toggleSourcesExpanded(message.id)}>
                                                         <div className="font-bold text-gray-700">Sources:</div>
                                                         <svg
-                                                            className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${isSourcesExpanded ? 'rotate-180' : ''}`}
+                                                            className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${expandedSources[message.id] ? 'rotate-180' : ''}`}
                                                             fill="none"
                                                             stroke="currentColor"
                                                             viewBox="0 0 24 24"
@@ -139,7 +147,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                                                         </svg>
                                                     </div>
                                                     <div 
-                                                        className={`transition-all duration-200 ease-in-out overflow-hidden ${isSourcesExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
+                                                        className={`transition-all duration-200 ease-in-out overflow-hidden ${expandedSources[message.id] ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
                                                     >
                                                         <div className="space-y-3">
                                                             {message.sources.map((source, index) => (
