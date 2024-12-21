@@ -10,7 +10,7 @@ export function ChatTitle({ compact, clearMessages }: ChatTitleProps) {
         <div className="border-b border-gray-200">
             <div className="max-w-4xl mx-auto px-4 py-4 md:px-6 text-center relative">
                 <h1 className="text-xl font-semibold">
-                    <span className="text-blue-600">Web</span> Search
+                    Chat with <span className="text-blue-600">the Web</span>
                 </h1>
                 <button 
                     onClick={clearMessages}

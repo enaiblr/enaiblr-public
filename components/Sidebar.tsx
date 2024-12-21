@@ -17,9 +17,9 @@ interface SidebarProps {
 const apps = [
   { name: 'AI Tools Search', icon: Search, slug: '' },
   { name: 'Disposable AI Chat', icon: MessageSquare, slug: 'chat' },
-  { name: 'AI Image Creator', icon: WandSparkles, slug: 'imagen' },
+  { name: 'Image Creator', icon: WandSparkles, slug: 'imagen' },
   { name: 'Chat with Docs', icon: FileText, slug: 'filechat' },
-  { name: 'Web Search', icon: Globe, slug: 'web' },
+  { name: 'Web Chat', icon: Globe, slug: 'web' },
   { name: 'Audio Transcription', icon: FileAudio, slug: 'transcribe' },
   { name: 'Text to Voice', icon: Speech, slug: 'voice' },
   // { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
