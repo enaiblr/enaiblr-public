@@ -1,6 +1,6 @@
+import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Message } from './types'
-import { useEffect, useRef, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
 interface MessageListProps {
@@ -42,6 +42,7 @@ function CollapsibleText({ content }: CollapsibleTextProps) {
 
 export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: MessageListProps) {
     const messageListRef = useRef<HTMLDivElement>(null);
+    const [isSourcesExpanded, setIsSourcesExpanded] = useState<boolean>(false);
 
     const scrollToBottom = () => {
         if (messageListRef.current && messagesEndRef.current) {
@@ -125,20 +126,35 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
 
                                             {message.sources && message.sources.length > 0 && (
                                                 <div className="mt-4 space-y-3 border-t pt-3 text-sm">
-                                                    <div className="font-bold text-gray-700">Sources:</div>
-                                                    {message.sources.map((source, index) => (
-                                                        <div key={index} className="space-y-1">
-                                                            <a
-                                                                href={source.url}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="text-blue-600 hover:underline font-medium"
-                                                            >
-                                                                {source.title}
-                                                            </a>
-                                                            <CollapsibleText content={source.content} />
+                                                    <div className="flex items-center justify-between cursor-pointer bg-gray-100 rounded-md p-2" onClick={() => setIsSourcesExpanded(!isSourcesExpanded)}>
+                                                        <div className="font-bold text-gray-700">Sources:</div>
+                                                        <svg
+                                                            className={`w-5 h-5 text-gray-500 transform transition-transform ${isSourcesExpanded ? 'rotate-180' : ''}`}
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </div>
+                                                    {isSourcesExpanded && (
+                                                        <div className="space-y-3">
+                                                            {message.sources.map((source, index) => (
+                                                                <div key={index} className="space-y-1">
+                                                                    <a
+                                                                        href={source.url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="text-blue-600 hover:underline font-medium"
+                                                                    >
+                                                                        {source.title}
+                                                                    </a>
+                                                                    <CollapsibleText content={source.content} />
+                                                                </div>
+                                                            ))}
                                                         </div>
-                                                    ))}
+                                                    )}
                                                 </div>
                                             )}
                                         </div>

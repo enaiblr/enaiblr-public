@@ -32,42 +32,55 @@ export function useChatMessages() {
                 })
             });
 
-            if (!response.ok) throw new Error('Failed to send message');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to send message');
+            }
 
             const reader = response.body?.getReader();
             if (!reader) throw new Error('No reader available');
 
             const textDecoder = new TextDecoder();
-            const { done, value } = await reader.read();
-            
-            if (!done && value) {
-                const chunk = textDecoder.decode(value);
-                const lines = chunk.split('\n');
+            let receivedResponse = false;
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                if (value) {
+                    const chunk = textDecoder.decode(value);
+                    const lines = chunk.split('\n');
 
-                for (const line of lines) {
-                    if (line.startsWith('data: ')) {
-                        try {
-                            const data = JSON.parse(line.slice(6));
-                            if (data.answer) {
-                                const assistantMessage: Message = {
-                                    role: 'assistant',
-                                    content: [{ 
-                                        type: 'text' as const, 
-                                        text: data.answer 
-                                    }],
-                                    sources: data.results
-                                };
-                                setMessages(prev => [...prev, assistantMessage]);
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                if (data.answer) {
+                                    receivedResponse = true;
+                                    const assistantMessage: Message = {
+                                        role: 'assistant',
+                                        content: [{ 
+                                            type: 'text' as const, 
+                                            text: data.answer 
+                                        }],
+                                        sources: data.results
+                                    };
+                                    setMessages(prev => [...prev, assistantMessage]);
+                                }
+                            } catch (e) {
+                                console.error('Error parsing SSE data:', e);
+                                throw new Error('Failed to parse server response');
                             }
-                        } catch (e) {
-                            console.error('Error parsing SSE data:', e);
-                            console.log('Raw data:', line.slice(6));
                         }
                     }
                 }
             }
+
+            if (!receivedResponse) {
+                throw new Error('No response received from server');
+            }
         } catch (error) {
             console.error('Error:', error);
+            setMessages(prev => prev.slice(0, -1));
         } finally {
             setIsLoading(false);
         }
