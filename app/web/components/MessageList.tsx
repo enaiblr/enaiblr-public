@@ -129,7 +129,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                                                     <div className="flex items-center justify-between cursor-pointer bg-gray-100 rounded-md p-2" onClick={() => setIsSourcesExpanded(!isSourcesExpanded)}>
                                                         <div className="font-bold text-gray-700">Sources:</div>
                                                         <svg
-                                                            className={`w-5 h-5 text-gray-500 transform transition-transform ${isSourcesExpanded ? 'rotate-180' : ''}`}
+                                                            className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${isSourcesExpanded ? 'rotate-180' : ''}`}
                                                             fill="none"
                                                             stroke="currentColor"
                                                             viewBox="0 0 24 24"
@@ -138,7 +138,9 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                                         </svg>
                                                     </div>
-                                                    {isSourcesExpanded && (
+                                                    <div 
+                                                        className={`transition-all duration-200 ease-in-out overflow-hidden ${isSourcesExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
+                                                    >
                                                         <div className="space-y-3">
                                                             {message.sources.map((source, index) => (
                                                                 <div key={index} className="space-y-1">
@@ -154,7 +156,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
                                                                 </div>
                                                             ))}
                                                         </div>
-                                                    )}
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
