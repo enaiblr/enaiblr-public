@@ -24,8 +24,5 @@ export const style = [
 export const EXAMPLE_PROMPTS = [
     "Rocket launch from Borobudur",
     "Retro-futuristic Jakarta",
-    "Alien pharmacy on Mars",
-    "Crystal flowers botanist",
-    "Raccoon orchestra",
     "Cyberpunk Bali 2077",
 ];
