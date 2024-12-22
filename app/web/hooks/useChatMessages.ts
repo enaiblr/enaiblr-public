@@ -55,22 +55,43 @@ export function useChatMessages() {
                         if (line.startsWith('data: ')) {
                             try {
                                 const data = JSON.parse(line.slice(6));
-                                if (data.answer) {
-                                    receivedResponse = true;
+                                if (data.type === 'sources') {
+                                    // Initialize assistant message with empty content but with sources
                                     const assistantMessage: Message = {
                                         id: crypto.randomUUID(),
                                         role: 'assistant',
                                         content: [{ 
                                             type: 'text' as const, 
-                                            text: data.answer 
+                                            text: '' 
                                         }],
-                                        sources: data.results
+                                        sources: data.sources
                                     };
                                     setMessages(prev => [...prev, assistantMessage]);
+                                } else if (data.type === 'content') {
+                                    // Update the assistant message with new content
+                                    setMessages(prev => {
+                                        const lastMessage = prev[prev.length - 1];
+                                        if (lastMessage?.role === 'assistant' && Array.isArray(lastMessage.content)) {
+                                            const textContent = lastMessage.content[0];
+                                            if (textContent && textContent.type === 'text') {
+                                                return [
+                                                    ...prev.slice(0, -1),
+                                                    {
+                                                        ...lastMessage,
+                                                        content: [{ 
+                                                            type: 'text' as const, 
+                                                            text: textContent.text + data.content 
+                                                        }]
+                                                    }
+                                                ];
+                                            }
+                                        }
+                                        return prev;
+                                    });
                                 }
                             } catch (e) {
                                 console.error('Error parsing SSE data:', e);
-                                throw new Error('Failed to parse server response');
+                                continue;
                             }
                         }
                     }
@@ -78,11 +99,49 @@ export function useChatMessages() {
             }
 
             if (!receivedResponse) {
-                throw new Error('No response received from server');
+                setMessages(prev => {
+                    const lastMessage = prev[prev.length - 1];
+                    if (lastMessage?.role === 'assistant' && Array.isArray(lastMessage.content)) {
+                        const textContent = lastMessage.content[0];
+                        if (textContent && textContent.type === 'text' && textContent.text === '') {
+                            // If we have an empty assistant message, add an error message
+                            return [
+                                ...prev.slice(0, -1),
+                                {
+                                    ...lastMessage,
+                                    content: [{ 
+                                        type: 'text' as const, 
+                                        text: 'Sorry, there was an error generating the response. Please try again.' 
+                                    }]
+                                }
+                            ];
+                        }
+                    }
+                    return prev;
+                });
             }
         } catch (error) {
             console.error('Error:', error);
-            setMessages(prev => prev.slice(0, -1));
+            setMessages(prev => {
+                const lastMessage = prev[prev.length - 1];
+                if (lastMessage?.role === 'assistant' && Array.isArray(lastMessage.content)) {
+                    const textContent = lastMessage.content[0];
+                    if (textContent && textContent.type === 'text') {
+                        // If we have a partial response, keep it and add error message
+                        return [
+                            ...prev.slice(0, -1),
+                            {
+                                ...lastMessage,
+                                content: [{ 
+                                    type: 'text' as const, 
+                                    text: textContent.text + '\n\n[Error: Response was interrupted. The above response may be incomplete.]'
+                                }]
+                            }
+                        ];
+                    }
+                }
+                return prev.slice(0, -1); // Remove the user message if no response started
+            });
         } finally {
             setIsLoading(false);
         }

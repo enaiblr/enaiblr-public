@@ -71,7 +71,7 @@ export function MessageList({ messages, messagesEndRef, onUpdate, isLoading }: M
     useEffect(() => {
         if (messages.length > 0) {
             const lastMessage = messages[messages.length - 1];
-            if (lastMessage.role === 'assistant') {
+            if (lastMessage.role === 'assistant' || lastMessage.role === 'user') {
                 scrollToBottom();
             }
         }

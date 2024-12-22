@@ -110,7 +110,7 @@ export function Sidebar() {
             })}
           </ul>
           <div className="absolute bottom-4 left-4 text-sm text-gray-600">
-            <a href="https://wa.me/+628128007690" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Contact</a> | <Link href="/about" className="hover:text-blue-600">About</Link>
+            <a href="https://wa.me/+628128007690" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Contact</a> | <Link href="https://raihankalla.id/enaiblr" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">About</Link>
           </div>
         </div>
       </div>
