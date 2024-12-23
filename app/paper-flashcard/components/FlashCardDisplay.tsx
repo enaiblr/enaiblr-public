@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronUp } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { FlashCardContent } from "../types";
 import { SECTIONS } from "../hooks/useFlashCard";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -110,26 +110,54 @@ const FlashCard = ({
   handleEdit,
 }: FlashCardProps) => {
   const [editedContent, setEditedContent] = useState<FlashCardContent>(content);
-  const contentLength = content[section.key].length;
+  const [fontSize, setFontSize] = useState(24); // Start with default size
+  const contentRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Calculate text size based on content length
-  const getTextSize = () => {
-    if (contentLength < 100) return 'text-2xl sm:text-3xl';
-    if (contentLength < 200) return 'text-xl sm:text-2xl';
-    if (contentLength < 400) return 'text-lg sm:text-xl';
-    if (contentLength < 600) return 'text-base sm:text-lg';
-    return 'text-sm sm:text-base';
-  };
+  const adjustTextSize = useCallback(() => {
+    if (!containerRef.current || !contentRef.current) return;
+
+    const container = containerRef.current;
+    const content = contentRef.current;
+    
+    // Start with a large font size
+    let currentSize = 24;
+    content.style.fontSize = `${currentSize}px`;
+
+    // Reduce font size until content fits
+    while (
+      (content.scrollHeight > container.clientHeight || 
+       content.scrollWidth > container.clientWidth) && 
+      currentSize > 8
+    ) {
+      currentSize -= 1;
+      content.style.fontSize = `${currentSize}px`;
+    }
+
+    setFontSize(currentSize);
+  }, []);
 
   useEffect(() => {
     setEditedContent(content);
   }, [content]);
 
+  useEffect(() => {
+    adjustTextSize();
+
+    const resizeObserver = new ResizeObserver(() => {
+      adjustTextSize();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [adjustTextSize, content[section.key]]);
+
   const handleSave = () => {
     handleEdit(editedContent);
   };
-
-  const textSize = getTextSize();
 
   return (
     <Card
@@ -138,7 +166,7 @@ const FlashCard = ({
       <div className="absolute top-4 left-4 bg-blue-200 text-blue-600 text-xs font-semibold rounded-full px-2 py-1">
         #{section.key}
       </div>
-      <div className={`font-bold w-full h-full mt-10 ${textSize}`}>
+      <div ref={containerRef} className="w-full h-full mt-10 flex flex-col">
         {editMode ? (
           <Textarea
             value={editedContent[section.key]}
@@ -148,12 +176,17 @@ const FlashCard = ({
               setEditedContent(newContent);
             }}
             onBlur={handleSave}
-            className={`w-full h-full resize-none bg-transparent border-none focus-visible:ring-0 font-bold leading-relaxed ${textColor} ${textSize}`}
+            style={{ fontSize: `${fontSize}px` }}
+            className={`w-full flex-1 resize-none bg-transparent border-none focus-visible:ring-0 font-bold leading-relaxed ${textColor} pb-8`}
             placeholder={`Enter ${section.label.toLowerCase()} here...`}
             autoFocus
           />
         ) : (
-          <div className={`whitespace-pre-wrap ${textColor}`}>
+          <div 
+            ref={contentRef}
+            className={`whitespace-pre-wrap ${textColor} font-bold flex-1 pb-8`}
+            style={{ fontSize: `${fontSize}px` }}
+          >
             {content[section.key]}
           </div>
         )}
