@@ -81,6 +81,9 @@ export const usePDFProcessor = () => {
 
           if (!proxyResponse.ok) {
             const errorData = await proxyResponse.json();
+            if (proxyResponse.status === 403) {
+              throw new Error('This PDF requires authentication or is restricted. Please try downloading it manually and uploading the file instead.');
+            }
             throw new Error(errorData.error || 'Failed to fetch PDF through proxy');
           }
 
