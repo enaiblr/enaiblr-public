@@ -70,48 +70,25 @@ export const usePDFProcessor = () => {
         pdfText = await extractTextFromPDF(arrayBuffer);
       } else if (pdfLink && isValidUrl(pdfLink)) {
         try {
-          const response = await fetch(pdfLink, {
-            mode: 'cors',
+          // Always use the proxy for URL-based PDFs
+          const proxyResponse = await fetch('/api/proxy-pdf', {
+            method: 'POST',
             headers: {
-              'Accept': 'application/pdf'
-            }
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: pdfLink }),
           });
 
-          if (!response.ok) {
-            throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
+          if (!proxyResponse.ok) {
+            const errorData = await proxyResponse.json();
+            throw new Error(errorData.error || 'Failed to fetch PDF through proxy');
           }
 
-          const contentType = response.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/pdf')) {
-            throw new Error('The URL does not point to a valid PDF file');
-          }
-
-          const arrayBuffer = await response.arrayBuffer();
+          const arrayBuffer = await proxyResponse.arrayBuffer();
           pdfText = await extractTextFromPDF(arrayBuffer);
         } catch (error) {
-          if (error instanceof Error) {
-            // If CORS is the issue, try fetching through our API
-            if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
-              const apiResponse = await fetch('/api/proxy-pdf', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ url: pdfLink }),
-              });
-
-              if (!apiResponse.ok) {
-                throw new Error('Failed to fetch PDF through proxy');
-              }
-
-              const arrayBuffer = await apiResponse.arrayBuffer();
-              pdfText = await extractTextFromPDF(arrayBuffer);
-            } else {
-              throw error;
-            }
-          } else {
-            throw new Error('Failed to fetch PDF');
-          }
+          console.error('PDF fetch error:', error);
+          throw error;
         }
       } else {
         throw new Error("Invalid PDF link");
