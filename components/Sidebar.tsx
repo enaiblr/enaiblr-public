@@ -6,9 +6,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
+// Module-level variable to persist across route changes
+let hasShownSidebarInSession = false;
+
 interface SidebarProps {
-  hasShownSidebarInSession: boolean
-  onSidebarShown: () => void
 }
 
 const apps = [
@@ -25,7 +26,7 @@ const apps = [
 ]
 
 
-export function Sidebar({ hasShownSidebarInSession, onSidebarShown }: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -36,12 +37,12 @@ export function Sidebar({ hasShownSidebarInSession, onSidebarShown }: SidebarPro
     if (pathname === '/' && !hasShownSidebarInSession) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-        onSidebarShown();
+        hasShownSidebarInSession = true;
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [pathname, hasShownSidebarInSession, onSidebarShown]);
+  }, [pathname]);
 
   // Second useEffect for handling click outside
   useEffect(() => {

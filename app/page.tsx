@@ -5,9 +5,6 @@ import { Sidebar } from '@/components/Sidebar'
 import { useEffect, useState } from 'react'
 import { AnimatedBackground } from '@/components/animated-background'
 
-// Create a module-level variable to persist across route changes
-let hasShownSidebarInSession = false;
-
 export default function Page({
   searchParams
 }: {
@@ -21,7 +18,7 @@ export default function Page({
 
   return (
     <>
-      <Sidebar hasShownSidebarInSession={hasShownSidebarInSession} onSidebarShown={() => { hasShownSidebarInSession = true }} />
+      <Sidebar />
       <AnimatedBackground />
       <SearchPage initialQuery={params.q || ""} />
     </>
