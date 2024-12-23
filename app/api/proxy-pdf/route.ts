@@ -14,11 +14,16 @@ export async function POST(req: Request) {
     const response = await fetch(url, {
       headers: {
         'Accept': 'application/pdf,*/*',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': url,
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
       }
     });
 
     if (!response.ok) {
+      console.error(`Failed to fetch PDF from ${url}: ${response.status} ${response.statusText}`);
       return NextResponse.json(
         { error: `Failed to fetch PDF: ${response.status} ${response.statusText}` },
         { status: response.status }
