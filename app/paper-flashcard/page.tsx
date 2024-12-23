@@ -128,7 +128,7 @@ export default function PDFProcessor() {
             </div>
           </div>
 
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 hidden sm:flex flex-col space-y-2 z-[1]">
             <Button
               variant="outline"
               size="icon"

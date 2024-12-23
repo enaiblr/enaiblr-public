@@ -1,28 +1,38 @@
 .card-container {
   position: relative;
-  overflow: hidden;
+  height: calc(100% - 4rem);
+  margin-bottom: 1rem;
 }
 
 .card-enter {
-  opacity: 0;
+  transform: translateY(100%);
+}
+
+.card-enter.-translate-y-full {
+  transform: translateY(-100%);
+}
+
+.card-enter.translate-y-full {
   transform: translateY(100%);
 }
 
 .card-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms ease-in, transform 300ms ease-in;
+  transform: translateY(0) !important;
+  transition: transform 300ms ease;
 }
 
 .card-exit {
-  opacity: 1;
   transform: translateY(0);
 }
 
-.card-exit-active {
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: opacity 300ms ease-in, transform 300ms ease-in;
+.card-exit-active.-translate-y-full {
+  transform: translateY(-100%) !important;
+  transition: transform 300ms ease;
+}
+
+.card-exit-active.translate-y-full {
+  transform: translateY(100%) !important;
+  transition: transform 300ms ease;
 }
 
 .relative {
@@ -60,4 +70,24 @@
 
 .opacity-100 {
   opacity: 1;
+}
+
+/* Ensure content is scrollable */
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #93C5FD transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #93C5FD;
+  border-radius: 3px;
 }
