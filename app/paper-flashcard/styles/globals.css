@@ -83,47 +83,47 @@
 
 /* Card animations */
 .slide-up-enter {
-  position: absolute;
-  transform: translateY(100vh);
+  transform: translateY(100%);
+  opacity: 0;
 }
 
 .slide-up-enter-active {
-  position: absolute;
   transform: translateY(0);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
 }
 
 .slide-up-exit {
-  position: absolute;
   transform: translateY(0);
+  opacity: 1;
 }
 
 .slide-up-exit-active {
-  position: absolute;
-  transform: translateY(-100vh);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
 }
 
 .slide-down-enter {
-  position: absolute;
-  transform: translateY(-100vh);
+  transform: translateY(-100%);
+  opacity: 0;
 }
 
 .slide-down-enter-active {
-  position: absolute;
   transform: translateY(0);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
 }
 
 .slide-down-exit {
-  position: absolute;
   transform: translateY(0);
+  opacity: 1;
 }
 
 .slide-down-exit-active {
-  position: absolute;
-  transform: translateY(100vh);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
 }
 
 /* Scrollbar styles */

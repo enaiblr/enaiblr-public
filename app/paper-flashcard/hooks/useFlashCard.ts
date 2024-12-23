@@ -19,6 +19,7 @@ export const useFlashCard = (cards: FlashCardContent[]) => {
   const [cardStyle, setCardStyle] = useState("bg-gradient-to-r from-blue-100 to-white");
   const [textColor, setTextColor] = useState(TEXT_COLORS[0]);
   const [hasSwipedUp, setHasSwipedUp] = useState(false);
+  const [direction, setDirection] = useState<'up' | 'down'>('up');
 
   // Reset current card when cards array changes
   useEffect(() => {
@@ -30,32 +31,33 @@ export const useFlashCard = (cards: FlashCardContent[]) => {
   const currentSection = SECTIONS[currentCard % SECTIONS.length];
   const currentCardIndex = Math.floor(currentCard / SECTIONS.length);
 
-  const safeSetCurrentCard = (newIndex: number) => {
+  const safeSetCurrentCard = (newIndex: number, dir: 'up' | 'down') => {
     if (totalCards === 0) return;
     const safeIndex = Math.max(0, Math.min(newIndex, totalCards - 1));
     setCurrentCard(safeIndex);
+    setDirection(dir);
   };
 
   const handlers = useSwipeable({
     onSwipedUp: () => {
       if (currentCard < totalCards - 1) {
-        safeSetCurrentCard(currentCard + 1);
+        safeSetCurrentCard(currentCard + 1, 'up');
         setHasSwipedUp(true);
       }
     },
     onSwipedDown: () => {
       if (currentCard > 0) {
-        safeSetCurrentCard(currentCard - 1);
+        safeSetCurrentCard(currentCard - 1, 'down');
       }
     },
   });
 
   const navigateCard = (direction: "next" | "prev") => {
     if (direction === "next" && currentCard < totalCards - 1) {
-      safeSetCurrentCard(currentCard + 1);
+      safeSetCurrentCard(currentCard + 1, 'up');
       setHasSwipedUp(true);
     } else if (direction === "prev" && currentCard > 0) {
-      safeSetCurrentCard(currentCard - 1);
+      safeSetCurrentCard(currentCard - 1, 'down');
     }
   };
 
@@ -86,5 +88,6 @@ export const useFlashCard = (cards: FlashCardContent[]) => {
     handleColorChange,
     handleTextColorChange,
     totalCards,
+    direction,
   };
 };

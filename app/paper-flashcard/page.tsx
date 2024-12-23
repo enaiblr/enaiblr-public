@@ -47,6 +47,7 @@ export default function PDFProcessor() {
     handleColorChange,
     handleTextColorChange,
     totalCards,
+    direction,
   } = useFlashCard(cards);
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +108,7 @@ export default function PDFProcessor() {
               hasSwipedUp={hasSwipedUp}
               handleEdit={handleCardEdit}
               handlers={handlers}
+              direction={direction}
             />
             <div className="relative z-20">
               <FlashCardControls

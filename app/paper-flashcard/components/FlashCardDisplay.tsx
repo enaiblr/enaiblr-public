@@ -15,6 +15,7 @@ interface FlashCardDisplayProps {
   hasSwipedUp: boolean;
   handleEdit: (index: number, newContent: FlashCardContent) => void;
   handlers: any;
+  direction: 'up' | 'down';
 }
 
 export const FlashCardDisplay = ({
@@ -26,25 +27,18 @@ export const FlashCardDisplay = ({
   hasSwipedUp,
   handleEdit,
   handlers,
+  direction,
 }: FlashCardDisplayProps) => {
   const currentSection = SECTIONS[currentCard % SECTIONS.length];
   const currentCardIndex = Math.floor(currentCard / SECTIONS.length);
   const totalCards = cards.length * SECTIONS.length;
   const nodeRef = useRef(null);
-  const [direction, setDirection] = useState<'up' | 'down'>('up');
-  const prevCardRef = useRef(currentCard);
-
-  useEffect(() => {
-    const newDirection = currentCard > prevCardRef.current ? 'up' : 'down';
-    setDirection(newDirection);
-    prevCardRef.current = currentCard;
-  }, [currentCard]);
 
   return (
     <div className="relative w-full h-[70vh]">
       {/* Card container */}
       <div className="absolute inset-0 overflow-hidden">
-        <TransitionGroup>
+        <TransitionGroup component={null}>
           <CSSTransition
             key={currentCard}
             timeout={300}
@@ -55,8 +49,9 @@ export const FlashCardDisplay = ({
               exitActive: direction === 'up' ? 'slide-up-exit-active' : 'slide-down-exit-active'
             }}
             nodeRef={nodeRef}
+            unmountOnExit
           >
-            <div ref={nodeRef} className="absolute inset-0">
+            <div ref={nodeRef} className="absolute inset-0 will-change-transform">
               <FlashCard
                 cardStyle={cardStyle}
                 textColor={textColor}
