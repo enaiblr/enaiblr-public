@@ -9,6 +9,10 @@ import { FlashCardDisplay } from "./components/FlashCardDisplay";
 import { PDFInput } from "./components/PDFInput";
 import { usePDFProcessor } from "./hooks/usePDFProcessor";
 import { useFlashCard } from "./hooks/useFlashCard";
+import { FlashCardContent } from "./types";
+import { Sidebar } from '@/components/Sidebar';
+import { AnimatedBackground } from "@/components/animated-background";
+import RenderFooter from '@/components/RenderFooter';
 import "./styles/flashcard.css";
 
 export default function PDFProcessor() {
@@ -20,15 +24,14 @@ export default function PDFProcessor() {
     isLoading,
     cards,
     setCards,
-    hashtag,
     setHashtag,
     errorMessage,
     handleProcess,
   } = usePDFProcessor();
 
-  const handleCardEdit = (index: number, newText: string) => {
+  const handleCardEdit = (index: number, newContent: FlashCardContent) => {
     const newCards = [...cards];
-    newCards[index] = newText;
+    newCards[index] = newContent;
     setCards(newCards);
   };
 
@@ -43,6 +46,7 @@ export default function PDFProcessor() {
     navigateCard,
     handleColorChange,
     handleTextColorChange,
+    totalCards,
   } = useFlashCard(cards);
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,84 +72,104 @@ export default function PDFProcessor() {
 
   if (cards.length > 0) {
     return (
-      <div
-        className="min-h-screen w-full overflow-hidden bg-gradient-to-r from-blue-100 to-white flex flex-col items-center justify-center p-4"
-      >
-        <div className="w-full max-w-3xl mb-4 flex justify-between items-center relative z-20">
-          <Button
-            variant="link"
-            onClick={() => {
-              setCards([]);
-              setHashtag([]);
-              setPdfLink("");
-              setFile(null);
-            }}
-            className="text-blue-600 hover:text-blue-800 flex items-center"
+      <div className="relative h-screen flex flex-col overflow-hidden">
+        <Sidebar />
+        <AnimatedBackground />
+        <div className="flex-1 container mx-auto px-4 flex flex-col items-center justify-center">
+          <div
+            className="w-full max-w-3xl mb-4 flex justify-between items-center relative z-20"
           >
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            Back
-          </Button>
-          <div className="text-sm text-blue-600 mr-4">
-            Card {currentCard + 1} of {cards.length}
+            <Button
+              variant="link"
+              onClick={() => {
+                setCards([]);
+                setHashtag([]);
+                setPdfLink("");
+                setFile(null);
+              }}
+              className="text-blue-600 hover:text-blue-800 flex items-center"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Back
+            </Button>
+            <div className="text-sm text-blue-600 mr-4">
+              Card {currentCard + 1} of {totalCards}
+            </div>
           </div>
-        </div>
 
-        <div className="w-full max-w-3xl flex flex-col items-center">
-          <FlashCardDisplay
-            cardStyle={cardStyle}
-            textColor={textColor}
-            currentCard={currentCard}
-            cards={cards}
-            editMode={editMode}
-            hasSwipedUp={hasSwipedUp}
-            handleEdit={handleCardEdit}
-            handlers={handlers}
-          />
-          <div className="relative z-20">
-            <FlashCardControls
+          <div className="w-full max-w-3xl">
+            <FlashCardDisplay
+              cardStyle={cardStyle}
+              textColor={textColor}
+              currentCard={currentCard}
+              cards={cards}
               editMode={editMode}
-              setEditMode={setEditMode}
-              handleColorChange={handleColorChange}
-              handleTextColorChange={handleTextColorChange}
-              openSourceDocument={openSourceDocument}
-              currentCard={cards[currentCard] || ""}
+              hasSwipedUp={hasSwipedUp}
+              handleEdit={handleCardEdit}
+              handlers={handlers}
             />
+            <div className="relative z-20">
+              <FlashCardControls
+                editMode={editMode}
+                setEditMode={setEditMode}
+                handleColorChange={handleColorChange}
+                handleTextColorChange={handleTextColorChange}
+                openSourceDocument={openSourceDocument}
+                currentCard={cards[currentCard] || {
+                  intro: "",
+                  researcher: "",
+                  question: "",
+                  method: "",
+                  findings: "",
+                  implications: "",
+                  closing: ""
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigateCard("prev")}
+              disabled={currentCard === 0}
+              aria-label="Previous card"
+              className="border-blue-500 text-blue-500 hover:bg-blue-100"
+            >
+              <ChevronUp className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigateCard("next")}
+              disabled={currentCard === totalCards - 1}
+              aria-label="Next card"
+              className="border-blue-500 text-blue-500 hover:bg-blue-100"
+            >
+              <ChevronDown className="h-4 w-4" />
+            </Button>
           </div>
         </div>
-
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navigateCard("prev")}
-            disabled={currentCard === 0}
-            aria-label="Previous card"
-            className="border-blue-500 text-blue-500 hover:bg-blue-100"
-          >
-            <ChevronUp className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navigateCard("next")}
-            disabled={currentCard === cards.length - 1}
-            aria-label="Next card"
-            className="border-blue-500 text-blue-500 hover:bg-blue-100"
-          >
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </div>
+        <RenderFooter />
       </div>
     );
   }
 
   return (
-    <PDFInput
-      pdfLink={pdfLink}
-      handleLinkChange={handleLinkChange}
-      handleFileChange={handleFileChange}
-      handleProcess={handleProcess}
-      errorMessage={errorMessage}
-    />
+    <div className="relative h-screen flex flex-col overflow-hidden">
+      <Sidebar />
+      <AnimatedBackground />
+      <div className="flex-1 container mx-auto px-4 flex items-center justify-center">
+        <PDFInput
+          pdfLink={pdfLink}
+          handleLinkChange={handleLinkChange}
+          handleFileChange={handleFileChange}
+          handleProcess={handleProcess}
+          errorMessage={errorMessage}
+        />
+      </div>
+      <RenderFooter />
+    </div>
   );
 }

@@ -15,7 +15,9 @@ import {
   Type,
 } from "lucide-react";
 import { WhatsappShareButton } from "react-share";
-import { GRADIENTS, TEXT_COLORS } from "../constants";
+import { GRADIENTS} from "../constants";
+import { FlashCardContent } from "../types";
+import { SECTIONS } from "../hooks/useFlashCard";
 
 interface FlashCardControlsProps {
   editMode: boolean;
@@ -23,7 +25,7 @@ interface FlashCardControlsProps {
   handleColorChange: (gradient: string) => void;
   handleTextColorChange: (color: string) => void;
   openSourceDocument: () => void;
-  currentCard: string;
+  currentCard: FlashCardContent;
 }
 
 export const FlashCardControls = ({
@@ -41,7 +43,7 @@ export const FlashCardControls = ({
         size="icon"
         onClick={() => setEditMode(!editMode)}
         aria-label={editMode ? "Save" : "Edit"}
-        className={editMode ? "bg-green-500 hover:bg-blue-600" : "border-blue-500 text-blue-500 hover:bg-blue-100"}
+        className={editMode ? "bg-blue-500 hover:bg-blue-600" : "border-blue-500 text-blue-500 hover:bg-blue-100"}
       >
         {editMode ? (
           <Check className="w-4 h-4" />
@@ -73,30 +75,6 @@ export const FlashCardControls = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="Change text color"
-            className="border-blue-500 text-blue-500 hover:bg-blue-100"
-          >
-            <Type className="w-4 h-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {TEXT_COLORS.map((color, index) => (
-            <DropdownMenuItem
-              key={index}
-              onClick={() => handleTextColorChange(color)}
-              className={`flex items-center justify-center p-2 ${color}`}
-            >
-              <span>Sample Text</span>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu> */}
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -110,7 +88,11 @@ export const FlashCardControls = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>
-            <WhatsappShareButton url={window.location.href} title={currentCard}>
+            <WhatsappShareButton
+              url={window.location.href}
+              title={`Check out this flashcard section: ${currentCard[SECTIONS[0].key as keyof FlashCardContent]}\n\nFrom the paper: ${window.location.href}`}
+              className="w-full"
+            >
               <div className="flex items-center">
                 <MessageCircle className="w-4 h-4 mr-2" />
                 WhatsApp

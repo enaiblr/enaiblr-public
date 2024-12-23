@@ -42,7 +42,7 @@ export const PDFInput = ({
   });
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white p-4">
+    <div className="flex flex-col items-center justify-center w-full">
       <Card className="w-full max-w-md p-6 space-y-4 shadow-lg border border-blue-200">
         <div className="flex flex-col items-center mb-4">
           <div className="flex items-center gap-2 text-4xl text-blue-500 mb-8">

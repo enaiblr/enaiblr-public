@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-import { FlashCard } from '../types';
+import { FlashCard, FlashCardContent } from '../types';
 
 // Initialize PDF.js outside of component
 if (typeof window !== 'undefined') {
@@ -11,7 +11,7 @@ export const usePDFProcessor = () => {
   const [pdfLink, setPdfLink] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [cards, setCards] = useState<string[]>([]);
+  const [cards, setCards] = useState<FlashCardContent[]>([]);
   const [hashtag, setHashtag] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -135,7 +135,7 @@ export const usePDFProcessor = () => {
       
       // Ensure we have valid flashcards array
       const validFlashcards = Array.isArray(data.flashcards) 
-        ? data.flashcards.filter((card: any) => typeof card === 'string' && card.trim().length > 0)
+        ? data.flashcards.filter((card: any) => typeof card === 'object' && card !== null)
         : [];
         
       if (validFlashcards.length === 0) {

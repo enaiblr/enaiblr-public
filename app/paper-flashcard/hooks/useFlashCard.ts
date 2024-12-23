@@ -1,8 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { TEXT_COLORS, GRADIENTS } from '../constants';
+import { FlashCardContent } from '../types';
 
-export const useFlashCard = (cards: string[]) => {
+export const SECTIONS = [
+  { key: 'intro', label: 'Introduction' },
+  { key: 'researcher', label: 'Researcher' },
+  { key: 'question', label: 'Question' },
+  { key: 'method', label: 'Method' },
+  { key: 'findings', label: 'Findings' },
+  { key: 'implications', label: 'Implications' },
+  { key: 'closing', label: 'Closing' },
+] as const;
+
+export const useFlashCard = (cards: FlashCardContent[]) => {
   const [currentCard, setCurrentCard] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [cardStyle, setCardStyle] = useState("bg-gradient-to-r from-blue-100 to-white");
@@ -15,15 +26,19 @@ export const useFlashCard = (cards: string[]) => {
     setHasSwipedUp(false);
   }, [cards]);
 
+  const totalCards = cards.length * SECTIONS.length;
+  const currentSection = SECTIONS[currentCard % SECTIONS.length];
+  const currentCardIndex = Math.floor(currentCard / SECTIONS.length);
+
   const safeSetCurrentCard = (newIndex: number) => {
-    if (cards.length === 0) return;
-    const safeIndex = Math.max(0, Math.min(newIndex, cards.length - 1));
+    if (totalCards === 0) return;
+    const safeIndex = Math.max(0, Math.min(newIndex, totalCards - 1));
     setCurrentCard(safeIndex);
   };
 
   const handlers = useSwipeable({
     onSwipedUp: () => {
-      if (currentCard < cards.length - 1) {
+      if (currentCard < totalCards - 1) {
         safeSetCurrentCard(currentCard + 1);
         setHasSwipedUp(true);
       }
@@ -36,7 +51,7 @@ export const useFlashCard = (cards: string[]) => {
   });
 
   const navigateCard = (direction: "next" | "prev") => {
-    if (direction === "next" && currentCard < cards.length - 1) {
+    if (direction === "next" && currentCard < totalCards - 1) {
       safeSetCurrentCard(currentCard + 1);
       setHasSwipedUp(true);
     } else if (direction === "prev" && currentCard > 0) {
@@ -59,6 +74,8 @@ export const useFlashCard = (cards: string[]) => {
 
   return {
     currentCard,
+    currentSection,
+    currentCardIndex,
     editMode,
     setEditMode,
     cardStyle,
@@ -68,5 +85,6 @@ export const useFlashCard = (cards: string[]) => {
     navigateCard,
     handleColorChange,
     handleTextColorChange,
+    totalCards,
   };
 };
