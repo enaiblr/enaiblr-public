@@ -7,11 +7,8 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 interface SidebarProps {
-  apps: {
-    name: string
-    icon: string
-    slug: string
-  }[]
+  hasShownSidebarInSession: boolean
+  onSidebarShown: () => void
 }
 
 const apps = [
@@ -28,24 +25,23 @@ const apps = [
 ]
 
 
-export function Sidebar() {
+export function Sidebar({ hasShownSidebarInSession, onSidebarShown }: SidebarProps) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-  const [hasShownSidebar, setHasShownSidebar] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   // First useEffect for auto-opening on homepage
   useEffect(() => {
-    if (pathname === '/' && !hasShownSidebar) {
+    if (pathname === '/' && !hasShownSidebarInSession) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-        setHasShownSidebar(true);
+        onSidebarShown();
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [pathname, hasShownSidebar]);
+  }, [pathname, hasShownSidebarInSession, onSidebarShown]);
 
   // Second useEffect for handling click outside
   useEffect(() => {
