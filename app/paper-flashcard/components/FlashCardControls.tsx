@@ -90,7 +90,7 @@ export const FlashCardControls = ({
           <DropdownMenuItem>
             <WhatsappShareButton
               url={window.location.href}
-              title={`Check out this flashcard section: ${currentCard[SECTIONS[0].key as keyof FlashCardContent]}\n\nFrom the paper: ${window.location.href}`}
+              title={`Check out this flashcard section: ${currentCard[SECTIONS[0].key as keyof FlashCardContent]}\n\nVisit: `}
               className="w-full"
             >
               <div className="flex items-center">
