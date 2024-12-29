@@ -22,17 +22,17 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://enaiblr.org'),
   title: {
     template: '%s | enaiblr',
-    default: 'enaiblr - AI Tools Search Engine',
+    default: 'enaiblr AI Platform',
   },
-  description: 'Simple and Straightforward Search Engine for Finding the Best AI Tools and Resources',
+  description: 'Unlimited Access to AI Tools and Resources',
   icons: {
     icon: ['/icon.png'],
   },
   openGraph: {
-    title: 'enaiblr - AI Tools Search Engine',
-    description: 'Simple and Straightforward Search Engine for Finding the Best AI Tools and Resources',
+    title: 'enaiblr AI Platform',
+    description: 'Unlimited Access to AI Tools and Resources',
     url: 'https://enaiblr.org',
-    siteName: 'enaiblr - AI Tools Search Engine',
+    siteName: 'enaiblr AI Platform',
     locale: 'en_ID, en_US',
     alternateLocale: 'en_ID, en_US',
     type: 'website',
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   // Twitter metadata
   twitter: {
     card: 'summary_large_image',
-    title: 'enaiblr - AI Tools Search Engine',
-    description: 'Simple and Straightforward Search Engine for Finding the Best AI Tools and Resources',
+    title: 'enaiblr AI Platform',
+    description: 'Unlimited Access to AI Tools and Resources',
   },
 
   // Additional metadata
