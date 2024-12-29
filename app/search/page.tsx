@@ -1,6 +1,6 @@
 'use client'
 
-import SearchPage from '@/components/search/SearchPage'
+import SearchPage from './components/SearchPage'
 import { Sidebar } from '@/components/Sidebar'
 import { useEffect, useState } from 'react'
 import { AnimatedBackground } from '@/components/animated-background'

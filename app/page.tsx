@@ -14,7 +14,7 @@ export default function Page() {
             <h1 className="text-4xl font-bold tracking-tighter mb-4">
               en<span className="text-blue-600">ai</span>blr
             </h1>
-            <p className="text-muted-foreground">Choose an AI tool to get started</p>
+            <p className="text-muted-foreground">AI Tools Repository</p>
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto">

@@ -5,15 +5,15 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { SearchHeader } from "./components/SearchHeader";
-import { SearchResultItem } from "./components/SearchResult";
-import CustomSearchInput from "./components/CustomSearchInput";
-import RenderFooter from "../RenderFooter";
+import { SearchHeader } from "./SearchHeader";
+import { SearchResultItem } from "./SearchResult";
+import CustomSearchInput from "./CustomSearchInput";
+import RenderFooter from "@/components/RenderFooter";
 
-import { useSearch } from "./hooks/useSearch";
-import { TAGS } from "./constants";
-import { getRandomIcon } from "./utils";
-import type { SearchPageProps } from "./types";
+import { useSearch } from "../hooks/useSearch";
+import { TAGS } from "../constants";
+import { getRandomIcon } from "../utils";
+import type { SearchPageProps } from "../types";
 
 export default function SearchPage({ initialQuery }: SearchPageProps) {
     return (
