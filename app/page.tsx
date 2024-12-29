@@ -25,7 +25,7 @@ export default function Page() {
                 <Link
                   key={app.slug}
                   href={`/${app.slug}`}
-                  className="group relative flex flex-col items-center p-4 md:p-6 bg-card hover:bg-blue-50 rounded-xl border transition-colors"
+                  className="group relative flex flex-col items-center p-4 md:p-6 bg-card hover:bg-blue-50 rounded-xl border transition-colors hover:outline-2 hover:outline-blue-600"
                 >
                   <div className="mb-3 md:mb-4 p-2 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
                     <Icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
