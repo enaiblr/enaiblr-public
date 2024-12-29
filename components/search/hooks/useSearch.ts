@@ -16,7 +16,7 @@ export const useSearch = () => {
 
         try {
             if (updateURL) {
-                router.push(`/?q=${encodeURIComponent(searchQuery)}`, { scroll: false });
+                router.push(`/search?q=${encodeURIComponent(searchQuery)}`, { scroll: false });
             }
 
             const response = await fetch("/api/search", {

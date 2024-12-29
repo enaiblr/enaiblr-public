@@ -1,33 +1,17 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, Search, MessageSquare, Globe, Zap, BookOpen, Wallet, FlaskConical, WandSparkles, FileAudio, Speech, FileText} from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { apps } from '@/config/apps'
 
 // Module-level variable to persist across route changes
 let hasShownSidebarInSession = false;
 
 interface SidebarProps {
 }
-
-const apps = [
-  { name: 'AI Tools Search', icon: Search, slug: '' },
-  { name: 'Disposable AI Chat', icon: MessageSquare, slug: 'chat' },
-  { name: 'Image Creator', icon: WandSparkles, slug: 'imagen' },
-  { name: 'Chat with Docs', icon: FileText, slug: 'filechat' },
-  { name: 'Web Chat', icon: Globe, slug: 'web' },
-  { name: 'Paper to Flashcard', icon: Zap, slug: 'paper-flashcard' },
-  { name: 'Audio Transcription', icon: FileAudio, slug: 'transcribe' },
-  { name: 'Text to Voice', icon: Speech, slug: 'voice' },
-
-
-  // { name: 'Japanese Flashcard', icon: BookOpen, slug: 'japanese-flashcard' },
-  // { name: 'Expense Tracker', icon: Wallet, slug: 'expense-tracker' },
-  // { name: 'Science Creator', icon: FlaskConical, slug: 'science-creator' },
-]
-
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -49,70 +33,59 @@ export function Sidebar() {
 
   // Second useEffect for handling click outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    function handleClickOutside(event: MouseEvent) {
       if (
         sidebarRef.current &&
+        buttonRef.current &&
         !sidebarRef.current.contains(event.target as Node) &&
-        !buttonRef.current?.contains(event.target as Node)
+        !buttonRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
       }
     }
 
-    if (isOpen) {
-      document.addEventListener('click', handleClickOutside)
-    }
-
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
-      document.removeEventListener('click', handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isOpen])
-
-  const toggleSidebar = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsOpen(!isOpen)
-  }
+  }, [])
 
   return (
     <>
       <button
         ref={buttonRef}
-        onClick={toggleSidebar}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg"
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-4 left-4 z-50 rounded-full p-2 bg-background border shadow-sm"
       >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
+        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       <div
         ref={sidebarRef}
         className={cn(
-          'fixed top-0 left-0 h-full w-64 bg-opacity-70 bg-white/60 backdrop-blur-md shadow-lg transform transition-transform duration-300 ease-in-out z-40',
+          'fixed top-0 left-0 z-40 w-64 h-screen transition-transform bg-background border-r',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="pt-16 px-4">
-          <ul className="space-y-2">
+        <div className="h-full px-3 py-4 overflow-y-auto">
+          <div className="space-y-2 mt-12">
             {apps.map((app) => {
-              const href = `/${app.slug}`
-              const isActive = pathname === href
+              const Icon = app.icon
+              const isActive = pathname === `/${app.slug}`
               return (
-                <li key={app.slug}>
-                  <Link
-                    href={href}
-                    className={cn(
-                      "flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg",
-                      isActive && "font-medium outline outline-2 outline-blue-600"
-                    )}
-                  >
-                    <app.icon size={20} className="text-xl" />
-                    <span>{app.name}</span>
-                  </Link>
-                </li>
+                <Link
+                  key={app.slug}
+                  href={`/${app.slug}`}
+                  className={cn(
+                    'flex items-center p-2 rounded-lg hover:bg-accent',
+                    isActive && 'bg-accent outline outline-2 outline-blue-600'
+                  )}
+                >
+                  <Icon className="w-6 h-6" />
+                  <span className="ml-3">{app.name}</span>
+                </Link>
               )
             })}
-          </ul>
-          <div className="absolute bottom-4 left-4 text-sm text-gray-600">
-            <a href="https://wa.me/+628128007690" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Contact</a> | <Link href="https://raihankalla.id/enaiblr" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">About</Link>
           </div>
         </div>
       </div>
