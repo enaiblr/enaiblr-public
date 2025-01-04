@@ -104,7 +104,7 @@ const Pricing = () => {
                 </ul>
               </CardContent>
               <CardFooter className="mt-auto">
-                <Link href="https://access.enaiblr.org" className="w-full">
+                <Link href="https://access.enaiblr.org/apps" className="w-full">
                   <button
                     className={cn(
                       "w-full rounded-lg px-4 py-2",

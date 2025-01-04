@@ -67,7 +67,7 @@ const Features = () => {
           {features.map((feature, index) => (
             <Link
               key={index}
-              href="https://access.enaiblr.org"
+              href="https://access.enaiblr.org/apps"
               className="w-full md:w-[calc(50%-1rem)] lg:w-[280px]"
             >
               <Card className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
