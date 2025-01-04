@@ -62,11 +62,12 @@ const Features = () => {
             Mulai dari produktivitas hingga kreativitas, platform kami punya semua tools dan fitur AI yang kamu butuhkan.
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-wrap justify-center gap-8" >
           {features.map((feature, index) => (
             <Card
               key={index}
               className="border-none shadow-lg w-full md:w-[calc(50%-1rem)] lg:w-[280px]"
+              onClick={() => window.location.href = 'https://access.enaiblr.org'}
             >
               <CardHeader>
                 <div className="w-12 h-12 flex items-center justify-center rounded-lg mb-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white">

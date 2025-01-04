@@ -66,27 +66,27 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Produk</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-muted-foreground hover:text-foreground">
+                <Link href="https://access.enaiblr.org" className="text-muted-foreground hover:text-foreground">
                   Search Engine
                 </Link>
               </li>
               <li>
-                <Link href="/chat" className="text-muted-foreground hover:text-foreground">
+                <Link href="https://access.enaiblr.org" className="text-muted-foreground hover:text-foreground">
                   AI Chat
                 </Link>
               </li>
               <li>
-                <Link href="/imagen" className="text-muted-foreground hover:text-foreground">
+                <Link href="https://access.enaiblr.org" className="text-muted-foreground hover:text-foreground">
                   Image Creator
                 </Link>
               </li>
               <li>
-                <Link href="/transcribe" className="text-muted-foreground hover:text-foreground">
+                <Link href="https://access.enaiblr.org" className="text-muted-foreground hover:text-foreground">
                   Audio Transcriber
                 </Link>
               </li>
               <li>
-                <Link href="/voice" className="text-muted-foreground hover:text-foreground">
+                <Link href="https://access.enaiblr.org" className="text-muted-foreground hover:text-foreground">
                   Text to Voice
                 </Link>
               </li>
