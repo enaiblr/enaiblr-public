@@ -1,5 +1,6 @@
 import { ScanSearch, MessageCircleQuestion, WandSparkles, FileAudio, Speech, Lightbulb, LayoutGrid } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Link from 'next/link'
 
 const features = [
   {
@@ -64,19 +65,21 @@ const Features = () => {
         </div>
         <div className="flex flex-wrap justify-center gap-8" >
           {features.map((feature, index) => (
-            <Card
+            <Link
               key={index}
-              className="border-none shadow-lg w-full md:w-[calc(50%-1rem)] lg:w-[280px]"
-              onClick={() => window.location.href = 'https://access.enaiblr.org'}
+              href="https://access.enaiblr.org"
+              className="w-full md:w-[calc(50%-1rem)] lg:w-[280px]"
             >
-              <CardHeader>
-                <div className="w-12 h-12 flex items-center justify-center rounded-lg mb-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                <CardTitle>{feature.title}</CardTitle>
-                <CardDescription>{feature.description}</CardDescription>
-              </CardHeader>
-            </Card>
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="w-12 h-12 flex items-center justify-center rounded-lg mb-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
+                    <feature.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle>{feature.title}</CardTitle>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
