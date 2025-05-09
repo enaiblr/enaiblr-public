@@ -1,4 +1,5 @@
 # enaiblr
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/enaiblr/enaiblr-public)
 
 Enaiblr is a growing AI tools platform currently featuring a search engine, disposable chatbot, and image generator - all designed with simplicity and functionality in mind.
 
